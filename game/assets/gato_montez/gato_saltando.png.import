@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c71r750sexdmt"
-path="res://.godot/imported/gatoMontez_caminar.png-74e444996566a0bc25185da885df80e5.ctex"
+uid="uid://li6m8g3aa248"
+path="res://.godot/imported/gato_saltando.png-bae30e7b5bb1fc0ef5c2af00cff466d7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/gato_montez/gatoMontez_caminar.png"
-dest_files=["res://.godot/imported/gatoMontez_caminar.png-74e444996566a0bc25185da885df80e5.ctex"]
+source_file="res://assets/gato_montez/gato_saltando.png"
+dest_files=["res://.godot/imported/gato_saltando.png-bae30e7b5bb1fc0ef5c2af00cff466d7.ctex"]
 
 [params]
 

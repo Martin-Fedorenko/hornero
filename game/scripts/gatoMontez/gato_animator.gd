@@ -2,7 +2,7 @@
 class_name GatoAnimator
 extends AnimatedSprite2D
 
-@export var base_scale := 0.25
+@export var base_scale := 1.0
 @export var sprite_mira_derecha := true
 @export var umbral_quieto := 10.0
 @export var alinear_patas_abajo := true # pone el borde inferior del frame sobre el origen
@@ -12,6 +12,8 @@ extends AnimatedSprite2D
 @export var animacion_correr := &"gatoMontez_correr"
 @export var animacion_salto := &"gatoMontez_salto"
 @export var animacion_ataque := &"gatoMontez_ataque"
+## Frame del salto que se muestra mientras sostiene al Hornero (-1 = el último).
+@export var frame_agarre := 5
 
 @export_group("Ajuste Caminar")
 @export var escala_caminar := 1.0
@@ -53,9 +55,9 @@ func _process(_delta: float) -> void:
 
 	flip_h = (_body.facing < 0) == sprite_mira_derecha
 
-	var m: int = _body.modo
-	var cambio := m != _modo_anterior
-	_modo_anterior = m
+	var m: GatoMontes.Modo = _body.modo
+	var cambio: bool = int(m) != _modo_anterior
+	_modo_anterior = int(m)
 
 	match m:
 		GatoMontes.Modo.ZARPAZO:
@@ -66,7 +68,7 @@ func _process(_delta: float) -> void:
 				_reproducir_desde_cero(animacion_salto)
 		GatoMontes.Modo.AGARRE:
 			if cambio:
-				_congelar_ultimo_frame(animacion_salto)
+				_congelar_frame(animacion_salto, frame_agarre)
 		_:
 			_movimiento()
 
@@ -127,11 +129,12 @@ func _reproducir_desde_cero(anim: StringName) -> void:
 	play(anim)
 
 
-func _congelar_ultimo_frame(anim: StringName) -> void:
+func _congelar_frame(anim: StringName, cual: int) -> void:
 	if not _existe(anim):
 		return
-	animation = anim
-	frame = sprite_frames.get_frame_count(anim) - 1
+	animation = anim # cambiar la animación resetea el frame a 0
+	var total := sprite_frames.get_frame_count(anim)
+	frame = total - 1 if cual < 0 else clampi(cual, 0, total - 1)
 	pause() # pause conserva el frame
 
 

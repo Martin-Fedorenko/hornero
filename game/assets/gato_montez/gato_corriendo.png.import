@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ckdm0cgjt8pq7"
-path="res://.godot/imported/gatoMontez_ataque.png-7ea4bed2335a50c0d7e1a48fab17f809.ctex"
+uid="uid://cqa3ye0poqd6w"
+path="res://.godot/imported/gato_corriendo.png-e3474fa2eb22a50d6bb16bf6c262de16.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/gato_montez/gatoMontez_ataque.png"
-dest_files=["res://.godot/imported/gatoMontez_ataque.png-7ea4bed2335a50c0d7e1a48fab17f809.ctex"]
+source_file="res://assets/gato_montez/gato_corriendo.png"
+dest_files=["res://.godot/imported/gato_corriendo.png-e3474fa2eb22a50d6bb16bf6c262de16.ctex"]
 
 [params]
 

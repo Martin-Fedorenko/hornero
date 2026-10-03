@@ -1,23 +1,25 @@
-[gd_scene format=3 uid="uid://1yqpckr3rwou"]
+[gd_scene format=3 uid="uid://3lk284xx4yoy"]
 
 [ext_resource type="Script" uid="uid://bve0jmyyfgxqo" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" uid="uid://botl8vytdr4og" path="res://scenes/hornero.tscn" id="2_hornero"]
 [ext_resource type="Script" uid="uid://bvqibbekykd66" path="res://scripts/world/platform.gd" id="3_platform"]
 [ext_resource type="PackedScene" path="res://scenes/pampas_background.tscn" id="4_background"]
-[ext_resource type="Script" uid="uid://cmk8t0yvmtd8n" path="res://scripts/world/meadow_floor.gd" id="5_floor"]
-[ext_resource type="PackedScene" path="res://scenes/nest_tree.tscn" id="6_nest_tree"]
-[ext_resource type="PackedScene" path="res://scenes/nest.tscn" id="7_nest"]
 [ext_resource type="Script" uid="uid://b4ym64cj0gyu6" path="res://scripts/chimango/Chimango.gd" id="5_85g3d"]
+[ext_resource type="Script" uid="uid://cmk8t0yvmtd8n" path="res://scripts/world/meadow_floor.gd" id="5_floor"]
 [ext_resource type="Texture2D" uid="uid://b0fq4svickc0l" path="res://assets/chimango/chimango_fly.png" id="5_tbgi4"]
 [ext_resource type="Texture2D" uid="uid://pqx4iomj67k6" path="res://assets/chimango/chimango_attack.png" id="6_choun"]
+[ext_resource type="PackedScene" path="res://scenes/nest_tree.tscn" id="6_nest_tree"]
 [ext_resource type="Script" uid="uid://mutqphpmvp01" path="res://scripts/hornero/ground_motor.gd" id="6_o6xl0"]
 [ext_resource type="Script" uid="uid://dporub47gssp2" path="res://scenes/chimango_animator.gd" id="6_tipki"]
+[ext_resource type="PackedScene" path="res://scenes/nest.tscn" id="7_nest"]
 [ext_resource type="Script" uid="uid://bm3x271kf07d4" path="res://scripts/hornero/flight_motor.gd" id="7_tipki"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/piedra.tscn" id="8_piedra"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/paja.tscn" id="9_paja"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/ramitas.tscn" id="10_ramitas"]
-[ext_resource type="Script" path="res://scripts/ui/vitals_hud.gd" id="11_vitals_hud"]
-[ext_resource type="Script" path="res://scripts/ui/death_screen.gd" id="12_death_screen"]
+[ext_resource type="Script" uid="uid://b4fuied2nfcsy" path="res://scripts/ui/vitals_hud.gd" id="11_vitals_hud"]
+[ext_resource type="PackedScene" uid="uid://4jpbvg34m0h6" path="res://scenes/gato_montes.tscn" id="11_ya4ey"]
+[ext_resource type="Script" uid="uid://dd7q7ynvslfy" path="res://scripts/ui/death_screen.gd" id="12_death_screen"]
+[ext_resource type="Script" uid="uid://2816edmgmc6c" path="res://scripts/gatoMontez/gato_spawner.gd" id="20_gqmmt"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
 atlas = ExtResource("6_choun")
@@ -132,7 +134,6 @@ animations = [{
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_a8y0u"]
 
-
 [node name="Laboratorio" type="Node2D" unique_id=1659740675]
 script = ExtResource("1_main")
 
@@ -179,7 +180,7 @@ drag_bottom_margin = 0.15
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=503126163]
 
-[node name="Vitales" type="VBoxContainer" parent="HUD"]
+[node name="Vitales" type="VBoxContainer" parent="HUD" unique_id=698270253]
 offset_left = 24.0
 offset_top = 16.0
 offset_right = 284.0
@@ -187,11 +188,11 @@ offset_bottom = 56.0
 theme_override_constants/separation = 6
 script = ExtResource("11_vitals_hud")
 
-[node name="Vida" type="ProgressBar" parent="HUD/Vitales"]
+[node name="Vida" type="ProgressBar" parent="HUD/Vitales" unique_id=337983274]
 layout_mode = 2
 value = 100.0
 
-[node name="Stamina" type="ProgressBar" parent="HUD/Vitales"]
+[node name="Stamina" type="ProgressBar" parent="HUD/Vitales" unique_id=791902759]
 layout_mode = 2
 value = 100.0
 
@@ -202,7 +203,7 @@ offset_right = 900.0
 offset_bottom = 90.0
 theme_override_colors/font_color = Color(0.2, 0.27, 0.25, 1)
 
-[node name="Muerte" type="Control" parent="HUD"]
+[node name="Muerte" type="Control" parent="HUD" unique_id=1519217544]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -213,7 +214,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("12_death_screen")
 
-[node name="Fondo" type="ColorRect" parent="HUD/Muerte"]
+[node name="Fondo" type="ColorRect" parent="HUD/Muerte" unique_id=394217686]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -223,7 +224,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.6)
 
-[node name="Textos" type="VBoxContainer" parent="HUD/Muerte"]
+[node name="Textos" type="VBoxContainer" parent="HUD/Muerte" unique_id=110747720]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -239,7 +240,7 @@ grow_vertical = 2
 theme_override_constants/separation = 18
 alignment = 1
 
-[node name="Titulo" type="Label" parent="HUD/Muerte/Textos"]
+[node name="Titulo" type="Label" parent="HUD/Muerte/Textos" unique_id=484722690]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.2, 0.18, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -248,7 +249,7 @@ theme_override_font_sizes/font_size = 96
 text = "HAS MUERTO"
 horizontal_alignment = 1
 
-[node name="Subtitulo" type="Label" parent="HUD/Muerte/Textos"]
+[node name="Subtitulo" type="Label" parent="HUD/Muerte/Textos" unique_id=1439298981]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.93, 0.88, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -269,7 +270,6 @@ position = Vector2(1270, 1280)
 [node name="Chimango" type="CharacterBody2D" parent="." unique_id=1104130030]
 script = ExtResource("5_85g3d")
 empezar_ausente = true
-tiempo_ausente_min = 10.0
 tiempo_ausente_max = 10.0
 
 [node name="ChimangoAnimator" type="AnimatedSprite2D" parent="Chimango" unique_id=1938302224]
@@ -293,3 +293,11 @@ max_pitch_deg = 50.0
 flap_impulse = 400.0
 turn_speed_keep = 0.7
 metadata/_custom_type_script = "uid://bm3x271kf07d4"
+
+[node name="GatoMontes" parent="." unique_id=840224556 instance=ExtResource("11_ya4ey")]
+
+[node name="Node2D" type="Node2D" parent="." unique_id=465029146 node_paths=PackedStringArray("jugador")]
+scale = Vector2(2, 2)
+script = ExtResource("20_gqmmt")
+escena_gato = ExtResource("11_ya4ey")
+jugador = NodePath("../Hornero")

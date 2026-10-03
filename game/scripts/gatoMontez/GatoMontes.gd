@@ -8,7 +8,7 @@ enum Modo { PASEO, PERSECUCION, ZARPAZO, SALTO, AGARRE, RECUPERACION }
 
 @export var target: Node2D # Hornero (si queda vacío, lo busca solo)
 @export var debug_print := false
-@export var debug_draw := false # dibuja la boca y el alcance del zarpazo
+@export var debug_draw := false # dibuja la boca, el zarpazo y la altura de salto
 
 @export_group("Paseo")
 @export var velocidad_caminar := 70.0
@@ -28,17 +28,16 @@ enum Modo { PASEO, PERSECUCION, ZARPAZO, SALTO, AGARRE, RECUPERACION }
 @export var radio_zarpazo := 60.0          # distancia horizontal para atacar en tierra
 @export var tolerancia_vertical := 50.0     # diferencia de altura aceptada para el zarpazo
 @export var duracion_zarpazo := 0.5
-@export var momento_golpe := 0.3            # antes de esto el Hornero puede escapar volando
+@export var momento_golpe := 0.4            # antes de esto el Hornero puede escapar volando
 @export var empuje_zarpazo := Vector2(250, -150)
 
 @export_group("Salto")
-@export var alcance_salto_x := 220.0        # distancia horizontal máxima para saltar
-@export var altura_salto_max := 220.0       # qué tan arriba puede llegar
+@export var altura_salto_max := 300.0       # cuánto puede subir como máximo
 @export var altura_salto_min := 60.0
-@export var margen_salto := 20.0            # salta un poco más alto que el Hornero
-@export var velocidad_salto_x := 400.0
-@export var radio_agarre := 45.0
-@export var offset_boca := Vector2(35, -45) # dónde queda el Hornero agarrado (mirando a la derecha)
+@export var margen_salto := 20.0            # sube un poco más de lo justo
+@export var velocidad_salto_x := 500.0      # velocidad horizontal máxima en el salto
+@export_range(0.0, 1.0) var anticipacion_salto := 0.8 # 0 = apunta a donde está, 1 = predice
+@export var offset_boca := Vector2(10, 30) # dónde queda el Hornero agarrado (mirando a la derecha)
 @export var cooldown_salto := 1.0
 
 @export_group("Agarre")
@@ -68,6 +67,9 @@ var _golpe_hecho := false
 var _tiempo_en_suelo := 0.0
 var _debug_timer := 0.0
 var _ray_borde: RayCast2D
+var _colision: CollisionShape2D
+var _salto_vel := Vector2.ZERO  # salto calculado por _puede_saltar()
+var _salto_facing := 1
 
 
 func _ready() -> void:
@@ -84,6 +86,14 @@ func _ready() -> void:
 	for g in get_tree().get_nodes_in_group("gatos"):
 		if g != self and g is PhysicsBody2D:
 			add_collision_exception_with(g)
+
+	# Forma de colisión propia, para detectar contacto real con el Hornero
+	for hijo in get_children():
+		if hijo is CollisionShape2D:
+			_colision = hijo
+			break
+	if _colision == null:
+		push_warning("GatoMontes: no encontré un CollisionShape2D hijo")
 
 	_ray_borde = RayCast2D.new()
 	_ray_borde.target_position = Vector2(0, largo_rayo_borde)
@@ -136,6 +146,10 @@ func _physics_process(delta: float) -> void:
 # ---------- Modos ----------
 
 func _proc_paseo(delta: float) -> void:
+	# Caso 1: el Hornero lo sobrevuela a una distancia alcanzable
+	if _puede_saltar():
+		_iniciar_salto()
+		return
 	if _hornero_disponible() and _hornero_en_suelo() and _dist() < radio_deteccion:
 		_cambiar_modo(Modo.PERSECUCION)
 		_memoria_timer = tiempo_memoria
@@ -160,6 +174,7 @@ func _proc_persecucion(delta: float) -> void:
 		_golpe_hecho = false
 		_cambiar_modo(Modo.ZARPAZO)
 		return
+	# Caso 2: lo venía persiguiendo y el Hornero levantó vuelo
 	if _puede_saltar():
 		_iniciar_salto()
 		return
@@ -193,8 +208,9 @@ func _proc_zarpazo(delta: float) -> void:
 
 
 func _proc_salto() -> void:
-	# En el aire no se dirige: conserva el impulso del salto
-	if _hornero_disponible() and _boca().distance_to(target.global_position) < radio_agarre:
+	# En el aire no se dirige: conserva el impulso del salto.
+	# Solo lo agarra si los cuerpos se tocan de verdad.
+	if _hornero_disponible() and _toca_al_hornero():
 		_agarrar()
 		return
 	if _modo_timer > 0.1 and is_on_floor():
@@ -238,22 +254,67 @@ func _puede_saltar() -> bool:
 		return false
 	if not _hornero_disponible() or _hornero_en_suelo():
 		return false
-	var dif := target.global_position - global_position
-	return dif.y < 0.0 and -dif.y <= altura_salto_max and absf(dif.x) <= alcance_salto_x
+	_salto_vel = _planear_salto()
+	return _salto_vel != Vector2.ZERO
+
+
+## Calcula el salto para que la boca llegue a donde VA a estar el Hornero
+## en el punto más alto. Devuelve Vector2.ZERO si no le alcanza.
+func _planear_salto() -> Vector2:
+	var vel_obj := Vector2.ZERO
+	if target is CharacterBody2D:
+		vel_obj = (target as CharacterBody2D).velocity
+
+	var objetivo := target.global_position
+	var vy := 0.0
+	var t := 0.0
+	# Dos pasadas: la altura define el tiempo, y el tiempo define dónde va a estar
+	for i in 2:
+		var subida := global_position.y - objetivo.y + offset_boca.y + margen_salto
+		if subida > altura_salto_max:
+			return Vector2.ZERO # muy alto
+		subida = maxf(subida, altura_salto_min)
+		vy = -sqrt(2.0 * gravedad * subida)
+		t = -vy / gravedad # tiempo hasta el punto más alto
+		objetivo = target.global_position + vel_obj * t * anticipacion_salto
+
+	if objetivo.y >= global_position.y:
+		return Vector2.ZERO # no está por encima del gato
+
+	var dir := signf(objetivo.x - global_position.x)
+	if dir == 0.0:
+		dir = float(facing)
+	var dx := objetivo.x - (global_position.x + offset_boca.x * dir)
+	var vx := dx / t
+	if absf(vx) > velocidad_salto_x:
+		return Vector2.ZERO # muy lejos
+
+	_salto_facing = int(dir)
+	return Vector2(vx, vy)
 
 
 func _iniciar_salto() -> void:
-	var dx := target.global_position.x - global_position.x
-	var altura := clampf(global_position.y - target.global_position.y + margen_salto,
-		altura_salto_min, altura_salto_max)
-	var vy := -sqrt(2.0 * gravedad * altura)
-	var t := -vy / gravedad # tiempo hasta el punto más alto
-	var vx := clampf(dx / t, -velocidad_salto_x, velocidad_salto_x)
-	velocity = Vector2(vx, vy)
-	if dx != 0.0:
-		facing = int(signf(dx))
+	velocity = _salto_vel
+	facing = _salto_facing
 	_cooldown_salto_timer = cooldown_salto
 	_cambiar_modo(Modo.SALTO)
+
+
+## Contacto real: ¿la forma de colisión del gato se superpone con el Hornero?
+func _toca_al_hornero() -> bool:
+	if _colision == null or _colision.shape == null:
+		return false
+	if not (target is CollisionObject2D):
+		return false
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = _colision.shape
+	query.transform = _colision.global_transform
+	query.collision_mask = (target as CollisionObject2D).collision_layer
+	query.exclude = [get_rid()]
+	for hit in get_world_2d().direct_space_state.intersect_shape(query, 8):
+		if hit.collider == target:
+			return true
+	return false
 
 
 func _golpear() -> void:
@@ -371,8 +432,11 @@ func _hay_borde(dir: int) -> bool:
 func _draw() -> void:
 	if not debug_draw:
 		return
-	draw_circle(Vector2(offset_boca.x * facing, offset_boca.y), radio_agarre, Color(1, 0, 0, 0.3))
+	# Punto donde queda el Hornero agarrado
+	draw_circle(Vector2(offset_boca.x * facing, offset_boca.y), 6.0, Color(1, 0, 0, 0.8))
 	draw_line(Vector2.ZERO, Vector2(radio_zarpazo * facing, 0), Color.YELLOW, 2.0)
+	# Altura máxima de salto
+	draw_line(Vector2(-40, -altura_salto_max), Vector2(40, -altura_salto_max), Color.GREEN, 2.0)
 
 
 func _debug(delta: float) -> void:

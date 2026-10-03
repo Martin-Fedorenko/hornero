@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://4jpbvg34m0h6"]
 
 [ext_resource type="Script" uid="uid://b3kjkx4ljaxnq" path="res://scripts/gatoMontez/GatoMontes.gd" id="1_7l07r"]
-[ext_resource type="SpriteFrames" uid="uid://74d6iqgaq0ox" path="res://assets/gato_montez/gato_montez.tres" id="2_4vtc2"]
+[ext_resource type="SpriteFrames" uid="uid://cr3sak31u67vf" path="res://assets/gato_montez/gato_montez.tres" id="2_4vtc2"]
 [ext_resource type="Script" uid="uid://cxbxwinpxxkqw" path="res://scripts/gatoMontez/gato_animator.gd" id="3_l3ilh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_l3ilh"]
@@ -13,7 +13,7 @@ debug_draw = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=169201341]
 sprite_frames = ExtResource("2_4vtc2")
-animation = &"gatoMontez_ataque"
+animation = &"gatoMontez_salto"
 offset = Vector2(0, -0.355)
 script = ExtResource("3_l3ilh")
 base_scale = 0.3
