@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://objetos_hornero/piedra.gd" id="1"]
+
+[sub_resource type="CircleShape2D" id="Shape"]
+radius = 10.0
+
+[node name="Piedra" type="RigidBody2D" groups=["levantables"]]
+collision_layer = 2
+collision_mask = 1
+mass = 0.15
+lock_rotation = true
+linear_damp = 2.0
+script = ExtResource("1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Shape")
+
+[node name="Dibujo" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-11, 3, -8, -6, 0, -10, 9, -5, 11, 5, 5, 10, -6, 9)
+color = Color(0.28, 0.31, 0.32, 1)
+
+[node name="Luz" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-8, -4, 0, -8, 7, -4, 2, 0, -5, 2)
+color = Color(0.52, 0.56, 0.55, 1)
