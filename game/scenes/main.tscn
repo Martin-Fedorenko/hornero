@@ -7,6 +7,127 @@
 [ext_resource type="Script" uid="uid://cmk8t0yvmtd8n" path="res://scripts/world/meadow_floor.gd" id="5_floor"]
 [ext_resource type="PackedScene" path="res://scenes/nest_tree.tscn" id="6_nest_tree"]
 [ext_resource type="PackedScene" path="res://scenes/nest.tscn" id="7_nest"]
+[ext_resource type="Script" uid="uid://b4ym64cj0gyu6" path="res://scripts/chimango/Chimango.gd" id="5_85g3d"]
+[ext_resource type="Texture2D" uid="uid://b0fq4svickc0l" path="res://assets/chimango/chimango_fly.png" id="5_tbgi4"]
+[ext_resource type="Texture2D" uid="uid://pqx4iomj67k6" path="res://assets/chimango/chimango_attack.png" id="6_choun"]
+[ext_resource type="Script" uid="uid://mutqphpmvp01" path="res://scripts/hornero/ground_motor.gd" id="6_o6xl0"]
+[ext_resource type="Script" uid="uid://dporub47gssp2" path="res://scenes/chimango_animator.gd" id="6_tipki"]
+[ext_resource type="Script" uid="uid://bm3x271kf07d4" path="res://scripts/hornero/flight_motor.gd" id="7_tipki"]
+[ext_resource type="PackedScene" path="res://objetos_hornero/piedra.tscn" id="8_piedra"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
+atlas = ExtResource("6_choun")
+region = Rect2(0, 0, 692, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jkv2x"]
+atlas = ExtResource("6_choun")
+region = Rect2(692, 0, 692, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jbj1t"]
+atlas = ExtResource("6_choun")
+region = Rect2(1384, 0, 692, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_muem4"]
+atlas = ExtResource("6_choun")
+region = Rect2(2076, 0, 692, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dp3eg"]
+atlas = ExtResource("6_choun")
+region = Rect2(2768, 0, 692, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ld40"]
+atlas = ExtResource("6_choun")
+region = Rect2(3460, 0, 692, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tefeu"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(0, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o6xl0"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(462, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tipki"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(924, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_85g3d"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(1386, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_choun"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(1848, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ya4ey"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(2310, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eb6dy"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(2772, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_trceg"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(3234, 0, 462, 724)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2siln"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a8y0u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jkv2x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jbj1t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_muem4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dp3eg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0ld40")
+}],
+"loop": 1,
+"name": &"ataque",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tefeu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o6xl0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tipki")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_85g3d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_choun")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ya4ey")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eb6dy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_trceg")
+}],
+"loop": 1,
+"name": &"vuelo",
+"speed": 12.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_a8y0u"]
+
 
 [node name="Laboratorio" type="Node2D" unique_id=1659740675]
 script = ExtResource("1_main")
@@ -69,3 +190,33 @@ offset_top = 72.0
 offset_right = 900.0
 offset_bottom = 98.0
 theme_override_colors/font_color = Color(0.2, 0.27, 0.25, 1)
+
+[node name="Piedra" parent="." unique_id=662864888 instance=ExtResource("8_piedra")]
+position = Vector2(650, 550)
+
+[node name="Chimango" type="CharacterBody2D" parent="." unique_id=1104130030]
+script = ExtResource("5_85g3d")
+empezar_ausente = true
+tiempo_ausente_min = 1000000.0
+
+[node name="ChimangoAnimator" type="AnimatedSprite2D" parent="Chimango" unique_id=1938302224]
+sprite_frames = SubResource("SpriteFrames_2siln")
+animation = &"ataque"
+script = ExtResource("6_tipki")
+
+[node name="ChimangoCollision" type="CollisionShape2D" parent="Chimango" unique_id=114115484]
+shape = SubResource("CircleShape2D_a8y0u")
+
+[node name="GroundMotor" type="Node" parent="Chimango" unique_id=484196229]
+script = ExtResource("6_o6xl0")
+metadata/_custom_type_script = "uid://mutqphpmvp01"
+
+[node name="FlightMotor" type="Node" parent="Chimango" unique_id=1882578548]
+script = ExtResource("7_tipki")
+stall_speed = 200.0
+air_drag = 0.2
+limit_pitch = true
+max_pitch_deg = 50.0
+flap_impulse = 400.0
+turn_speed_keep = 0.7
+metadata/_custom_type_script = "uid://bm3x271kf07d4"

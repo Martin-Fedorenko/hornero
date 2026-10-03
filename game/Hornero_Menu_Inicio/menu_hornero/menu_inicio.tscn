@@ -1,0 +1,145 @@
+[gd_scene format=3 uid="uid://dybocjvnvleh5"]
+
+[ext_resource type="Script" uid="uid://vhlr20r5l86g" path="res://Hornero_Menu_Inicio/menu_hornero/menu_inicio.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://cp3mumvp0a4rj" path="res://Hornero_Menu_Inicio/menu_hornero/fondo_menu.png" id="2"]
+
+[node name="MenuInicio" type="Control" unique_id=286932035]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Fondo" type="TextureRect" parent="." unique_id=1260736277]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Contenido" type="MarginContainer" parent="." unique_id=1870174885]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.065
+anchor_top = 0.08
+anchor_right = 0.4
+anchor_bottom = 0.88
+
+[node name="Columna" type="VBoxContainer" parent="Contenido" unique_id=1025835954]
+layout_mode = 2
+theme_override_constants/separation = 13
+alignment = 1
+
+[node name="Titulo" type="Label" parent="Contenido/Columna" unique_id=335614735]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.92, 0.77, 1)
+theme_override_font_sizes/font_size = 58
+text = "HORNERO"
+
+[node name="Subtitulo" type="Label" parent="Contenido/Columna" unique_id=1560874823]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.83, 0.84, 0.71, 1)
+theme_override_font_sizes/font_size = 20
+text = "Un nido por construir."
+
+[node name="Espacio" type="Control" parent="Contenido/Columna" unique_id=838648542]
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Start" type="Button" parent="Contenido/Columna" unique_id=1064526975]
+custom_minimum_size = Vector2(0, 57)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Start"
+
+[node name="ComoJugar" type="Button" parent="Contenido/Columna" unique_id=1568581439]
+custom_minimum_size = Vector2(0, 57)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Cómo jugar"
+
+[node name="Creditos" type="Button" parent="Contenido/Columna" unique_id=1776751290]
+custom_minimum_size = Vector2(0, 57)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Creditos"
+
+[node name="Salir" type="Button" parent="Contenido/Columna" unique_id=112202338]
+custom_minimum_size = Vector2(0, 57)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Salir"
+
+[node name="AyudaTeclado" type="Label" parent="." unique_id=210328141]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.065
+anchor_top = 0.94
+anchor_right = 0.5
+anchor_bottom = 0.98
+theme_override_colors/font_color = Color(0.85, 0.88, 0.78, 1)
+theme_override_font_sizes/font_size = 14
+text = "Flechas / Tab para elegir · Enter para aceptar"
+
+[node name="Ventana" type="Control" parent="." unique_id=1398975744]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sombra" type="ColorRect" parent="Ventana" unique_id=2084928728]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.06, 0.05, 0.78)
+
+[node name="Panel" type="PanelContainer" parent="Ventana" unique_id=1313139034]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.1
+anchor_right = 0.8
+anchor_bottom = 0.9
+
+[node name="Margen" type="MarginContainer" parent="Ventana/Panel" unique_id=1501712651]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="Columna" type="VBoxContainer" parent="Ventana/Panel/Margen" unique_id=441449100]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Titulo" type="Label" parent="Ventana/Panel/Margen/Columna" unique_id=254843171]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.92, 0.77, 1)
+theme_override_font_sizes/font_size = 34
+text = "Cómo jugar"
+
+[node name="Texto" type="RichTextLabel" parent="Ventana/Panel/Margen/Columna" unique_id=81010788]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.95, 0.92, 0.83, 1)
+theme_override_font_sizes/normal_font_size = 20
+
+[node name="Cerrar" type="Button" parent="Ventana/Panel/Margen/Columna" unique_id=688007889]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Volver"

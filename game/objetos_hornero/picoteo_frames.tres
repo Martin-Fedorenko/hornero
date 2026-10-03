@@ -1,0 +1,65 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://60hfu8tt2t5p"]
+
+[ext_resource type="Texture2D" uid="uid://ds51xhdeqwwex" path="res://objetos_hornero/picoteo_sheet.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="Peck_0"]
+atlas = ExtResource("1")
+region = Rect2(36, 182, 489, 275)
+margin = Rect2(41, 257, 151, 365)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Peck_1"]
+atlas = ExtResource("1")
+region = Rect2(529, 221, 476, 236)
+margin = Rect2(39, 296, 164, 404)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Peck_2"]
+atlas = ExtResource("1")
+region = Rect2(1055, 233, 441, 224)
+margin = Rect2(30, 308, 199, 416)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Peck_3"]
+atlas = ExtResource("1")
+region = Rect2(37, 721, 443, 217)
+margin = Rect2(39, 315, 197, 423)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Peck_4"]
+atlas = ExtResource("1")
+region = Rect2(536, 706, 464, 232)
+margin = Rect2(43, 300, 176, 408)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Peck_5"]
+atlas = ExtResource("1")
+region = Rect2(1043, 662, 477, 276)
+margin = Rect2(38, 256, 163, 364)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Peck_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Peck_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Peck_2")
+}, {
+"duration": 1.8,
+"texture": SubResource("Peck_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("Peck_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("Peck_5")
+}],
+"loop": 0,
+"name": &"picotear",
+"speed": 11.0
+}]

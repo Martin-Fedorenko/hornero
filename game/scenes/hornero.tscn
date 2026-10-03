@@ -1,35 +1,44 @@
 [gd_scene format=3 uid="uid://botl8vytdr4og"]
 
-[ext_resource type="Script" path="res://scripts/hornero/hornero.gd" id="1_body"]
+[ext_resource type="Script" uid="uid://7whxausb5yre" path="res://scripts/hornero/hornero.gd" id="1_body"]
 [ext_resource type="SpriteFrames" uid="uid://c73o47gtyvccl" path="res://assets/hornero/hornero_frames.tres" id="2_frames"]
-[ext_resource type="Script" path="res://scripts/hornero/hornero_animator.gd" id="3_anim"]
-[ext_resource type="Script" path="res://scripts/hornero/flight_debug.gd" id="4_debug"]
-[ext_resource type="Script" path="res://scripts/hornero/flight_motor.gd" id="5_flight"]
-[ext_resource type="Script" path="res://scripts/hornero/ground_motor.gd" id="6_ground"]
+[ext_resource type="Script" uid="uid://dwnwunxtqibuc" path="res://scripts/hornero/hornero_animator.gd" id="3_anim"]
+[ext_resource type="Script" uid="uid://tujd5uw8e83d" path="res://scripts/hornero/flight_debug.gd" id="4_debug"]
+[ext_resource type="Script" uid="uid://bm3x271kf07d4" path="res://scripts/hornero/flight_motor.gd" id="5_flight"]
+[ext_resource type="Script" uid="uid://mutqphpmvp01" path="res://scripts/hornero/ground_motor.gd" id="6_ground"]
+[ext_resource type="PackedScene" path="res://objetos_hornero/interaccion.tscn" id="7_5fmsy"]
 
 [sub_resource type="CircleShape2D" id="BodyShape"]
 radius = 16.0
 
-[node name="Hornero" type="CharacterBody2D"]
+[node name="Hornero" type="CharacterBody2D" unique_id=1382592324]
 floor_snap_length = 8.0
 script = ExtResource("1_body")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=16026184]
 shape = SubResource("BodyShape")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1711639943]
 scale = Vector2(0.2, 0.2)
 sprite_frames = ExtResource("2_frames")
 animation = &"planeo"
 offset = Vector2(-12, -12)
 script = ExtResource("3_anim")
 
-[node name="FlightDebug" type="Node2D" parent="."]
+[node name="Pico" type="Marker2D" parent="AnimatedSprite2D" unique_id=421535289]
+position = Vector2(175, 8)
+
+[node name="PicoCaminar" type="Marker2D" parent="AnimatedSprite2D" unique_id=1137143360]
+position = Vector2(215, 8)
+
+[node name="Interaccion" parent="." unique_id=1721652910 instance=ExtResource("7_5fmsy")]
+
+[node name="FlightDebug" type="Node2D" parent="." unique_id=492247518]
 z_index = 1
 script = ExtResource("4_debug")
 
-[node name="FlightMotor" type="Node" parent="."]
+[node name="FlightMotor" type="Node" parent="." unique_id=2102639065]
 script = ExtResource("5_flight")
 
-[node name="GroundMotor" type="Node" parent="."]
+[node name="GroundMotor" type="Node" parent="." unique_id=1633563894]
 script = ExtResource("6_ground")

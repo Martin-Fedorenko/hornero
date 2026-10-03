@@ -1,0 +1,67 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://v2gndd13bxh"]
+
+[ext_resource type="Texture2D" uid="uid://b0fq4svickc0l" path="res://assets/chimango/chimango_fly.png" id="1_b71hy"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8xkpn"]
+atlas = ExtResource("1_b71hy")
+region = Rect2(0, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_engj2"]
+atlas = ExtResource("1_b71hy")
+region = Rect2(462, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eihip"]
+atlas = ExtResource("1_b71hy")
+region = Rect2(924, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aprga"]
+atlas = ExtResource("1_b71hy")
+region = Rect2(1386, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qtgiw"]
+atlas = ExtResource("1_b71hy")
+region = Rect2(1848, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_obhcm"]
+atlas = ExtResource("1_b71hy")
+region = Rect2(2310, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h1xpa"]
+atlas = ExtResource("1_b71hy")
+region = Rect2(2772, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n07sv"]
+atlas = ExtResource("1_b71hy")
+region = Rect2(3234, 0, 462, 724)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8xkpn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_engj2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eihip")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aprga")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qtgiw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_obhcm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h1xpa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n07sv")
+}],
+"loop": 1,
+"name": &"vuelo",
+"speed": 12.0
+}]

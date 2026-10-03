@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Hornero · Laboratorio de vuelo"
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://Hornero_Menu_Inicio/menu_hornero/menu_inicio.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [display]
