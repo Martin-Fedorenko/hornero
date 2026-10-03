@@ -1,7 +1,51 @@
 [gd_scene format=3 uid="uid://dybocjvnvleh5"]
 
 [ext_resource type="Script" uid="uid://vhlr20r5l86g" path="res://Hornero_Menu_Inicio/menu_hornero/menu_inicio.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://cp3mumvp0a4rj" path="res://Hornero_Menu_Inicio/menu_hornero/fondo_menu.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://bclgfwx867p2a" path="res://Hornero_Menu_Inicio/menu_hornero/Nido al atardecer entre ramas-2.png" id="2_d0jyu"]
+[ext_resource type="Texture2D" uid="uid://xcsv3k75jwp0" path="res://Menu_hornero_frames/hornero_viento_00_reposo.png" id="3_wbovl"]
+[ext_resource type="Texture2D" uid="uid://bt3qmihbuwf5x" path="res://Menu_hornero_frames/Sprite de ave parpadeando-4.png" id="4_v14sn"]
+[ext_resource type="Texture2D" uid="uid://bmcb0r2lp3yvj" path="res://Menu_hornero_frames/hornero_viento_01_brisa_inicia.png" id="4_yyglp"]
+[ext_resource type="Texture2D" uid="uid://8eb0i3jb0267" path="res://Menu_hornero_frames/hornero_viento_02_brisa_sube.png" id="5_v14sn"]
+[ext_resource type="Texture2D" uid="uid://cw12i0q2d5bxk" path="res://Menu_hornero_frames/hornero_viento_03_rafaga_maxima.png" id="6_fdjcp"]
+[ext_resource type="Texture2D" uid="uid://casvagfect7a3" path="res://Menu_hornero_frames/hornero_viento_04_brisa_baja.png" id="7_obomc"]
+[ext_resource type="Texture2D" uid="uid://b0hxn54mvrmlr" path="res://Menu_hornero_frames/hornero_viento_05_casi_reposo.png" id="8_s1htw"]
+[ext_resource type="Texture2D" uid="uid://dlgxku8fw4umo" path="res://Hornero_Menu_Inicio/menu_hornero/Logotipo rústico HORNERO con ramita dorada-5.png" id="9_yyglp"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_73d2e"]
+animations = [{
+"frames": [],
+"loop": 1,
+"name": &"new_animation",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_wbovl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_v14sn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_yyglp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_v14sn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_fdjcp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_obomc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_s1htw")
+}],
+"loop": 1,
+"name": &"viento",
+"speed": 5.0
+}]
+
+[sub_resource type="ImageTexture" id="ImageTexture_73d2e"]
 
 [node name="MenuInicio" type="Control" unique_id=286932035]
 layout_mode = 3
@@ -20,7 +64,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2")
+texture = ExtResource("2_d0jyu")
 expand_mode = 1
 stretch_mode = 6
 
@@ -36,12 +80,6 @@ anchor_bottom = 0.88
 layout_mode = 2
 theme_override_constants/separation = 13
 alignment = 1
-
-[node name="Titulo" type="Label" parent="Contenido/Columna" unique_id=335614735]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.98, 0.92, 0.77, 1)
-theme_override_font_sizes/font_size = 58
-text = "HORNERO"
 
 [node name="Subtitulo" type="Label" parent="Contenido/Columna" unique_id=1560874823]
 layout_mode = 2
@@ -143,3 +181,17 @@ custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "Volver"
+
+[node name="HorneroMenu" type="AnimatedSprite2D" parent="." unique_id=1528493170]
+position = Vector2(881, 221)
+scale = Vector2(0.3, 0.3)
+sprite_frames = SubResource("SpriteFrames_73d2e")
+animation = &"viento"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=355568695]
+texture = SubResource("ImageTexture_73d2e")
+
+[node name="LogotipoRústicoHorneroConRamitaDorada5" type="Sprite2D" parent="." unique_id=329699677]
+position = Vector2(267, 98)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("9_yyglp")

@@ -2,7 +2,7 @@ extends Node
 ## Hijo directo de Hornero. Sustituye COMPLETAMENTE la versión con Tween.
 @export var alcance: float = 80.0
 @export var debug_logs: bool = true
-@export var mostrar_puntos: bool = true
+@export var mostrar_puntos: bool = false
 @export var usar_pico_automatico: bool = true
 @export var intervalo_logs: float = 0.75
 @export var escala_picoteo: float = 0.19
