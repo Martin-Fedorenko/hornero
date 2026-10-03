@@ -193,6 +193,8 @@ func _agarrar() -> void:
 	target.set_physics_process(false)
 	if target is CharacterBody2D:
 		(target as CharacterBody2D).velocity = Vector2.ZERO
+	if target is Hornero:
+		(target as Hornero).knock_down()
 	agarro_jugador.emit()
 
 func _cargar(delta: float) -> Vector2:
@@ -210,7 +212,9 @@ func _cargar(delta: float) -> Vector2:
 
 func _escapar() -> void:
 	target.set_physics_process(true)
-	if target is CharacterBody2D:
+	if target is Hornero:
+		(target as Hornero).escape_capture(Vector2(-facing * 150.0, -300.0))
+	elif target is CharacterBody2D:
 		# Sale impulsado hacia atrás y arriba, con control
 		(target as CharacterBody2D).velocity = Vector2(-facing * 150.0, -300.0)
 	jugador_escapo.emit()

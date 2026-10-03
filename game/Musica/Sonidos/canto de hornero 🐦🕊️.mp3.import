@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://donnc0cfwqgxe"
+path="res://.godot/imported/canto de hornero 🐦🕊️.mp3-dd56ac89b6c746ae4c5d3cd18e1a9181.mp3str"
+
+[deps]
+
+source_file="res://Musica/Sonidos/canto de hornero 🐦🕊️.mp3"
+dest_files=["res://.godot/imported/canto de hornero 🐦🕊️.mp3-dd56ac89b6c746ae4c5d3cd18e1a9181.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

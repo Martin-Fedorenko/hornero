@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://mutqphpmvp01" path="res://scripts/hornero/ground_motor.gd" id="6_ground"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/interaccion.tscn" id="7_5fmsy"]
 [ext_resource type="Script" path="res://scripts/hornero/hornero_vitals.gd" id="8_vitals"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/Sound of beating wings - Efecto de sonido (HD).mp3" id="9_flap"]
 
 [sub_resource type="CircleShape2D" id="BodyShape"]
 radius = 16.0
@@ -46,3 +47,11 @@ script = ExtResource("6_ground")
 
 [node name="Vitals" type="Node" parent="."]
 script = ExtResource("8_vitals")
+
+[node name="AleteoAudio" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("9_flap")
+volume_db = -4.0
+max_distance = 1600.0
+
+[node name="AleteoAudioTimer" type="Timer" parent="."]
+one_shot = true

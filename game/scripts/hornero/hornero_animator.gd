@@ -81,6 +81,8 @@ func _pick_animation() -> StringName:
 			return fall_animation
 		Hornero.State.RECOVERING:
 			return recover_animation
+		Hornero.State.NESTED:
+			return idle_animation
 	if _body.wants_to_walk or absf(_body.velocity.x) > walk_threshold:
 		return walk_animation
 	return idle_animation

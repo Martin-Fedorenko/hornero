@@ -45,7 +45,7 @@ animations = [{
 "duration": 5.0,
 "texture": SubResource("Nest4")
 }],
-"loop": true,
+"loop": false,
 "name": &"crecer",
 "speed": 1.0
 }]
@@ -57,7 +57,7 @@ size = Vector2(280, 140)
 scale = Vector2(0.28, 0.28)
 sprite_frames = SubResource("NestFrames")
 animation = &"crecer"
-autoplay = "crecer"
+frame = 0
 centered = false
 offset = Vector2(-175, -288)
 script = ExtResource("2_script")

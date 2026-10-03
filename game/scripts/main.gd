@@ -14,11 +14,14 @@ const INVENTORY_ICONS := {
 @export var world_rect := Rect2(0, -400, 6000, 2200)
 ## Escena a la que vuelve al apretar Esc.
 @export_file("*.tscn") var menu_scene := "res://Hornero_Menu_Inicio/menu_hornero/menu_inicio.tscn"
+@export var nest_interaction_distance := 140.0
+@export var nest_perch_offset := Vector2(0, -18)
+@export var nest_exit_distance := 180.0
 
 @onready var _hornero: Hornero = $Hornero
 @onready var _camera: Camera2D = $Hornero/Camera2D
 @onready var _status: Label = $HUD/Status
-@onready var _nest: Node = $World/NestTree/Nest
+@onready var _nest: AnimatedSprite2D = $World/NestTree/Nest
 @onready var _vitals_hud: Control = $HUD/Vitales
 @onready var _death_screen: Control = $HUD/Muerte
 
@@ -47,6 +50,26 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"ui_cancel"):
 		get_viewport().set_input_as_handled()
 		get_tree().change_scene_to_file(menu_scene)
+		return
+	if event is InputEventKey and event.pressed and not event.echo \
+		and event.physical_keycode == KEY_G:
+		_toggle_nest_pose()
+		get_viewport().set_input_as_handled()
+
+
+func _toggle_nest_pose() -> void:
+	if _hornero.state == Hornero.State.NESTED:
+		var exit_position := _nest.global_position + Vector2(
+			nest_exit_distance * _hornero.facing, 0.0)
+		_hornero.exit_nest(exit_position)
+		return
+	if _hornero.state == Hornero.State.FALLING \
+		or _hornero.state == Hornero.State.RECOVERING \
+		or _hornero.state == Hornero.State.DEAD:
+		return
+	if _hornero.global_position.distance_to(_nest.global_position) > nest_interaction_distance:
+		return
+	_hornero.enter_nest(_nest.global_position + nest_perch_offset)
 
 
 func _process(_delta: float) -> void:
