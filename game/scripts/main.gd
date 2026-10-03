@@ -12,11 +12,15 @@ const INVENTORY_ICONS := {
 
 ## Área jugable. La cámara no muestra nada fuera de este rectángulo.
 @export var world_rect := Rect2(0, -400, 6000, 2200)
+## Escena a la que vuelve al apretar Esc.
+@export_file("*.tscn") var menu_scene := "res://Hornero_Menu_Inicio/menu_hornero/menu_inicio.tscn"
 
 @onready var _hornero: Hornero = $Hornero
 @onready var _camera: Camera2D = $Hornero/Camera2D
 @onready var _status: Label = $HUD/Status
 @onready var _nest: Node = $World/NestTree/Nest
+@onready var _vitals_hud: Control = $HUD/Vitales
+@onready var _death_screen: Control = $HUD/Muerte
 
 var _inventory_counts := {
 	&"paja": 0,
@@ -35,6 +39,14 @@ func _ready() -> void:
 	_camera.reset_smoothing()
 	_nest.connect(&"material_delivered", _on_material_delivered)
 	_create_inventory_hud()
+	_vitals_hud.track(_hornero.vitals)
+	_hornero.died.connect(_death_screen.show_after_delay)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed(&"ui_cancel"):
+		get_viewport().set_input_as_handled()
+		get_tree().change_scene_to_file(menu_scene)
 
 
 func _process(_delta: float) -> void:
