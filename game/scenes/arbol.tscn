@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/world/arbol.gd" id="1_arbol"]
+
+[node name="Arbol" type="Node2D"]
+script = ExtResource("1_arbol")

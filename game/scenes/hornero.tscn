@@ -9,9 +9,13 @@
 [ext_resource type="PackedScene" path="res://objetos_hornero/interaccion.tscn" id="7_5fmsy"]
 [ext_resource type="Script" path="res://scripts/hornero/hornero_vitals.gd" id="8_vitals"]
 [ext_resource type="AudioStream" path="res://Musica/Sonidos/Sound of beating wings - Efecto de sonido (HD).mp3" id="9_flap"]
+[ext_resource type="Script" path="res://scripts/hornero/hornero_comer.gd" id="10_comer"]
 
 [sub_resource type="CircleShape2D" id="BodyShape"]
 radius = 16.0
+
+[sub_resource type="CircleShape2D" id="BeakShape"]
+radius = 36.0
 
 [node name="Hornero" type="CharacterBody2D" unique_id=1382592324]
 floor_snap_length = 8.0
@@ -55,3 +59,13 @@ max_distance = 1600.0
 
 [node name="AleteoAudioTimer" type="Timer" parent="."]
 one_shot = true
+
+[node name="Comer" type="Area2D" parent="."]
+position = Vector2(30, 0)
+collision_layer = 0
+collision_mask = 8
+monitorable = false
+script = ExtResource("10_comer")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Comer"]
+shape = SubResource("BeakShape")

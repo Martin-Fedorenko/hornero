@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" path="res://objetos_hornero/ramitas.tscn" id="10_ramitas"]
 [ext_resource type="Script" path="res://scripts/ui/vitals_hud.gd" id="11_vitals_hud"]
 [ext_resource type="Script" path="res://scripts/ui/death_screen.gd" id="12_death_screen"]
+[ext_resource type="PackedScene" path="res://scenes/arbol.tscn" id="13_arbol"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
 atlas = ExtResource("6_choun")
@@ -138,6 +139,28 @@ script = ExtResource("1_main")
 [node name="PampasBackground" parent="." unique_id=1285302345 instance=ExtResource("4_background")]
 
 [node name="World" type="Node2D" parent="." unique_id=1661870613]
+
+[node name="Arboles" type="Node2D" parent="World"]
+
+[node name="Arbol1" parent="World/Arboles" instance=ExtResource("13_arbol")]
+position = Vector2(1050, 1648)
+
+[node name="Arbol2" parent="World/Arboles" instance=ExtResource("13_arbol")]
+position = Vector2(1900, 1648)
+tipo = 1
+flip = true
+
+[node name="Arbol3" parent="World/Arboles" instance=ExtResource("13_arbol")]
+position = Vector2(3950, 1648)
+tipo = 2
+
+[node name="Arbol4" parent="World/Arboles" instance=ExtResource("13_arbol")]
+position = Vector2(5000, 1648)
+tipo = 3
+
+[node name="Arbol5" parent="World/Arboles" instance=ExtResource("13_arbol")]
+position = Vector2(5420, 1648)
+flip = true
 
 [node name="NestTree" parent="World" unique_id=748560120 instance=ExtResource("6_nest_tree")]
 position = Vector2(3000, 1648)

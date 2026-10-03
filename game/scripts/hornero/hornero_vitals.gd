@@ -58,6 +58,20 @@ func take_damage(amount: float) -> void:
 		died.emit()
 
 
+## Recupera vida (comer bichos). Muerto ya no se cura.
+func heal(amount: float) -> void:
+	if health <= 0.0 or amount <= 0.0 or health >= max_health:
+		return
+	health = minf(health + amount, max_health)
+	health_changed.emit(health, max_health)
+
+
+## Recupera stamina de golpe (comer bichos).
+func restore_stamina(amount: float) -> void:
+	if health > 0.0 and amount > 0.0 and stamina < max_stamina:
+		_set_stamina(stamina + amount)
+
+
 func _set_stamina(value: float) -> void:
 	stamina = clampf(value, 0.0, max_stamina)
 	stamina_changed.emit(stamina, max_stamina)

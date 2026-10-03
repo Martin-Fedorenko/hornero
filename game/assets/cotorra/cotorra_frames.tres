@@ -1,0 +1,67 @@
+[gd_resource type="SpriteFrames" load_steps=10 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/cotorra/cotorra_ataque.png" id="1_atk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk0"]
+atlas = ExtResource("1_atk")
+region = Rect2(0, 0, 296, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk1"]
+atlas = ExtResource("1_atk")
+region = Rect2(296, 0, 296, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk2"]
+atlas = ExtResource("1_atk")
+region = Rect2(592, 0, 296, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk3"]
+atlas = ExtResource("1_atk")
+region = Rect2(888, 0, 296, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk4"]
+atlas = ExtResource("1_atk")
+region = Rect2(1184, 0, 296, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk5"]
+atlas = ExtResource("1_atk")
+region = Rect2(1480, 0, 296, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk6"]
+atlas = ExtResource("1_atk")
+region = Rect2(1776, 0, 296, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atk7"]
+atlas = ExtResource("1_atk")
+region = Rect2(2072, 0, 296, 360)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atk7")
+}],
+"loop": true,
+"name": &"ataque",
+"speed": 10.0
+}]
