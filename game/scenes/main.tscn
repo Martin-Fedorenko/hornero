@@ -6,9 +6,34 @@
 [ext_resource type="PackedScene" path="res://scenes/pampas_background.tscn" id="4_background"]
 [ext_resource type="Script" uid="uid://b4ym64cj0gyu6" path="res://scripts/chimango/Chimango.gd" id="5_85g3d"]
 [ext_resource type="Texture2D" uid="uid://b0fq4svickc0l" path="res://assets/chimango/chimango_fly.png" id="5_tbgi4"]
+[ext_resource type="Texture2D" uid="uid://pqx4iomj67k6" path="res://assets/chimango/chimango_attack.png" id="6_choun"]
 [ext_resource type="Script" uid="uid://mutqphpmvp01" path="res://scripts/hornero/ground_motor.gd" id="6_o6xl0"]
 [ext_resource type="Script" uid="uid://dporub47gssp2" path="res://scenes/chimango_animator.gd" id="6_tipki"]
 [ext_resource type="Script" uid="uid://bm3x271kf07d4" path="res://scripts/hornero/flight_motor.gd" id="7_tipki"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
+atlas = ExtResource("6_choun")
+region = Rect2(0, 0, 692, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jkv2x"]
+atlas = ExtResource("6_choun")
+region = Rect2(692, 0, 692, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jbj1t"]
+atlas = ExtResource("6_choun")
+region = Rect2(1384, 0, 692, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_muem4"]
+atlas = ExtResource("6_choun")
+region = Rect2(2076, 0, 692, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dp3eg"]
+atlas = ExtResource("6_choun")
+region = Rect2(2768, 0, 692, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ld40"]
+atlas = ExtResource("6_choun")
+region = Rect2(3460, 0, 692, 724)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tefeu"]
 atlas = ExtResource("5_tbgi4")
@@ -44,6 +69,29 @@ region = Rect2(3234, 0, 462, 724)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_2siln"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a8y0u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jkv2x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jbj1t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_muem4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dp3eg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0ld40")
+}],
+"loop": 1,
+"name": &"ataque",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_tefeu")
@@ -167,7 +215,7 @@ script = ExtResource("5_85g3d")
 
 [node name="ChimangoAnimator" type="AnimatedSprite2D" parent="Chimango" unique_id=1938302224]
 sprite_frames = SubResource("SpriteFrames_2siln")
-animation = &"vuelo"
+animation = &"ataque"
 script = ExtResource("6_tipki")
 
 [node name="ChimangoCollision" type="CollisionShape2D" parent="Chimango" unique_id=114115484]
