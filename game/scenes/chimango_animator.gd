@@ -44,5 +44,5 @@ func _existe(anim: StringName) -> bool:
 	if not _avisadas.has(anim):
 		_avisadas[anim] = true
 		push_error("ChimangoAnimator: no existe '%s'. Disponibles: %s"
-			% [anim, sprite_frames.get_animation_names() if sprite_frames else "ninguna"])
+			% [anim, str(sprite_frames.get_animation_names()) if sprite_frames else "ninguna"])
 	return false
