@@ -66,6 +66,12 @@ func heal(amount: float) -> void:
 	health_changed.emit(health, max_health)
 
 
+## Recupera stamina de golpe (comer bichos).
+func restore_stamina(amount: float) -> void:
+	if health > 0.0 and amount > 0.0 and stamina < max_stamina:
+		_set_stamina(stamina + amount)
+
+
 func _set_stamina(value: float) -> void:
 	stamina = clampf(value, 0.0, max_stamina)
 	stamina_changed.emit(stamina, max_stamina)

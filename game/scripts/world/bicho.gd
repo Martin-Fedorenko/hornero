@@ -1,7 +1,7 @@
 class_name Bicho
 extends Area2D
-## Bichito posado en las hojas de un árbol. El hornero lo come en el aire
-## apretando E (ver HorneroComer) y recupera vida.
+## Bichito posado en las hojas de un árbol. El hornero lo come al pasarle
+## por encima volando (ver HorneroComer) y recupera vida y stamina.
 ##
 ## La hoja `insectos_asset.png` tiene un tipo de bicho por fila y 6 cuadros
 ## de idle por fila. Los SpriteFrames se arman una sola vez y se comparten.
@@ -26,6 +26,8 @@ static var _frames: SpriteFrames
 @export var tipo := Tipo.ORUGA
 ## Vida que recupera el hornero al comerlo.
 @export var heal_amount := 10.0
+## Stamina que recupera el hornero al comerlo.
+@export var stamina_amount := 15.0
 ## Tamaño en pantalla respecto de la hoja original.
 @export var sprite_scale := 0.2
 @export var idle_fps := 7.0
