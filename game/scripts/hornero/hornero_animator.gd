@@ -1,5 +1,6 @@
 class_name HorneroAnimator
 extends AnimatedSprite2D
+@export var interaccion_picoteo: Node
 ## Traduce el estado del hornero a animaciones. Sólo lee; nunca toca la física.
 ## Única excepción: avisa al cuerpo cuando termina la animación de recuperarse.
 
@@ -44,6 +45,9 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	if is_instance_valid(interaccion_picoteo):
+		if interaccion_picoteo.get("ocupado") == true:
+			return
 	var animation_name := _pick_animation()
 	_apply_pose(animation_name)
 	if animation != animation_name:
