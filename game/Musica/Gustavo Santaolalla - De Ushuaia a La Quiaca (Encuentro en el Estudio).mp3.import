@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bos2qhat74jxb"
+path="res://.godot/imported/Gustavo Santaolalla - De Ushuaia a La Quiaca (Encuentro en el Estudio).mp3-bce2529fe4ec60600ca7c3ee3dc80e86.mp3str"
+
+[deps]
+
+source_file="res://Musica/Gustavo Santaolalla - De Ushuaia a La Quiaca (Encuentro en el Estudio).mp3"
+dest_files=["res://.godot/imported/Gustavo Santaolalla - De Ushuaia a La Quiaca (Encuentro en el Estudio).mp3-bce2529fe4ec60600ca7c3ee3dc80e86.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

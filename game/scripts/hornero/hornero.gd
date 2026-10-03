@@ -13,10 +13,11 @@ signal rolled_upright
 ## Cayó al piso sin vida. Ya no se levanta.
 signal died
 
-enum State { FLYING, GLIDING, GROUND, FALLING, RECOVERING, DEAD }
+enum State { FLYING, GLIDING, GROUND, FALLING, RECOVERING, DEAD, NESTED }
 
 ## Tiempo que el hornero se considera aleteando (FLYING) tras cada aleteo.
 @export var flap_state_duration := 0.45
+@export_range(0.05, 5.0, 0.05) var flap_sound_duration := 1.0
 ## Cuánto puede pasarse de la vertical antes de rodar para no quedar panza
 ## arriba (grados). Evita que ruede de ida y vuelta justo en la vertical.
 @export_range(0.0, 45.0) var upright_roll_margin_deg := 15.0
@@ -50,14 +51,37 @@ var _pitch_inverted := false
 @onready var _ground: GroundMotor = $GroundMotor
 @onready var _debug: CanvasItem = $FlightDebug
 @onready var vitals: HorneroVitals = $Vitals
+@onready var _flap_audio: AudioStreamPlayer2D = $AleteoAudio
+@onready var _flap_audio_timer: Timer = $AleteoAudioTimer
 
 
 func _ready() -> void:
 	_debug.visible = debug_draw_flight_direction
+	flapped.connect(_play_flap_sound)
+	_flap_audio_timer.timeout.connect(_stop_flap_sound)
 	_apply_orientation()
 
 
+func _play_flap_sound() -> void:
+	if _flap_audio.stream == null:
+		return
+	var audio_length := _flap_audio.stream.get_length()
+	var playback_duration := flap_sound_duration
+	if audio_length > 0.0:
+		playback_duration = minf(playback_duration, audio_length)
+	_flap_audio.stop()
+	_flap_audio.play()
+	_flap_audio_timer.start(playback_duration)
+
+
+func _stop_flap_sound() -> void:
+	_flap_audio.stop()
+
+
 func _physics_process(delta: float) -> void:
+	if state == State.NESTED:
+		velocity = Vector2.ZERO
+		return
 	if state == State.DEAD:
 		velocity = _ground.integrate(velocity, 0.0, delta)
 		move_and_slide()
@@ -80,7 +104,8 @@ func _physics_process(delta: float) -> void:
 
 
 func is_airborne() -> bool:
-	return state != State.GROUND and state != State.RECOVERING and state != State.DEAD
+	return state != State.GROUND and state != State.RECOVERING \
+		and state != State.DEAD and state != State.NESTED
 
 
 func is_dead() -> bool:
@@ -94,6 +119,37 @@ func knock_down() -> void:
 	pitch = 0.0
 	_apply_orientation()
 	_set_state(State.FALLING)
+
+
+## Recupera el control cuando el hornero escapa del agarre del chimango.
+func escape_capture(escape_velocity: Vector2) -> void:
+	if state == State.DEAD:
+		return
+	pitch = 0.0
+	velocity = escape_velocity
+	_apply_orientation()
+	_set_state(State.GLIDING)
+
+
+func enter_nest(nest_position: Vector2) -> void:
+	if state == State.FALLING or state == State.RECOVERING or state == State.DEAD:
+		return
+	global_position = nest_position
+	velocity = Vector2.ZERO
+	pitch = 0.0
+	wants_to_walk = false
+	_apply_orientation()
+	_set_state(State.NESTED)
+
+
+func exit_nest(exit_position: Vector2) -> void:
+	if state != State.NESTED:
+		return
+	global_position = exit_position
+	velocity = Vector2.ZERO
+	pitch = 0.0
+	_apply_orientation()
+	_set_state(State.GLIDING)
 
 
 ## Lo agarró un depredador y lo soltó: recibe daño y cae aturdido.

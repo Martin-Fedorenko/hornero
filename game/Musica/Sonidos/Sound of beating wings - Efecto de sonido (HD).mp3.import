@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://51rshykyx2ee"
+path="res://.godot/imported/Sound of beating wings - Efecto de sonido (HD).mp3-a185872741d4ce08b3b341feff71e6e4.mp3str"
+
+[deps]
+
+source_file="res://Musica/Sonidos/Sound of beating wings - Efecto de sonido (HD).mp3"
+dest_files=["res://.godot/imported/Sound of beating wings - Efecto de sonido (HD).mp3-a185872741d4ce08b3b341feff71e6e4.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

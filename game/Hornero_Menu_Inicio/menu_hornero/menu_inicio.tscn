@@ -10,6 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://casvagfect7a3" path="res://Menu_hornero_frames/hornero_viento_04_brisa_baja.png" id="7_obomc"]
 [ext_resource type="Texture2D" uid="uid://b0hxn54mvrmlr" path="res://Menu_hornero_frames/hornero_viento_05_casi_reposo.png" id="8_s1htw"]
 [ext_resource type="Texture2D" uid="uid://dlgxku8fw4umo" path="res://Hornero_Menu_Inicio/menu_hornero/Logotipo rústico HORNERO con ramita dorada-5.png" id="9_yyglp"]
+[ext_resource type="AudioStream" uid="uid://bos2qhat74jxb" path="res://Musica/Gustavo Santaolalla - De Ushuaia a La Quiaca (Encuentro en el Estudio).mp3" id="10_musica"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/canto de hornero 🐦🕊️.mp3" id="11_canto"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_73d2e"]
 animations = [{
@@ -68,6 +70,17 @@ texture = ExtResource("2_d0jyu")
 expand_mode = 1
 stretch_mode = 6
 
+[node name="MusicaMenu" type="AudioStreamPlayer" parent="." unique_id=539469288]
+stream = ExtResource("10_musica")
+volume_db = 0.951
+
+[node name="CantoHornero" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_canto")
+volume_db = -24.0
+
+[node name="TemporizadorCantoHornero" type="Timer" parent="."]
+one_shot = true
+
 [node name="Contenido" type="MarginContainer" parent="." unique_id=1870174885]
 layout_mode = 1
 anchors_preset = -1
@@ -105,6 +118,17 @@ mouse_default_cursor_shape = 2
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
+
+[node name="LogotipoRústicoHorneroConRamitaDorada5" type="Sprite2D" parent="." unique_id=329699677]
+position = Vector2(270, 80)
+scale = Vector2(0.13, 0.13)
+texture = ExtResource("9_yyglp")
+
+[node name="HorneroMenu" type="AnimatedSprite2D" parent="." unique_id=1528493170]
+position = Vector2(948, 225.99998)
+scale = Vector2(0.3, 0.3)
+sprite_frames = SubResource("SpriteFrames_73d2e")
+animation = &"viento"
 
 [node name="Ventana" type="Control" parent="." unique_id=1398975744]
 visible = false
@@ -161,16 +185,5 @@ layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "Volver"
 
-[node name="HorneroMenu" type="AnimatedSprite2D" parent="." unique_id=1528493170]
-position = Vector2(948, 226)
-scale = Vector2(0.3, 0.3)
-sprite_frames = SubResource("SpriteFrames_73d2e")
-animation = &"viento"
-
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=355568695]
 texture = SubResource("ImageTexture_73d2e")
-
-[node name="LogotipoRústicoHorneroConRamitaDorada5" type="Sprite2D" parent="." unique_id=329699677]
-position = Vector2(270, 80)
-scale = Vector2(0.13, 0.13)
-texture = ExtResource("9_yyglp")

@@ -11,12 +11,17 @@ const BOTON_AYUDA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/B
 const BOTON_HISTORIA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón Historia estilo fileteado porteño-3.png")
 const BOTON_CREDITOS: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Créditos en madera con fileteado porteño-1.png")
 const BOTON_SALIR: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón SALIR con fileteado porteño-5.png")
+@export_range(10.0, 30.0, 1.0) var intervalo_canto_minimo := 10.0
+@export_range(10.0, 30.0, 1.0) var intervalo_canto_maximo := 30.0
 
 @onready var start: Button = $Contenido/Columna/Start
 @onready var ayuda: Button = $Contenido/Columna/ComoJugar
 @onready var historia: Button = $Contenido/Columna/Historia
 @onready var boton_creditos: Button = $Contenido/Columna/Creditos
 @onready var salir: Button = $Contenido/Columna/Salir
+@onready var musica_menu: AudioStreamPlayer = $MusicaMenu
+@onready var _canto_hornero: AudioStreamPlayer = $CantoHornero
+@onready var _temporizador_canto: Timer = $TemporizadorCantoHornero
 @onready var ventana: Control = $Ventana
 @onready var titulo_ventana: Label = $Ventana/Panel/Margen/Columna/Titulo
 @onready var texto_ventana: RichTextLabel = $Ventana/Panel/Margen/Columna/Texto
@@ -30,6 +35,7 @@ func _ready() -> void:
 	boton_creditos.pressed.connect(func(): _mostrar("Créditos", creditos))
 	salir.pressed.connect(_salir)
 	cerrar.pressed.connect(_cerrar)
+	musica_menu.finished.connect(_reiniciar_musica)
 	_estilizar_boton_con_imagen(start, BOTON_JUGAR)
 	_estilizar_boton_con_imagen(ayuda, BOTON_AYUDA)
 	_estilizar_boton_con_imagen(historia, BOTON_HISTORIA)
@@ -40,6 +46,24 @@ func _ready() -> void:
 	ventana.hide()
 	start.grab_focus()
 	$HorneroMenu.play(&"viento")
+	musica_menu.play()
+	_iniciar_canto_ambiental()
+
+func _reiniciar_musica() -> void:
+	musica_menu.play()
+
+func _iniciar_canto_ambiental() -> void:
+	_temporizador_canto.timeout.connect(_reproducir_canto)
+	_programar_siguiente_canto()
+
+func _programar_siguiente_canto() -> void:
+	var minimo := minf(intervalo_canto_minimo, intervalo_canto_maximo)
+	var maximo := maxf(intervalo_canto_minimo, intervalo_canto_maximo)
+	_temporizador_canto.start(randf_range(minimo, maximo))
+
+func _reproducir_canto() -> void:
+	_canto_hornero.play()
+	_programar_siguiente_canto()
 
 func _iniciar() -> void:
 	start.disabled = true

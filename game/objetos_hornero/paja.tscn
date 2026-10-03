@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://objetos_hornero/piedra.gd" id="1_pickup"]
 [ext_resource type="Texture2D" path="res://objetos_hornero/paja.svg" id="2_texture"]
+[ext_resource type="Script" path="res://objetos_hornero/destello_levantable.gd" id="3_destello"]
 
 [sub_resource type="RectangleShape2D" id="Shape"]
 size = Vector2(38, 14)
@@ -21,3 +22,6 @@ shape = SubResource("Shape")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_texture")
 scale = Vector2(0.42, 0.42)
+
+[node name="DestelloLevantable" type="Node2D" parent="."]
+script = ExtResource("3_destello")
