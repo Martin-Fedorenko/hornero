@@ -4,13 +4,13 @@
 [ext_resource type="PackedScene" uid="uid://botl8vytdr4og" path="res://scenes/hornero.tscn" id="2_hornero"]
 [ext_resource type="Script" uid="uid://bvqibbekykd66" path="res://scripts/world/platform.gd" id="3_platform"]
 [ext_resource type="PackedScene" path="res://scenes/pampas_background.tscn" id="4_background"]
-[ext_resource type="PackedScene" path="res://objetos_hornero/piedra.tscn" id="8_piedra"]
 [ext_resource type="Script" uid="uid://b4ym64cj0gyu6" path="res://scripts/chimango/Chimango.gd" id="5_85g3d"]
 [ext_resource type="Texture2D" uid="uid://b0fq4svickc0l" path="res://assets/chimango/chimango_fly.png" id="5_tbgi4"]
 [ext_resource type="Texture2D" uid="uid://pqx4iomj67k6" path="res://assets/chimango/chimango_attack.png" id="6_choun"]
 [ext_resource type="Script" uid="uid://mutqphpmvp01" path="res://scripts/hornero/ground_motor.gd" id="6_o6xl0"]
 [ext_resource type="Script" uid="uid://dporub47gssp2" path="res://scenes/chimango_animator.gd" id="6_tipki"]
 [ext_resource type="Script" uid="uid://bm3x271kf07d4" path="res://scripts/hornero/flight_motor.gd" id="7_tipki"]
+[ext_resource type="PackedScene" path="res://objetos_hornero/piedra.tscn" id="8_piedra"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
 atlas = ExtResource("6_choun")
@@ -217,6 +217,7 @@ position = Vector2(650, 550)
 [node name="Chimango" type="CharacterBody2D" parent="." unique_id=1104130030]
 script = ExtResource("5_85g3d")
 empezar_ausente = true
+tiempo_ausente_min = 1000000.0
 
 [node name="ChimangoAnimator" type="AnimatedSprite2D" parent="Chimango" unique_id=1938302224]
 sprite_frames = SubResource("SpriteFrames_2siln")
