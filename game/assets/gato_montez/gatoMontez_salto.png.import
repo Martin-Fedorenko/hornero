@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ds80mwf74gy77"
-path="res://.godot/imported/hornero_fall.png-3d325b2222bbf09990976b33464cb483.ctex"
+uid="uid://6foank0a8n7y"
+path="res://.godot/imported/gatoMontez_salto.png-149c56c195da0c90ccc2c94dfdff7402.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/hornero_fall.png"
-dest_files=["res://.godot/imported/hornero_fall.png-3d325b2222bbf09990976b33464cb483.ctex"]
+source_file="res://assets/gato_montez/gatoMontez_salto.png"
+dest_files=["res://.godot/imported/gatoMontez_salto.png-149c56c195da0c90ccc2c94dfdff7402.ctex"]
 
 [params]
 

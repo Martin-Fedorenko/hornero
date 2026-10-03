@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chkodesxbe6yf"
-path="res://.godot/imported/hornero_sheet.png-a6a951fb8e27c744a733bba1ee77b375.ctex"
+uid="uid://ckdm0cgjt8pq7"
+path="res://.godot/imported/gatoMontez_ataque.png-7ea4bed2335a50c0d7e1a48fab17f809.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/hornero_sheet.png"
-dest_files=["res://.godot/imported/hornero_sheet.png-a6a951fb8e27c744a733bba1ee77b375.ctex"]
+source_file="res://assets/gato_montez/gatoMontez_ataque.png"
+dest_files=["res://.godot/imported/gatoMontez_ataque.png-7ea4bed2335a50c0d7e1a48fab17f809.ctex"]
 
 [params]
 

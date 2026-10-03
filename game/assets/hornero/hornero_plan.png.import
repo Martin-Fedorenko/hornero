@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://hhvitq1kkie6"
-path="res://.godot/imported/hornero_plan.png-ea9e8f8e9c44c70a921313b0770290eb.ctex"
+path="res://.godot/imported/hornero_plan.png-26285bd740b06a90506444a91607fd7d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/hornero_plan.png"
-dest_files=["res://.godot/imported/hornero_plan.png-ea9e8f8e9c44c70a921313b0770290eb.ctex"]
+source_file="res://assets/hornero/hornero_plan.png"
+dest_files=["res://.godot/imported/hornero_plan.png-26285bd740b06a90506444a91607fd7d.ctex"]
 
 [params]
 

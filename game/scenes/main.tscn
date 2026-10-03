@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://mutqphpmvp01" path="res://scripts/hornero/ground_motor.gd" id="6_o6xl0"]
 [ext_resource type="Script" uid="uid://dporub47gssp2" path="res://scenes/chimango_animator.gd" id="6_tipki"]
 [ext_resource type="Script" uid="uid://bm3x271kf07d4" path="res://scripts/hornero/flight_motor.gd" id="7_tipki"]
+[ext_resource type="PackedScene" uid="uid://4jpbvg34m0h6" path="res://scenes/gato_montes.tscn" id="11_ya4ey"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
 atlas = ExtResource("6_choun")
@@ -235,3 +236,5 @@ max_pitch_deg = 50.0
 flap_impulse = 400.0
 turn_speed_keep = 0.7
 metadata/_custom_type_script = "uid://bm3x271kf07d4"
+
+[node name="GatoMontes" parent="." unique_id=840224556 instance=ExtResource("11_ya4ey")]

@@ -1,10 +1,10 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://c73o47gtyvccl"]
 
-[ext_resource type="Texture2D" uid="uid://chkodesxbe6yf" path="res://assets/hornero_sheet.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://drgi8flvrtpv6" path="res://assets/hornero_walk.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://hhvitq1kkie6" path="res://assets/hornero_plan.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://ds80mwf74gy77" path="res://assets/hornero_fall.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://bavhe2vs1d1y0" path="res://assets/hornero_recover_frames.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://chkodesxbe6yf" path="res://assets/hornero/hornero_sheet.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://drgi8flvrtpv6" path="res://assets/hornero/hornero_walk.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://hhvitq1kkie6" path="res://assets/hornero/hornero_plan.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://ds80mwf74gy77" path="res://assets/hornero/hornero_fall.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bavhe2vs1d1y0" path="res://assets/hornero/hornero_recover_frames.png" id="5"]
 
 [sub_resource type="AtlasTexture" id="Fall_0"]
 atlas = ExtResource("4")

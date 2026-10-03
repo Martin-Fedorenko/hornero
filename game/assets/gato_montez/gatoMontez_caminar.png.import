@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8uqmna7vm1ox"
-path="res://.godot/imported/hornero_recover.png-6f2190905222f5300e220cb78f8a695f.ctex"
+uid="uid://c71r750sexdmt"
+path="res://.godot/imported/gatoMontez_caminar.png-74e444996566a0bc25185da885df80e5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/hornero_recover.png"
-dest_files=["res://.godot/imported/hornero_recover.png-6f2190905222f5300e220cb78f8a695f.ctex"]
+source_file="res://assets/gato_montez/gatoMontez_caminar.png"
+dest_files=["res://.godot/imported/gatoMontez_caminar.png-74e444996566a0bc25185da885df80e5.ctex"]
 
 [params]
 
