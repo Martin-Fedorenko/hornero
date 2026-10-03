@@ -11,6 +11,8 @@
 [ext_resource type="Script" uid="uid://dporub47gssp2" path="res://scenes/chimango_animator.gd" id="6_tipki"]
 [ext_resource type="Script" uid="uid://bm3x271kf07d4" path="res://scripts/hornero/flight_motor.gd" id="7_tipki"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/piedra.tscn" id="8_piedra"]
+[ext_resource type="PackedScene" path="res://objetos_hornero/paja.tscn" id="9_paja"]
+[ext_resource type="PackedScene" path="res://objetos_hornero/ramitas.tscn" id="10_ramitas"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
 atlas = ExtResource("6_choun")
@@ -213,6 +215,12 @@ theme_override_colors/font_color = Color(0.2, 0.27, 0.25, 1)
 
 [node name="Piedra" parent="." unique_id=662864888 instance=ExtResource("8_piedra")]
 position = Vector2(650, 550)
+
+[node name="Paja" parent="." unique_id=1257325304 instance=ExtResource("9_paja")]
+position = Vector2(1030, 1280)
+
+[node name="Ramitas" parent="." unique_id=1631829200 instance=ExtResource("10_ramitas")]
+position = Vector2(1270, 1280)
 
 [node name="Chimango" type="CharacterBody2D" parent="." unique_id=1104130030]
 script = ExtResource("5_85g3d")

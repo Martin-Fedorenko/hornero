@@ -26,6 +26,7 @@ func _ready() -> void:
 	$Ventana/Panel.add_theme_stylebox_override("panel", _caja(Color("243936"), Color("bca571"), 20))
 	ventana.hide()
 	start.grab_focus()
+	$HorneroMenu.play(&"viento")
 
 func _iniciar() -> void:
 	start.disabled = true
