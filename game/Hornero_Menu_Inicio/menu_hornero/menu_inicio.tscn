@@ -2,47 +2,99 @@
 
 [ext_resource type="Script" uid="uid://vhlr20r5l86g" path="res://Hornero_Menu_Inicio/menu_hornero/menu_inicio.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://bclgfwx867p2a" path="res://Hornero_Menu_Inicio/menu_hornero/Nido al atardecer entre ramas-2.png" id="2_d0jyu"]
-[ext_resource type="Texture2D" uid="uid://xcsv3k75jwp0" path="res://Menu_hornero_frames/hornero_viento_00_reposo.png" id="3_wbovl"]
-[ext_resource type="Texture2D" uid="uid://bt3qmihbuwf5x" path="res://Menu_hornero_frames/Sprite de ave parpadeando-4.png" id="4_v14sn"]
-[ext_resource type="Texture2D" uid="uid://bmcb0r2lp3yvj" path="res://Menu_hornero_frames/hornero_viento_01_brisa_inicia.png" id="4_yyglp"]
-[ext_resource type="Texture2D" uid="uid://8eb0i3jb0267" path="res://Menu_hornero_frames/hornero_viento_02_brisa_sube.png" id="5_v14sn"]
-[ext_resource type="Texture2D" uid="uid://cw12i0q2d5bxk" path="res://Menu_hornero_frames/hornero_viento_03_rafaga_maxima.png" id="6_fdjcp"]
-[ext_resource type="Texture2D" uid="uid://casvagfect7a3" path="res://Menu_hornero_frames/hornero_viento_04_brisa_baja.png" id="7_obomc"]
-[ext_resource type="Texture2D" uid="uid://b0hxn54mvrmlr" path="res://Menu_hornero_frames/hornero_viento_05_casi_reposo.png" id="8_s1htw"]
+[ext_resource type="Texture2D" path="res://Menu_hornero_frames/hornero_menu_limpio.png" id="3_sheet"]
 [ext_resource type="Texture2D" uid="uid://dlgxku8fw4umo" path="res://Hornero_Menu_Inicio/menu_hornero/Logotipo rústico HORNERO con ramita dorada-5.png" id="9_yyglp"]
+
+[sub_resource type="AtlasTexture" id="Atlas_h0"]
+atlas = ExtResource("3_sheet")
+region = Rect2(0, 0, 394, 378)
+
+[sub_resource type="AtlasTexture" id="Atlas_h1"]
+atlas = ExtResource("3_sheet")
+region = Rect2(394, 0, 394, 378)
+
+[sub_resource type="AtlasTexture" id="Atlas_h2"]
+atlas = ExtResource("3_sheet")
+region = Rect2(788, 0, 394, 378)
+
+[sub_resource type="AtlasTexture" id="Atlas_h3"]
+atlas = ExtResource("3_sheet")
+region = Rect2(1182, 0, 394, 378)
+
+[sub_resource type="AtlasTexture" id="Atlas_h4"]
+atlas = ExtResource("3_sheet")
+region = Rect2(0, 378, 394, 378)
+
+[sub_resource type="AtlasTexture" id="Atlas_h5"]
+atlas = ExtResource("3_sheet")
+region = Rect2(394, 378, 394, 378)
+
+[sub_resource type="AtlasTexture" id="Atlas_h6"]
+atlas = ExtResource("3_sheet")
+region = Rect2(788, 378, 394, 378)
+
+[sub_resource type="AtlasTexture" id="Atlas_h7"]
+atlas = ExtResource("3_sheet")
+region = Rect2(1182, 378, 394, 378)
+
+[sub_resource type="AtlasTexture" id="Atlas_h8"]
+atlas = ExtResource("3_sheet")
+region = Rect2(0, 756, 394, 378)
+
+[sub_resource type="AtlasTexture" id="Atlas_h9"]
+atlas = ExtResource("3_sheet")
+region = Rect2(394, 756, 394, 378)
+
+[sub_resource type="AtlasTexture" id="Atlas_h10"]
+atlas = ExtResource("3_sheet")
+region = Rect2(788, 756, 394, 378)
+
+[sub_resource type="AtlasTexture" id="Atlas_h11"]
+atlas = ExtResource("3_sheet")
+region = Rect2(1182, 756, 394, 378)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_73d2e"]
 animations = [{
-"frames": [],
-"loop": 1,
-"name": &"new_animation",
-"speed": 5.0
-}, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_wbovl")
+"texture": SubResource("Atlas_h0")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_v14sn")
+"texture": SubResource("Atlas_h1")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_yyglp")
+"texture": SubResource("Atlas_h2")
 }, {
 "duration": 1.0,
-"texture": ExtResource("5_v14sn")
+"texture": SubResource("Atlas_h3")
 }, {
 "duration": 1.0,
-"texture": ExtResource("6_fdjcp")
+"texture": SubResource("Atlas_h4")
 }, {
 "duration": 1.0,
-"texture": ExtResource("7_obomc")
+"texture": SubResource("Atlas_h5")
 }, {
 "duration": 1.0,
-"texture": ExtResource("8_s1htw")
+"texture": SubResource("Atlas_h6")
+}, {
+"duration": 1.0,
+"texture": SubResource("Atlas_h7")
+}, {
+"duration": 1.0,
+"texture": SubResource("Atlas_h8")
+}, {
+"duration": 1.0,
+"texture": SubResource("Atlas_h9")
+}, {
+"duration": 1.0,
+"texture": SubResource("Atlas_h10")
+}, {
+"duration": 1.0,
+"texture": SubResource("Atlas_h11")
 }],
-"loop": 1,
+"loop": true,
 "name": &"viento",
-"speed": 5.0
+"speed": 12.0
 }]
 
 [sub_resource type="ImageTexture" id="ImageTexture_73d2e"]
@@ -184,7 +236,6 @@ text = "Volver"
 
 [node name="HorneroMenu" type="AnimatedSprite2D" parent="." unique_id=1528493170]
 position = Vector2(881, 221)
-scale = Vector2(0.3, 0.3)
 sprite_frames = SubResource("SpriteFrames_73d2e")
 animation = &"viento"
 

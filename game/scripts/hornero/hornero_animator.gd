@@ -12,6 +12,9 @@ extends AnimatedSprite2D
 @export var fall_animation := &"caida"
 @export var recover_animation := &"recuperarse"
 @export var roll_animation := &"rotacion_vertical"
+## Muerto queda tirado: la animación de recuperarse congelada en este cuadro.
+@export var dead_animation := &"recuperarse"
+@export var dead_frame := 0
 ## Velocidad horizontal mínima para considerar que camina (px/s).
 @export var walk_threshold := 5.0
 
@@ -56,6 +59,9 @@ func _process(_delta: float) -> void:
 	if is_instance_valid(interaccion_picoteo):
 		if interaccion_picoteo.get("ocupado") == true:
 			return
+	if _body.is_dead():
+		_show_dead()
+		return
 	var animation_name := _pick_animation()
 	_apply_pose(animation_name)
 	if animation != animation_name:
@@ -106,6 +112,14 @@ func _apply_pose(animation_name: StringName) -> void:
 	# El cuerpo gira 180° al mirar a la izquierda; invertir Y deja el dibujo
 	# derecho y espejado, y el offset queda espejado junto con él.
 	scale = Vector2(pose_scale, pose_scale * _body.facing)
+
+
+func _show_dead() -> void:
+	_apply_pose(dead_animation)
+	if animation != dead_animation or is_playing():
+		play(dead_animation)
+		pause()
+		frame = dead_frame
 
 
 func _on_animation_finished() -> void:
