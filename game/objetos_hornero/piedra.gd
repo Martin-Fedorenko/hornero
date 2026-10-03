@@ -1,6 +1,8 @@
 extends RigidBody2D
 ## Puede ampliarse a ramas y otros materiales usando el mismo grupo y métodos.
 var recogida: bool = false
+var entregado: bool = false
+@export var tipo_recurso: StringName = &"piedra"
 
 func recoger() -> void:
 	recogida = true

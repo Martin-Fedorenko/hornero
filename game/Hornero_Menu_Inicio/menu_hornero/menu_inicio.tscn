@@ -72,60 +72,39 @@ stretch_mode = 6
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.065
-anchor_top = 0.08
+anchor_top = 0.195
 anchor_right = 0.4
-anchor_bottom = 0.88
+anchor_bottom = 0.93
 
 [node name="Columna" type="VBoxContainer" parent="Contenido" unique_id=1025835954]
 layout_mode = 2
-theme_override_constants/separation = 13
+theme_override_constants/separation = 6
 alignment = 1
 
-[node name="Subtitulo" type="Label" parent="Contenido/Columna" unique_id=1560874823]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.83, 0.84, 0.71, 1)
-theme_override_font_sizes/font_size = 20
-text = "Un nido por construir."
-
-[node name="Espacio" type="Control" parent="Contenido/Columna" unique_id=838648542]
-custom_minimum_size = Vector2(0, 14)
-layout_mode = 2
-mouse_filter = 2
-
 [node name="Start" type="Button" parent="Contenido/Columna" unique_id=1064526975]
-custom_minimum_size = Vector2(0, 57)
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
-text = "Start"
 
 [node name="ComoJugar" type="Button" parent="Contenido/Columna" unique_id=1568581439]
-custom_minimum_size = Vector2(0, 57)
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
-text = "Cómo jugar"
+
+[node name="Historia" type="Button" parent="Contenido/Columna" unique_id=842559747]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
 
 [node name="Creditos" type="Button" parent="Contenido/Columna" unique_id=1776751290]
-custom_minimum_size = Vector2(0, 57)
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
-text = "Creditos"
 
 [node name="Salir" type="Button" parent="Contenido/Columna" unique_id=112202338]
-custom_minimum_size = Vector2(0, 57)
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
-text = "Salir"
-
-[node name="AyudaTeclado" type="Label" parent="." unique_id=210328141]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.065
-anchor_top = 0.94
-anchor_right = 0.5
-anchor_bottom = 0.98
-theme_override_colors/font_color = Color(0.85, 0.88, 0.78, 1)
-theme_override_font_sizes/font_size = 14
-text = "Flechas / Tab para elegir · Enter para aceptar"
 
 [node name="Ventana" type="Control" parent="." unique_id=1398975744]
 visible = false
@@ -192,6 +171,6 @@ animation = &"viento"
 texture = SubResource("ImageTexture_73d2e")
 
 [node name="LogotipoRústicoHorneroConRamitaDorada5" type="Sprite2D" parent="." unique_id=329699677]
-position = Vector2(267, 98)
-scale = Vector2(0.2, 0.2)
+position = Vector2(270, 80)
+scale = Vector2(0.13, 0.13)
 texture = ExtResource("9_yyglp")
