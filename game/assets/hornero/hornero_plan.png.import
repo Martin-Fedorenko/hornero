@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bavhe2vs1d1y0"
-path="res://.godot/imported/hornero_recover_frames.png-4716308a118339debc644ef4bc5f6ab7.ctex"
+uid="uid://hhvitq1kkie6"
+path="res://.godot/imported/hornero_plan.png-26285bd740b06a90506444a91607fd7d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/hornero_recover_frames.png"
-dest_files=["res://.godot/imported/hornero_recover_frames.png-4716308a118339debc644ef4bc5f6ab7.ctex"]
+source_file="res://assets/hornero/hornero_plan.png"
+dest_files=["res://.godot/imported/hornero_plan.png-26285bd740b06a90506444a91607fd7d.ctex"]
 
 [params]
 

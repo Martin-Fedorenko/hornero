@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://botl8vytdr4og"]
 
 [ext_resource type="Script" path="res://scripts/hornero/hornero.gd" id="1_body"]
-[ext_resource type="SpriteFrames" uid="uid://c73o47gtyvccl" path="res://assets/hornero_frames.tres" id="2_frames"]
+[ext_resource type="SpriteFrames" uid="uid://c73o47gtyvccl" path="res://assets/hornero/hornero_frames.tres" id="2_frames"]
 [ext_resource type="Script" path="res://scripts/hornero/hornero_animator.gd" id="3_anim"]
 [ext_resource type="Script" path="res://scripts/hornero/flight_debug.gd" id="4_debug"]
 [ext_resource type="Script" path="res://scripts/hornero/flight_motor.gd" id="5_flight"]

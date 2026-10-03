@@ -1,10 +1,59 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://c73o47gtyvccl"]
 
-[ext_resource type="Texture2D" uid="uid://chkodesxbe6yf" path="res://assets/hornero_sheet.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://drgi8flvrtpv6" path="res://assets/hornero_walk.png" id="2"]
-[ext_resource type="Texture2D" path="res://assets/hornero_plan.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://ds80mwf74gy77" path="res://assets/hornero_fall.png" id="4"]
-[ext_resource type="Texture2D" path="res://assets/hornero_recover_frames.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://chkodesxbe6yf" path="res://assets/hornero/hornero_sheet.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://drgi8flvrtpv6" path="res://assets/hornero/hornero_walk.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://hhvitq1kkie6" path="res://assets/hornero/hornero_plan.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://ds80mwf74gy77" path="res://assets/hornero/hornero_fall.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bavhe2vs1d1y0" path="res://assets/hornero/hornero_recover_frames.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://c1bn70nioglla" path="res://assets/hornero/hornero_rotation_vertical.png" id="6"]
+
+[sub_resource type="AtlasTexture" id="Fall_0"]
+atlas = ExtResource("4")
+region = Rect2(74, 74, 355, 354)
+margin = Rect2(22, 23, 45, 46)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Fall_1"]
+atlas = ExtResource("4")
+region = Rect2(534, 76, 313, 381)
+margin = Rect2(43, 9, 87, 19)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Fall_2"]
+atlas = ExtResource("4")
+region = Rect2(938, 135, 340, 343)
+margin = Rect2(30, 28, 60, 57)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Fall_3"]
+atlas = ExtResource("4")
+region = Rect2(1377, 160, 314, 304)
+margin = Rect2(43, 48, 86, 96)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Fall_4"]
+atlas = ExtResource("4")
+region = Rect2(116, 524, 304, 306)
+margin = Rect2(48, 47, 96, 94)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Fall_5"]
+atlas = ExtResource("4")
+region = Rect2(540, 540, 340, 273)
+margin = Rect2(30, 63, 60, 127)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Fall_6"]
+atlas = ExtResource("4")
+region = Rect2(949, 587, 350, 226)
+margin = Rect2(25, 87, 50, 174)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Fall_7"]
+atlas = ExtResource("4")
+region = Rect2(1400, 602, 333, 242)
+margin = Rect2(33, 79, 67, 158)
+filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Walk_0"]
 atlas = ExtResource("2")
@@ -40,48 +89,6 @@ filter_clip = true
 atlas = ExtResource("2")
 region = Rect2(1050, 605, 462, 274)
 margin = Rect2(15, 217, 50, 238)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Frame_7"]
-atlas = ExtResource("1")
-region = Rect2(1360, 606, 386, 205)
-margin = Rect2(42, 218, 126, 307)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Frame_0"]
-atlas = ExtResource("1")
-region = Rect2(27, 67, 416, 293)
-margin = Rect2(13, 71, 96, 219)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Frame_1"]
-atlas = ExtResource("1")
-region = Rect2(471, 126, 418, 234)
-margin = Rect2(10, 130, 94, 278)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Frame_2"]
-atlas = ExtResource("1")
-region = Rect2(914, 216, 388, 241)
-margin = Rect2(40, 220, 124, 271)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Frame_3"]
-atlas = ExtResource("1")
-region = Rect2(1359, 215, 386, 252)
-margin = Rect2(42, 219, 126, 260)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Frame_4"]
-atlas = ExtResource("1")
-region = Rect2(27, 584, 419, 166)
-margin = Rect2(9, 196, 93, 346)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Frame_5"]
-atlas = ExtResource("1")
-region = Rect2(470, 495, 419, 255)
-margin = Rect2(9, 107, 93, 257)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Plan_0"]
@@ -132,54 +139,6 @@ region = Rect2(1652, 429, 497, 191)
 margin = Rect2(7, 32, 15, 65)
 filter_clip = true
 
-[sub_resource type="AtlasTexture" id="Fall_0"]
-atlas = ExtResource("4")
-region = Rect2(74, 74, 355, 354)
-margin = Rect2(22, 23, 45, 46)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Fall_1"]
-atlas = ExtResource("4")
-region = Rect2(534, 76, 313, 381)
-margin = Rect2(43, 9, 87, 19)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Fall_2"]
-atlas = ExtResource("4")
-region = Rect2(938, 135, 340, 343)
-margin = Rect2(30, 28, 60, 57)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Fall_3"]
-atlas = ExtResource("4")
-region = Rect2(1377, 160, 314, 304)
-margin = Rect2(43, 48, 86, 96)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Fall_4"]
-atlas = ExtResource("4")
-region = Rect2(116, 524, 304, 306)
-margin = Rect2(48, 47, 96, 94)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Fall_5"]
-atlas = ExtResource("4")
-region = Rect2(540, 540, 340, 273)
-margin = Rect2(30, 63, 60, 127)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Fall_6"]
-atlas = ExtResource("4")
-region = Rect2(949, 587, 350, 226)
-margin = Rect2(25, 87, 50, 174)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Fall_7"]
-atlas = ExtResource("4")
-region = Rect2(1400, 602, 333, 242)
-margin = Rect2(33, 79, 67, 158)
-filter_clip = true
-
 [sub_resource type="AtlasTexture" id="Recover_0"]
 atlas = ExtResource("5")
 region = Rect2(0, 0, 420, 320)
@@ -225,8 +184,127 @@ atlas = ExtResource("5")
 region = Rect2(3360, 0, 420, 320)
 filter_clip = true
 
+[sub_resource type="AtlasTexture" id="Frame_7"]
+atlas = ExtResource("1")
+region = Rect2(1360, 606, 386, 205)
+margin = Rect2(42, 218, 126, 307)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_0"]
+atlas = ExtResource("6")
+region = Rect2(11, 362, 238, 180)
+margin = Rect2(1, 0, 2, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_1"]
+atlas = ExtResource("6")
+region = Rect2(249, 362, 218, 180)
+margin = Rect2(11, 0, 22, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_2"]
+atlas = ExtResource("6")
+region = Rect2(467, 362, 217, 180)
+margin = Rect2(11, 0, 23, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_3"]
+atlas = ExtResource("6")
+region = Rect2(690, 362, 209, 180)
+margin = Rect2(15, 0, 31, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_4"]
+atlas = ExtResource("6")
+region = Rect2(911, 362, 203, 180)
+margin = Rect2(18, 0, 37, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_5"]
+atlas = ExtResource("6")
+region = Rect2(1117, 362, 210, 180)
+margin = Rect2(15, 0, 30, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_6"]
+atlas = ExtResource("6")
+region = Rect2(1330, 362, 208, 180)
+margin = Rect2(16, 0, 32, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_7"]
+atlas = ExtResource("6")
+region = Rect2(1540, 362, 225, 180)
+margin = Rect2(7, 0, 15, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_0"]
+atlas = ExtResource("1")
+region = Rect2(27, 67, 416, 293)
+margin = Rect2(13, 71, 96, 219)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_1"]
+atlas = ExtResource("1")
+region = Rect2(471, 126, 418, 234)
+margin = Rect2(10, 130, 94, 278)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_2"]
+atlas = ExtResource("1")
+region = Rect2(914, 216, 388, 241)
+margin = Rect2(40, 220, 124, 271)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_3"]
+atlas = ExtResource("1")
+region = Rect2(1359, 215, 386, 252)
+margin = Rect2(42, 219, 126, 260)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_4"]
+atlas = ExtResource("1")
+region = Rect2(27, 584, 419, 166)
+margin = Rect2(9, 196, 93, 346)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_5"]
+atlas = ExtResource("1")
+region = Rect2(470, 495, 419, 255)
+margin = Rect2(9, 107, 93, 257)
+filter_clip = true
+
 [resource]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Fall_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Fall_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Fall_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Fall_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("Fall_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("Fall_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("Fall_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("Fall_7")
+}],
+"loop": 1,
+"name": &"caida",
+"speed": 12.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("Walk_0")
@@ -275,41 +353,10 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Plan_7")
 }],
-"loop": true,
+"loop": 1,
 "name": &"planeo",
 "speed": 8.0
-},
-{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Fall_0")
 }, {
-"duration": 1.0,
-"texture": SubResource("Fall_1")
-}, {
-"duration": 1.0,
-"texture": SubResource("Fall_2")
-}, {
-"duration": 1.0,
-"texture": SubResource("Fall_3")
-}, {
-"duration": 1.0,
-"texture": SubResource("Fall_4")
-}, {
-"duration": 1.0,
-"texture": SubResource("Fall_5")
-}, {
-"duration": 1.0,
-"texture": SubResource("Fall_6")
-}, {
-"duration": 1.0,
-"texture": SubResource("Fall_7")
-}],
-"loop": true,
-"name": &"caida",
-"speed": 12.0
-},
-{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("Recover_0")
@@ -338,7 +385,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Recover_8")
 }],
-"loop": false,
+"loop": 0,
 "name": &"recuperarse",
 "speed": 12.0
 }, {
@@ -349,6 +396,35 @@ animations = [{
 "loop": 1,
 "name": &"reposo",
 "speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Roll_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Roll_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Roll_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Roll_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("Roll_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("Roll_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("Roll_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("Roll_7")
+}],
+"loop": 0,
+"name": &"rotacion_vertical",
+"speed": 20.0
 }, {
 "frames": [{
 "duration": 1.0,
