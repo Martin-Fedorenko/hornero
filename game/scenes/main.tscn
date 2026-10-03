@@ -1,17 +1,17 @@
-[gd_scene format=3 uid="uid://1yqpckr3rwou"]
+[gd_scene format=3 uid="uid://3lk284xx4yoy"]
 
 [ext_resource type="Script" uid="uid://bve0jmyyfgxqo" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" uid="uid://botl8vytdr4og" path="res://scenes/hornero.tscn" id="2_hornero"]
 [ext_resource type="Script" uid="uid://bvqibbekykd66" path="res://scripts/world/platform.gd" id="3_platform"]
 [ext_resource type="PackedScene" path="res://scenes/pampas_background.tscn" id="4_background"]
-[ext_resource type="Script" uid="uid://cmk8t0yvmtd8n" path="res://scripts/world/meadow_floor.gd" id="5_floor"]
-[ext_resource type="PackedScene" path="res://scenes/nest_tree.tscn" id="6_nest_tree"]
-[ext_resource type="PackedScene" path="res://scenes/nest.tscn" id="7_nest"]
 [ext_resource type="Script" uid="uid://b4ym64cj0gyu6" path="res://scripts/chimango/Chimango.gd" id="5_85g3d"]
+[ext_resource type="Script" uid="uid://cmk8t0yvmtd8n" path="res://scripts/world/meadow_floor.gd" id="5_floor"]
 [ext_resource type="Texture2D" uid="uid://b0fq4svickc0l" path="res://assets/chimango/chimango_fly.png" id="5_tbgi4"]
 [ext_resource type="Texture2D" uid="uid://pqx4iomj67k6" path="res://assets/chimango/chimango_attack.png" id="6_choun"]
+[ext_resource type="PackedScene" path="res://scenes/nest_tree.tscn" id="6_nest_tree"]
 [ext_resource type="Script" uid="uid://mutqphpmvp01" path="res://scripts/hornero/ground_motor.gd" id="6_o6xl0"]
 [ext_resource type="Script" uid="uid://dporub47gssp2" path="res://scenes/chimango_animator.gd" id="6_tipki"]
+[ext_resource type="PackedScene" path="res://scenes/nest.tscn" id="7_nest"]
 [ext_resource type="Script" uid="uid://bm3x271kf07d4" path="res://scripts/hornero/flight_motor.gd" id="7_tipki"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/piedra.tscn" id="8_piedra"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/paja.tscn" id="9_paja"]
@@ -132,7 +132,6 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_a8y0u"]
-
 
 [node name="Laboratorio" type="Node2D" unique_id=1659740675]
 script = ExtResource("1_main")

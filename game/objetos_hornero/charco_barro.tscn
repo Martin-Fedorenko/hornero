@@ -1,0 +1,11 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://objetos_hornero/charco_barro.gd" id="1_source"]
+[ext_resource type="Texture2D" path="res://assets/floor/Atlas de charcos secos y agrietados.png" id="2_dry"]
+[ext_resource type="PackedScene" path="res://objetos_hornero/bola_barro.tscn" id="4_ball"]
+
+[node name="CharcoBarro" type="Node2D"]
+script = ExtResource("1_source")
+escena_bola = ExtResource("4_ball")
+textura_seca = ExtResource("2_dry")
+posicion_bola = Vector2(0, 18)

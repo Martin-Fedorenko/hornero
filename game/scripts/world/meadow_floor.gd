@@ -44,6 +44,8 @@ extends Node2D
 
 const ATLAS := preload("res://assets/floor/floor_assets.png")
 const FADE_SHADER := preload("res://scripts/world/strip_fade.gdshader")
+const MUD_SOURCE_SCENE := preload("res://objetos_hornero/charco_barro.tscn")
+const DRY_PUDDLE_ATLAS := preload("res://assets/floor/Atlas de charcos secos y agrietados.png")
 
 ## Franjas de pasto: región en el atlas y fila (relativa a la región) donde
 ## empieza el pasto macizo. Por encima sólo hay matas sueltas.
@@ -195,6 +197,7 @@ func _rebuild() -> void:
 func _add_ground_body() -> void:
 	var body := StaticBody2D.new()
 	body.name = "Collider"
+	body.add_to_group(&"suelo")
 	var shape := RectangleShape2D.new()
 	shape.size = Vector2(width, depth)
 	var collider := CollisionShape2D.new()
@@ -277,6 +280,13 @@ func _add_decor(rng: RandomNumberGenerator, kind: String, center_x: float) -> vo
 		base_y = rng.randf_range(base_range.x, base_range.y)
 	sprite.position = Vector2(x, base_y - size.y)
 	_layers[layer].add_child(sprite)
+	if kind == "charco":
+		var source := MUD_SOURCE_SCENE.instantiate()
+		source.call("configurar_charco", sprite, size)
+		source.set("textura_seca", DRY_PUDDLE_ATLAS)
+		source.set("posicion_bola", Vector2(0, -14))
+		source.position = sprite.position + size * 0.5
+		_layers[layer].add_child(source)
 
 
 func _pick_kind(rng: RandomNumberGenerator) -> String:

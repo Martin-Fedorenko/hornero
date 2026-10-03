@@ -46,6 +46,10 @@ func _ready() -> void:
 func _rebuild() -> void:
 	if not is_inside_tree():
 		return
+	if solid:
+		remove_from_group(&"suelo")
+	else:
+		add_to_group(&"suelo")
 	if _collider == null:
 		_collider = CollisionShape2D.new()
 		add_child(_collider, false, Node.INTERNAL_MODE_FRONT)

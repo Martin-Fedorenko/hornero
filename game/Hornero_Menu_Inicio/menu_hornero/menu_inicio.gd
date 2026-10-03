@@ -4,9 +4,17 @@ extends Control
 @export_multiline var creditos: String = "Un proyecto en desarrollo.\n\nMotor: Godot Engine\nIlustraciones de prototipo: El Brian - Ingeniero Fedorenko - Villadeza Eric."
 
 const AYUDA: String = "VUELO\nWASD o flechas: moverse.\nW / flecha arriba: despegar desde el piso.\nS / flecha abajo: descender.\nEspacio: mantener planeo.\n1: vuelo.   2: planeo fijo.\n\nEN EL PISO\nA/D o flechas izquierda/derecha: caminar.\nAl soltar las teclas, el hornero queda quieto.\n\nINTERACTUAR\nE: picotear y recoger una piedra cercana.\nSi llevás una piedra, E la suelta."
+const HISTORIA: String = "El hornero necesita reunir paja, ramitas, piedras y barro para construir su nido. Vuela por las pampas, recoge materiales y debe volver al nido para entregarlos, mientras el chimango acecha desde el cielo."
+
+const BOTON_JUGAR: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón Jugar de fileteado porteño-2.png")
+const BOTON_AYUDA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón fileteado porteño_ Cómo jugar-4.png")
+const BOTON_HISTORIA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón Historia estilo fileteado porteño-3.png")
+const BOTON_CREDITOS: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Créditos en madera con fileteado porteño-1.png")
+const BOTON_SALIR: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón SALIR con fileteado porteño-5.png")
 
 @onready var start: Button = $Contenido/Columna/Start
 @onready var ayuda: Button = $Contenido/Columna/ComoJugar
+@onready var historia: Button = $Contenido/Columna/Historia
 @onready var boton_creditos: Button = $Contenido/Columna/Creditos
 @onready var salir: Button = $Contenido/Columna/Salir
 @onready var ventana: Control = $Ventana
@@ -18,11 +26,16 @@ var foco_anterior: Control
 func _ready() -> void:
 	start.pressed.connect(_iniciar)
 	ayuda.pressed.connect(func(): _mostrar("Cómo jugar", AYUDA))
+	historia.pressed.connect(func(): _mostrar("Historia", HISTORIA))
 	boton_creditos.pressed.connect(func(): _mostrar("Créditos", creditos))
 	salir.pressed.connect(_salir)
 	cerrar.pressed.connect(_cerrar)
-	for boton in [start, ayuda, boton_creditos, salir, cerrar]:
-		_estilizar_boton(boton, boton == start)
+	_estilizar_boton_con_imagen(start, BOTON_JUGAR)
+	_estilizar_boton_con_imagen(ayuda, BOTON_AYUDA)
+	_estilizar_boton_con_imagen(historia, BOTON_HISTORIA)
+	_estilizar_boton_con_imagen(boton_creditos, BOTON_CREDITOS)
+	_estilizar_boton_con_imagen(salir, BOTON_SALIR)
+	_estilizar_boton(cerrar, false)
 	$Ventana/Panel.add_theme_stylebox_override("panel", _caja(Color("243936"), Color("bca571"), 20))
 	ventana.hide()
 	start.grab_focus()
@@ -46,13 +59,13 @@ func _mostrar(titulo: String, texto: String) -> void:
 	texto_ventana.scroll_to_line(0)
 	ventana.show()
 	# Evitar llegar a los botones detrás del cuadro usando Tab.
-	for boton in [start, ayuda, boton_creditos, salir]:
+	for boton in [start, ayuda, historia, boton_creditos, salir]:
 		boton.focus_mode = Control.FOCUS_NONE
 	cerrar.grab_focus()
 
 func _cerrar() -> void:
 	ventana.hide()
-	for boton in [start, ayuda, boton_creditos, salir]:
+	for boton in [start, ayuda, historia, boton_creditos, salir]:
 		boton.focus_mode = Control.FOCUS_ALL
 	if is_instance_valid(foco_anterior):
 		foco_anterior.grab_focus()
@@ -91,3 +104,22 @@ func _estilizar_boton(boton: Button, principal: bool) -> void:
 	foco.draw_center = false
 	foco.set_border_width_all(3)
 	boton.add_theme_stylebox_override("focus", foco)
+
+func _estilizar_boton_con_imagen(boton: Button, imagen: Texture2D) -> void:
+	boton.text = ""
+	boton.icon = imagen
+	boton.expand_icon = true
+	boton.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	boton.custom_minimum_size = Vector2(0, 100)
+	boton.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	boton.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
+	boton.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
+	boton.add_theme_stylebox_override("disabled", StyleBoxEmpty.new())
+	var foco := StyleBoxFlat.new()
+	foco.bg_color = Color(0, 0, 0, 0)
+	foco.border_color = Color("fff1c1")
+	foco.set_border_width_all(2)
+	foco.set_corner_radius_all(8)
+	boton.add_theme_stylebox_override("focus", foco)
+	boton.mouse_entered.connect(func(): boton.modulate = Color(1.08, 1.06, 0.96))
+	boton.mouse_exited.connect(func(): boton.modulate = Color.WHITE)

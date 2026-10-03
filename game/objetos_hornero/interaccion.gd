@@ -16,11 +16,12 @@ const PICOS: Array[Vector2] = [
 
 var objeto: RigidBody2D = null
 var ocupado: bool = false
+var _capturado: bool = false
 var _reloj: float = 0.0
 var _picos_cache: Dictionary = {}
 var _imagenes_cache: Dictionary = {}
 var _debug: Node2D
-var _interpolacion_original: int = 0
+var _interpolacion_original: Node.PhysicsInterpolationMode = Node.PHYSICS_INTERPOLATION_MODE_INHERIT
 @onready var hornero: CharacterBody2D = get_parent() as CharacterBody2D
 @onready var sprite: AnimatedSprite2D = get_parent().get_node("AnimatedSprite2D")
 
@@ -49,6 +50,12 @@ func _ready() -> void:
 	_log("INICIO | E = recoger/soltar. L = una muestra de diagnóstico.")
 	_log("Pico automático=%s. Verde=pico usado; rosa=Marker2D; amarillo=objeto." % usar_pico_automatico)
 	sprite.animation_changed.connect(_diagnosticar_cambio_animacion)
+	hornero.state_changed.connect(_al_cambiar_estado_hornero)
+	var chimango := hornero.get_parent().get_node_or_null("Chimango") as Chimango
+	if chimango != null:
+		chimango.agarro_jugador.connect(_al_ser_capturado)
+		chimango.jugador_escapo.connect(_al_ser_liberado)
+		chimango.solto_jugador.connect(_al_ser_liberado)
 	
 	
 func _unhandled_input(event: InputEvent) -> void:
@@ -175,7 +182,8 @@ func _visible(candidato: RigidBody2D) -> bool:
 	return hornero.get_world_2d().direct_space_state.intersect_ray(query).is_empty()
 
 func interactuar() -> void:
-	if ocupado:
+	if ocupado or _capturado or hornero.state == Hornero.State.FALLING \
+		or hornero.state == Hornero.State.RECOVERING:
 		return
 	ocupado = true
 	var posicion_hornero_inicio := hornero.global_position
@@ -195,7 +203,7 @@ func interactuar() -> void:
 	sprite.set_process(false)
 	hornero.velocity = Vector2.ZERO
 	_log("POSICION_HORNERO | inicio=%s" % posicion_hornero_inicio)
-	var candidato := _objeto_cercano() if not is_instance_valid(objeto) else null
+	var candidato: RigidBody2D = _objeto_cercano() if not is_instance_valid(objeto) else null
 		# La dirección la controla hornero.facing y la rotación del cuerpo.
 	sprite.flip_h = false
 	sprite.stop()
@@ -221,6 +229,7 @@ func interactuar() -> void:
 	sprite.rotation = rotacion_anterior
 	sprite.centered = centrado_anterior
 	sprite.offset = offset_anterior
+	ocupado = false
 	sprite.animation = animacion_anterior
 	sprite.set_frame_and_progress(cuadro_anterior, progreso_anterior)
 	if reproducia:
@@ -229,24 +238,30 @@ func interactuar() -> void:
 	_seguir_pico()
 	_log("POSICION_HORNERO | fin=%s delta_total=%s" % [
 		hornero.global_position, hornero.global_position - posicion_hornero_inicio])
-	ocupado = false
-	hornero.set_physics_process(procesaba)
+	if procesaba and not _capturado \
+		and hornero.state != Hornero.State.FALLING \
+		and hornero.state != Hornero.State.RECOVERING:
+		hornero.set_physics_process(true)
 	_imprimir_estado("FIN_PICOTEO", _error_actual())
 
+func _al_cambiar_estado_hornero(_anterior: Hornero.State, actual: Hornero.State) -> void:
+	if actual == Hornero.State.FALLING:
+		_soltar_objeto_en_pico()
+
+func _al_ser_capturado() -> void:
+	_capturado = true
+	_soltar_objeto_en_pico()
+
+func _al_ser_liberado() -> void:
+	_capturado = false
+
 func _accion_en_contacto() -> void:
+	if _capturado or hornero.state == Hornero.State.FALLING \
+		or hornero.state == Hornero.State.RECOVERING:
+		_soltar_objeto_en_pico()
+		return
 	if is_instance_valid(objeto):
-		var lado := -1.0 if sprite.flip_h else 1.0
-		var destino := _posicion_pico() + Vector2(24.0*lado, -12.0).rotated(sprite.global_rotation)
-		var query := PhysicsRayQueryParameters2D.create(
-			hornero.global_position, destino, 1, [hornero.get_rid(), objeto.get_rid()])
-		var hit := hornero.get_world_2d().direct_space_state.intersect_ray(query)
-		if not hit.is_empty():
-			destino = hit["position"] + hit["normal"] * 12.0
-		_log("SOLTAR | %s -> %s" % [objeto.name, destino])
-		objeto.call("soltar", destino)
-		objeto.physics_interpolation_mode = _interpolacion_original
-		objeto.reset_physics_interpolation()
-		objeto = null
+		_soltar_objeto_en_pico()
 		return
 	var cercano := _objeto_cercano()
 	if cercano == null:
@@ -268,6 +283,22 @@ func _accion_en_contacto() -> void:
 	for hijo in objeto.get_children():
 		if hijo is Node2D:
 			_log("HIJO_OBJETO | %s tipo=%s posicion_local=%s escala=%s" % [hijo.name, hijo.get_class(), hijo.position, hijo.scale])
+
+func _soltar_objeto_en_pico() -> void:
+	if not is_instance_valid(objeto):
+		return
+	var lado := -1.0 if sprite.flip_h else 1.0
+	var destino := _posicion_pico() + Vector2(24.0 * lado, -12.0).rotated(sprite.global_rotation)
+	var query := PhysicsRayQueryParameters2D.create(
+		hornero.global_position, destino, 1, [hornero.get_rid(), objeto.get_rid()])
+	var hit := hornero.get_world_2d().direct_space_state.intersect_ray(query)
+	if not hit.is_empty():
+		destino = hit["position"] + hit["normal"] * 12.0
+	_log("SOLTAR | %s -> %s" % [objeto.name, destino])
+	objeto.call("soltar", destino)
+	objeto.physics_interpolation_mode = _interpolacion_original
+	objeto.reset_physics_interpolation()
+	objeto = null
 
 func _imprimir_estado(evento: String, error_antes: float) -> void:
 	if not debug_logs:
