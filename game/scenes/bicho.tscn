@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/world/bicho.gd" id="1_bicho"]
+
+[sub_resource type="CircleShape2D" id="Shape"]
+radius = 16.0
+
+[node name="Bicho" type="Area2D"]
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+script = ExtResource("1_bicho")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Shape")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

@@ -8,9 +8,13 @@
 [ext_resource type="Script" uid="uid://mutqphpmvp01" path="res://scripts/hornero/ground_motor.gd" id="6_ground"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/interaccion.tscn" id="7_5fmsy"]
 [ext_resource type="Script" path="res://scripts/hornero/hornero_vitals.gd" id="8_vitals"]
+[ext_resource type="Script" path="res://scripts/hornero/hornero_comer.gd" id="9_comer"]
 
 [sub_resource type="CircleShape2D" id="BodyShape"]
 radius = 16.0
+
+[sub_resource type="CircleShape2D" id="BeakShape"]
+radius = 36.0
 
 [node name="Hornero" type="CharacterBody2D" unique_id=1382592324]
 floor_snap_length = 8.0
@@ -46,3 +50,13 @@ script = ExtResource("6_ground")
 
 [node name="Vitals" type="Node" parent="."]
 script = ExtResource("8_vitals")
+
+[node name="Comer" type="Area2D" parent="."]
+position = Vector2(30, 0)
+collision_layer = 0
+collision_mask = 8
+monitorable = false
+script = ExtResource("9_comer")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Comer"]
+shape = SubResource("BeakShape")
