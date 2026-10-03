@@ -13,6 +13,11 @@ Prototipo jugable de vuelo y planeo. Abrí `project.godot` y pulsá **F5**.
 
 ```text
 scenes/main.tscn            Nivel: piso, paredes, plataformas, cámara, HUD
+scenes/nest_tree.tscn       Árbol (tree_asset.png). El origen es la base del
+                            tronco, sobre el piso. En main.tscn lleva de hijo
+                            al nido, que se puede mover libremente
+scenes/nest.tscn            Nido de hornero (nest_asset.png), animación "crecer".
+                            El origen es la base del nido
 scenes/hornero.tscn         Hornero (CharacterBody2D)
 ├── CollisionShape2D        Círculo: no cambia al rotar el cuerpo
 ├── AnimatedSprite2D        hornero_animator.gd
@@ -24,9 +29,14 @@ scripts/hornero/hornero.gd        Máquina de estados FLYING / GLIDING / GROUND 
 scripts/hornero/hornero_input.gd  Única lectura del teclado
 scripts/world/platform.gd         Rectángulo visible con collider (sólo borde
                                   superior, o sólido con `solid`)
-assets/hornero_frames.tres        Animaciones: vuelo, planeo, reposo, caminar,
-                                  caida, recuperarse
-assets/hornero_recover_frames.png Cuadros de hornero_recover.png separados
+scripts/world/meadow_floor.gd     Piso de pastizal con assets/floor/floor_assets.png:
+                                  franjas de pasto fundidas entre sí
+                                  (strip_fade.gdshader) y piedras, matas y charcos
+                                  al azar según `random_seed`. Sólo el piso colisiona
+assets/hornero/                   Sprites del hornero
+├── hornero_frames.tres           Animaciones: vuelo, planeo, reposo, caminar,
+│                                 caida, recuperarse
+└── hornero_recover_frames.png    Cuadros de hornero_recover.png separados
                                   (en el original se superponen)
 ```
 

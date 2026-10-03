@@ -1,16 +1,23 @@
-[gd_scene format=3 uid="uid://3lk284xx4yoy"]
+[gd_scene format=3 uid="uid://1yqpckr3rwou"]
 
 [ext_resource type="Script" uid="uid://bve0jmyyfgxqo" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" uid="uid://botl8vytdr4og" path="res://scenes/hornero.tscn" id="2_hornero"]
 [ext_resource type="Script" uid="uid://bvqibbekykd66" path="res://scripts/world/platform.gd" id="3_platform"]
 [ext_resource type="PackedScene" path="res://scenes/pampas_background.tscn" id="4_background"]
+[ext_resource type="Script" uid="uid://cmk8t0yvmtd8n" path="res://scripts/world/meadow_floor.gd" id="5_floor"]
+[ext_resource type="PackedScene" path="res://scenes/nest_tree.tscn" id="6_nest_tree"]
+[ext_resource type="PackedScene" path="res://scenes/nest.tscn" id="7_nest"]
 [ext_resource type="Script" uid="uid://b4ym64cj0gyu6" path="res://scripts/chimango/Chimango.gd" id="5_85g3d"]
 [ext_resource type="Texture2D" uid="uid://b0fq4svickc0l" path="res://assets/chimango/chimango_fly.png" id="5_tbgi4"]
 [ext_resource type="Texture2D" uid="uid://pqx4iomj67k6" path="res://assets/chimango/chimango_attack.png" id="6_choun"]
 [ext_resource type="Script" uid="uid://mutqphpmvp01" path="res://scripts/hornero/ground_motor.gd" id="6_o6xl0"]
 [ext_resource type="Script" uid="uid://dporub47gssp2" path="res://scenes/chimango_animator.gd" id="6_tipki"]
 [ext_resource type="Script" uid="uid://bm3x271kf07d4" path="res://scripts/hornero/flight_motor.gd" id="7_tipki"]
-[ext_resource type="PackedScene" uid="uid://4jpbvg34m0h6" path="res://scenes/gato_montes.tscn" id="11_ya4ey"]
+[ext_resource type="PackedScene" path="res://objetos_hornero/piedra.tscn" id="8_piedra"]
+[ext_resource type="PackedScene" path="res://objetos_hornero/paja.tscn" id="9_paja"]
+[ext_resource type="PackedScene" path="res://objetos_hornero/ramitas.tscn" id="10_ramitas"]
+[ext_resource type="Script" path="res://scripts/ui/vitals_hud.gd" id="11_vitals_hud"]
+[ext_resource type="Script" path="res://scripts/ui/death_screen.gd" id="12_death_screen"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
 atlas = ExtResource("6_choun")
@@ -125,65 +132,42 @@ animations = [{
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_a8y0u"]
 
-[node name="Laboratorio" type="Node2D" unique_id=805606583]
+
+[node name="Laboratorio" type="Node2D" unique_id=1659740675]
 script = ExtResource("1_main")
 
-[node name="PampasBackground" parent="." unique_id=1549126932 instance=ExtResource("4_background")]
+[node name="PampasBackground" parent="." unique_id=1285302345 instance=ExtResource("4_background")]
 
-[node name="World" type="Node2D" parent="." unique_id=956585639]
+[node name="World" type="Node2D" parent="." unique_id=1661870613]
 
-[node name="Piso" type="StaticBody2D" parent="World" unique_id=2047084813]
-position = Vector2(0, 1640)
-script = ExtResource("3_platform")
-size = Vector2(6000, 160)
-solid = true
-one_way = false
-fill_color = Color(0.69, 0.48, 0.31, 1)
-top_band = 18.0
+[node name="NestTree" parent="World" unique_id=748560120 instance=ExtResource("6_nest_tree")]
+position = Vector2(3000, 1648)
 
-[node name="ParedIzquierda" type="StaticBody2D" parent="World" unique_id=1031541673]
+[node name="Nest" parent="World/NestTree" unique_id=319226660 instance=ExtResource("7_nest")]
+position = Vector2(13, -256)
+
+[node name="Piso" type="Node2D" parent="World" unique_id=1742482040]
+position = Vector2(0, 1648)
+script = ExtResource("5_floor")
+
+[node name="ParedIzquierda" type="StaticBody2D" parent="World" unique_id=320975503]
 position = Vector2(-100, -400)
 script = ExtResource("3_platform")
 size = Vector2(100, 2200)
 solid = true
 one_way = false
 
-[node name="ParedDerecha" type="StaticBody2D" parent="World" unique_id=2010138499]
+[node name="ParedDerecha" type="StaticBody2D" parent="World" unique_id=100376015]
 position = Vector2(6000, -400)
 script = ExtResource("3_platform")
 size = Vector2(100, 2200)
 solid = true
 one_way = false
 
-[node name="Plataforma1" type="StaticBody2D" parent="World" unique_id=267946207]
-position = Vector2(900, 1300)
-script = ExtResource("3_platform")
-size = Vector2(520, 110)
-
-[node name="Plataforma2" type="StaticBody2D" parent="World" unique_id=1444763660]
-position = Vector2(2000, 1040)
-script = ExtResource("3_platform")
-size = Vector2(420, 100)
-
-[node name="Plataforma3" type="StaticBody2D" parent="World" unique_id=1050829898]
-position = Vector2(3100, 1340)
-script = ExtResource("3_platform")
-size = Vector2(600, 120)
-
-[node name="Plataforma4" type="StaticBody2D" parent="World" unique_id=796131858]
-position = Vector2(4200, 820)
-script = ExtResource("3_platform")
-size = Vector2(380, 100)
-
-[node name="Plataforma5" type="StaticBody2D" parent="World" unique_id=250811008]
-position = Vector2(5000, 1200)
-script = ExtResource("3_platform")
-size = Vector2(500, 110)
-
-[node name="Hornero" parent="." unique_id=853117226 instance=ExtResource("2_hornero")]
+[node name="Hornero" parent="." unique_id=907819609 instance=ExtResource("2_hornero")]
 position = Vector2(500, 900)
 
-[node name="Camera2D" type="Camera2D" parent="Hornero" unique_id=2096905684]
+[node name="Camera2D" type="Camera2D" parent="Hornero" unique_id=1154209186]
 position_smoothing_enabled = true
 position_smoothing_speed = 4.0
 drag_horizontal_enabled = true
@@ -193,27 +177,100 @@ drag_top_margin = 0.15
 drag_right_margin = 0.1
 drag_bottom_margin = 0.15
 
-[node name="HUD" type="CanvasLayer" parent="." unique_id=1668422236]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=503126163]
 
-[node name="Controles" type="Label" parent="HUD" unique_id=331174832]
+[node name="Vitales" type="VBoxContainer" parent="HUD"]
 offset_left = 24.0
 offset_top = 16.0
-offset_right = 900.0
-offset_bottom = 70.0
-theme_override_colors/font_color = Color(0.2, 0.27, 0.25, 1)
-text = "↓/S: nariz arriba  ·  ↑/W: nariz abajo  ·  Espacio: aletear / despegar  ·  ←/A →/D: caminar o darse vuelta
-Amarillo: forward  ·  Celeste: velocidad"
+offset_right = 284.0
+offset_bottom = 56.0
+theme_override_constants/separation = 6
+script = ExtResource("11_vitals_hud")
 
-[node name="Status" type="Label" parent="HUD" unique_id=432993478]
+[node name="Vida" type="ProgressBar" parent="HUD/Vitales"]
+layout_mode = 2
+value = 100.0
+
+[node name="Stamina" type="ProgressBar" parent="HUD/Vitales"]
+layout_mode = 2
+value = 100.0
+
+[node name="Status" type="Label" parent="HUD" unique_id=1573267295]
 offset_left = 24.0
-offset_top = 72.0
+offset_top = 64.0
 offset_right = 900.0
-offset_bottom = 98.0
+offset_bottom = 90.0
 theme_override_colors/font_color = Color(0.2, 0.27, 0.25, 1)
+
+[node name="Muerte" type="Control" parent="HUD"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("12_death_screen")
+
+[node name="Fondo" type="ColorRect" parent="HUD/Muerte"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Textos" type="VBoxContainer" parent="HUD/Muerte"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -90.0
+offset_right = 400.0
+offset_bottom = 90.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="Titulo" type="Label" parent="HUD/Muerte/Textos"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.2, 0.18, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 96
+text = "HAS MUERTO"
+horizontal_alignment = 1
+
+[node name="Subtitulo" type="Label" parent="HUD/Muerte/Textos"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.93, 0.88, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 28
+text = "Esc para ir al menú  ·  Enter para jugar de nuevo"
+horizontal_alignment = 1
+
+[node name="Piedra" parent="." unique_id=662864888 instance=ExtResource("8_piedra")]
+position = Vector2(650, 550)
+
+[node name="Paja" parent="." unique_id=1257325304 instance=ExtResource("9_paja")]
+position = Vector2(1030, 1280)
+
+[node name="Ramitas" parent="." unique_id=1631829200 instance=ExtResource("10_ramitas")]
+position = Vector2(1270, 1280)
 
 [node name="Chimango" type="CharacterBody2D" parent="." unique_id=1104130030]
 script = ExtResource("5_85g3d")
 empezar_ausente = true
+tiempo_ausente_min = 10.0
+tiempo_ausente_max = 10.0
 
 [node name="ChimangoAnimator" type="AnimatedSprite2D" parent="Chimango" unique_id=1938302224]
 sprite_frames = SubResource("SpriteFrames_2siln")
@@ -236,5 +293,3 @@ max_pitch_deg = 50.0
 flap_impulse = 400.0
 turn_speed_keep = 0.7
 metadata/_custom_type_script = "uid://bm3x271kf07d4"
-
-[node name="GatoMontes" parent="." unique_id=840224556 instance=ExtResource("11_ya4ey")]

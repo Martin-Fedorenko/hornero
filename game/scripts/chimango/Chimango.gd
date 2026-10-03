@@ -183,7 +183,8 @@ func _picada(delta: float) -> Vector2:
 func _puede_agarrar() -> bool:
 	if target is Hornero:
 		var h := target as Hornero
-		return h.state != Hornero.State.FALLING and h.state != Hornero.State.RECOVERING
+		return h.state != Hornero.State.FALLING and h.state != Hornero.State.RECOVERING \
+			and h.state != Hornero.State.DEAD
 	return true
 
 func _agarrar() -> void:
@@ -219,7 +220,9 @@ func _soltar() -> void:
 	target.set_physics_process(true)
 	if target is CharacterBody2D:
 		(target as CharacterBody2D).velocity = velocity
-	if target.has_method("knock_down"):
+	if target.has_method("take_grab_hit"):
+		target.take_grab_hit()
+	elif target.has_method("knock_down"):
 		target.knock_down()
 	solto_jugador.emit()
 	_irse()

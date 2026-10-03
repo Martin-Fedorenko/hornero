@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://hhvitq1kkie6" path="res://assets/hornero/hornero_plan.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://ds80mwf74gy77" path="res://assets/hornero/hornero_fall.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://bavhe2vs1d1y0" path="res://assets/hornero/hornero_recover_frames.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://c1bn70nioglla" path="res://assets/hornero/hornero_rotation_vertical.png" id="6"]
 
 [sub_resource type="AtlasTexture" id="Fall_0"]
 atlas = ExtResource("4")
@@ -189,6 +190,54 @@ region = Rect2(1360, 606, 386, 205)
 margin = Rect2(42, 218, 126, 307)
 filter_clip = true
 
+[sub_resource type="AtlasTexture" id="Roll_0"]
+atlas = ExtResource("6")
+region = Rect2(11, 362, 238, 180)
+margin = Rect2(1, 0, 2, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_1"]
+atlas = ExtResource("6")
+region = Rect2(249, 362, 218, 180)
+margin = Rect2(11, 0, 22, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_2"]
+atlas = ExtResource("6")
+region = Rect2(467, 362, 217, 180)
+margin = Rect2(11, 0, 23, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_3"]
+atlas = ExtResource("6")
+region = Rect2(690, 362, 209, 180)
+margin = Rect2(15, 0, 31, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_4"]
+atlas = ExtResource("6")
+region = Rect2(911, 362, 203, 180)
+margin = Rect2(18, 0, 37, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_5"]
+atlas = ExtResource("6")
+region = Rect2(1117, 362, 210, 180)
+margin = Rect2(15, 0, 30, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_6"]
+atlas = ExtResource("6")
+region = Rect2(1330, 362, 208, 180)
+margin = Rect2(16, 0, 32, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Roll_7"]
+atlas = ExtResource("6")
+region = Rect2(1540, 362, 225, 180)
+margin = Rect2(7, 0, 15, 0)
+filter_clip = true
+
 [sub_resource type="AtlasTexture" id="Frame_0"]
 atlas = ExtResource("1")
 region = Rect2(27, 67, 416, 293)
@@ -347,6 +396,35 @@ animations = [{
 "loop": 1,
 "name": &"reposo",
 "speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Roll_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Roll_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Roll_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Roll_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("Roll_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("Roll_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("Roll_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("Roll_7")
+}],
+"loop": 0,
+"name": &"rotacion_vertical",
+"speed": 20.0
 }, {
 "frames": [{
 "duration": 1.0,

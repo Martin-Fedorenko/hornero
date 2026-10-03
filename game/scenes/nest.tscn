@@ -1,0 +1,58 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://b3bamy0vnm4fg" path="res://assets/base/nest_asset.png" id="1_nest"]
+
+[sub_resource type="AtlasTexture" id="Nest0"]
+atlas = ExtResource("1_nest")
+region = Rect2(18, 229, 350, 290)
+
+[sub_resource type="AtlasTexture" id="Nest1"]
+atlas = ExtResource("1_nest")
+region = Rect2(399, 235, 350, 290)
+
+[sub_resource type="AtlasTexture" id="Nest2"]
+atlas = ExtResource("1_nest")
+region = Rect2(774, 237, 350, 290)
+
+[sub_resource type="AtlasTexture" id="Nest3"]
+atlas = ExtResource("1_nest")
+region = Rect2(1162, 239, 350, 290)
+
+[sub_resource type="AtlasTexture" id="Nest4"]
+atlas = ExtResource("1_nest")
+region = Rect2(1543, 241, 350, 290)
+
+[sub_resource type="SpriteFrames" id="NestFrames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Nest0")
+},
+{
+"duration": 1.0,
+"texture": SubResource("Nest1")
+},
+{
+"duration": 1.0,
+"texture": SubResource("Nest2")
+},
+{
+"duration": 1.0,
+"texture": SubResource("Nest3")
+},
+{
+"duration": 5.0,
+"texture": SubResource("Nest4")
+}],
+"loop": true,
+"name": &"crecer",
+"speed": 1.0
+}]
+
+[node name="Nest" type="AnimatedSprite2D"]
+scale = Vector2(0.28, 0.28)
+sprite_frames = SubResource("NestFrames")
+animation = &"crecer"
+autoplay = "crecer"
+centered = false
+offset = Vector2(-175, -288)
