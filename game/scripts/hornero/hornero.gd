@@ -8,13 +8,18 @@ extends CharacterBody2D
 
 signal state_changed(previous: State, current: State)
 signal flapped
+## El hornero rodó sobre su eje para no quedar panza arriba.
+signal rolled_upright
 
 enum State { FLYING, GLIDING, GROUND, FALLING, RECOVERING }
 
 ## Tiempo que el hornero se considera aleteando (FLYING) tras cada aleteo.
 @export var flap_state_duration := 0.45
+## Cuánto puede pasarse de la vertical antes de rodar para no quedar panza
+## arriba (grados). Evita que ruede de ida y vuelta justo en la vertical.
+@export_range(0.0, 45.0) var upright_roll_margin_deg := 15.0
 ## Dibuja el vector forward (amarillo) y la velocidad (celeste).
-@export var debug_draw_flight_direction := true:
+@export var debug_draw_flight_direction := false:
 	set(value):
 		debug_draw_flight_direction = value
 		if is_node_ready():
@@ -27,8 +32,17 @@ var facing := 1
 var pitch := 0.0
 ## Vector unitario hacia donde apunta el cuerpo. Siempre RIGHT rotado por rotation.
 var forward := Vector2.RIGHT
+## En el suelo, si se está apretando una dirección. Al darse vuelta caminando
+## la velocidad pasa por 0, pero sigue caminando.
+var wants_to_walk := false
 
 var _flap_time_left := 0.0
+## Tras enderezarse, la tecla de dirección que se venía apretando apunta al
+## revés; se ignora hasta soltarla para no dar media vuelta sin querer.
+var _turn_locked := false
+## Al rodar, "nariz arriba" pasa a girar para el otro lado. Mientras se siga
+## apretando la misma tecla se invierte, así el giro en pantalla continúa.
+var _pitch_inverted := false
 
 @onready var _flight: FlightMotor = $FlightMotor
 @onready var _ground: GroundMotor = $GroundMotor
@@ -79,10 +93,17 @@ func finish_recovery() -> void:
 # --- Aire ---------------------------------------------------------------
 
 func _air_step(input: HorneroInput, delta: float) -> void:
-	if input.move != 0.0 and signf(input.move) != facing:
+	if _turn_locked and (input.move == 0.0 or signf(input.move) == facing):
+		_turn_locked = false
+	if not _turn_locked and input.move != 0.0 and signf(input.move) != facing:
 		facing = int(signf(input.move))
 		velocity = _flight.turn_around(velocity)
-	pitch = _flight.update_pitch(pitch, input.pitch, velocity, forward, facing, delta)
+	if input.pitch == 0.0:
+		_pitch_inverted = false
+	var pitch_input := -input.pitch if _pitch_inverted else input.pitch
+	pitch = _flight.update_pitch(pitch, pitch_input, velocity, forward, facing, delta)
+	if absf(pitch) > PI / 2.0 + deg_to_rad(upright_roll_margin_deg):
+		_roll_upright(input)
 	_apply_orientation()
 	if input.flap:
 		_flap()
@@ -94,6 +115,18 @@ func _flap() -> void:
 	_flap_time_left = flap_state_duration
 	_set_state(State.FLYING)
 	flapped.emit()
+
+
+## Pasada la vertical quedaría panza arriba: rueda sobre su eje. Invierte
+## facing y refleja el pitch, así rotation, forward y velocity no cambian;
+## sólo el dibujo pasa a tener la panza hacia abajo.
+func _roll_upright(input: HorneroInput) -> void:
+	facing = -facing
+	pitch = wrapf(PI - pitch, -PI, PI)
+	_turn_locked = true
+	if input.pitch != 0.0:
+		_pitch_inverted = not _pitch_inverted
+	rolled_upright.emit()
 
 
 # --- Caída ---------------------------------------------------------------
@@ -110,6 +143,7 @@ func _recover_step(delta: float) -> void:
 # --- Suelo ---------------------------------------------------------------
 
 func _ground_step(input: HorneroInput, delta: float) -> void:
+	wants_to_walk = input.move != 0.0
 	if input.flap:
 		_take_off()
 		return
@@ -132,6 +166,7 @@ func _land(input: HorneroInput) -> void:
 	pitch = 0.0
 	_apply_orientation()
 	velocity = Vector2(_ground.target_speed(input.move), 0.0)
+	wants_to_walk = input.move != 0.0
 	_set_state(State.GROUND)
 
 

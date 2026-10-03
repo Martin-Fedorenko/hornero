@@ -831,13 +831,53 @@ region_filter_clip_enabled = true
 
 [node name="Alambrado" type="Parallax2D" parent="."]
 scroll_scale = Vector2(0.6, 0.48)
-repeat_size = Vector2(292, 0)
-repeat_times = 4
+repeat_size = Vector2(1752, 0)
+repeat_times = 2
 
-[node name="Tramo" type="Sprite2D" parent="Alambrado"]
+[node name="Tramo0" type="Sprite2D" parent="Alambrado"]
 texture = ExtResource("1_atlas")
 centered = false
 position = Vector2(0, 469)
+region_enabled = true
+region_rect = Rect2(68, 1136, 292, 80)
+region_filter_clip_enabled = true
+
+[node name="Tramo1" type="Sprite2D" parent="Alambrado"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(292, 469)
+region_enabled = true
+region_rect = Rect2(68, 1136, 292, 80)
+region_filter_clip_enabled = true
+
+[node name="Tramo2" type="Sprite2D" parent="Alambrado"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(584, 469)
+region_enabled = true
+region_rect = Rect2(68, 1136, 292, 80)
+region_filter_clip_enabled = true
+
+[node name="Tramo3" type="Sprite2D" parent="Alambrado"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(876, 469)
+region_enabled = true
+region_rect = Rect2(68, 1136, 292, 80)
+region_filter_clip_enabled = true
+
+[node name="Tramo4" type="Sprite2D" parent="Alambrado"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(1168, 469)
+region_enabled = true
+region_rect = Rect2(68, 1136, 292, 80)
+region_filter_clip_enabled = true
+
+[node name="Tramo5" type="Sprite2D" parent="Alambrado"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(1460, 469)
 region_enabled = true
 region_rect = Rect2(68, 1136, 292, 80)
 region_filter_clip_enabled = true
