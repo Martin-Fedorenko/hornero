@@ -1,10 +1,89 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1"]
-[ext_resource type="PackedScene" path="res://scenes/hornero.tscn" id="2"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="PackedScene" uid="uid://botl8vytdr4og" path="res://scenes/hornero.tscn" id="2_hornero"]
+[ext_resource type="Script" path="res://scripts/world/platform.gd" id="3_platform"]
 
 [node name="Laboratorio" type="Node2D"]
-script = ExtResource("1")
+script = ExtResource("1_main")
 
-[node name="Hornero" parent="." instance=ExtResource("2")]
-position = Vector2(576, 330)
+[node name="World" type="Node2D" parent="."]
+
+[node name="Piso" type="StaticBody2D" parent="World"]
+position = Vector2(0, 1640)
+script = ExtResource("3_platform")
+size = Vector2(6000, 160)
+solid = true
+one_way = false
+fill_color = Color(0.69, 0.48, 0.31, 1)
+top_band = 18.0
+
+[node name="ParedIzquierda" type="StaticBody2D" parent="World"]
+position = Vector2(-100, -400)
+script = ExtResource("3_platform")
+size = Vector2(100, 2200)
+solid = true
+one_way = false
+
+[node name="ParedDerecha" type="StaticBody2D" parent="World"]
+position = Vector2(6000, -400)
+script = ExtResource("3_platform")
+size = Vector2(100, 2200)
+solid = true
+one_way = false
+
+[node name="Plataforma1" type="StaticBody2D" parent="World"]
+position = Vector2(900, 1300)
+script = ExtResource("3_platform")
+size = Vector2(520, 110)
+
+[node name="Plataforma2" type="StaticBody2D" parent="World"]
+position = Vector2(2000, 1040)
+script = ExtResource("3_platform")
+size = Vector2(420, 100)
+
+[node name="Plataforma3" type="StaticBody2D" parent="World"]
+position = Vector2(3100, 1340)
+script = ExtResource("3_platform")
+size = Vector2(600, 120)
+
+[node name="Plataforma4" type="StaticBody2D" parent="World"]
+position = Vector2(4200, 820)
+script = ExtResource("3_platform")
+size = Vector2(380, 100)
+
+[node name="Plataforma5" type="StaticBody2D" parent="World"]
+position = Vector2(5000, 1200)
+script = ExtResource("3_platform")
+size = Vector2(500, 110)
+
+[node name="Hornero" parent="." instance=ExtResource("2_hornero")]
+position = Vector2(500, 900)
+
+[node name="Camera2D" type="Camera2D" parent="Hornero"]
+position_smoothing_enabled = true
+position_smoothing_speed = 4.0
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.1
+drag_top_margin = 0.15
+drag_right_margin = 0.1
+drag_bottom_margin = 0.15
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Controles" type="Label" parent="HUD"]
+offset_left = 24.0
+offset_top = 16.0
+offset_right = 900.0
+offset_bottom = 70.0
+theme_override_colors/font_color = Color(0.2, 0.27, 0.25, 1)
+text = "↓/S: nariz arriba  ·  ↑/W: nariz abajo  ·  Espacio: aletear / despegar  ·  ←/A →/D: caminar o darse vuelta
+Amarillo: forward  ·  Celeste: velocidad"
+
+[node name="Status" type="Label" parent="HUD"]
+offset_left = 24.0
+offset_top = 72.0
+offset_right = 900.0
+offset_bottom = 98.0
+theme_override_colors/font_color = Color(0.2, 0.27, 0.25, 1)

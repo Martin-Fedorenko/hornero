@@ -1,24 +1,35 @@
 [gd_scene format=3 uid="uid://botl8vytdr4og"]
 
-[ext_resource type="Script" uid="uid://bhtl7lkggewjb" path="res://scripts/hornero.gd" id="1"]
-[ext_resource type="SpriteFrames" path="res://assets/hornero_frames_con_caminata.tres" id="2_fllcg"]
+[ext_resource type="Script" path="res://scripts/hornero/hornero.gd" id="1_body"]
+[ext_resource type="SpriteFrames" uid="uid://c73o47gtyvccl" path="res://assets/hornero_frames.tres" id="2_frames"]
+[ext_resource type="Script" path="res://scripts/hornero/hornero_animator.gd" id="3_anim"]
+[ext_resource type="Script" path="res://scripts/hornero/flight_debug.gd" id="4_debug"]
+[ext_resource type="Script" path="res://scripts/hornero/flight_motor.gd" id="5_flight"]
+[ext_resource type="Script" path="res://scripts/hornero/ground_motor.gd" id="6_ground"]
 
-[sub_resource type="CapsuleShape2D" id="BodyShape"]
-radius = 13.0
-height = 66.0
+[sub_resource type="CircleShape2D" id="BodyShape"]
+radius = 16.0
 
-[node name="Hornero" type="CharacterBody2D" unique_id=1895733049]
-motion_mode = 1
-script = ExtResource("1")
+[node name="Hornero" type="CharacterBody2D"]
+floor_snap_length = 8.0
+script = ExtResource("1_body")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1257189810]
-scale = Vector2(0.24, 0.24)
-sprite_frames = ExtResource("2_fllcg")
-animation = &"caminar"
-autoplay = "vuelo"
-frame_progress = 0.06595593
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1127453975]
-position = Vector2(6, 5)
-rotation = 1.5707963
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("BodyShape")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.24, 0.24)
+sprite_frames = ExtResource("2_frames")
+animation = &"planeo"
+offset = Vector2(20, -46)
+script = ExtResource("3_anim")
+
+[node name="FlightDebug" type="Node2D" parent="."]
+z_index = 1
+script = ExtResource("4_debug")
+
+[node name="FlightMotor" type="Node" parent="."]
+script = ExtResource("5_flight")
+
+[node name="GroundMotor" type="Node" parent="."]
+script = ExtResource("6_ground")

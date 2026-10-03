@@ -1,6 +1,43 @@
-[gd_resource type="SpriteFrames" format=3 uid="uid://d2dc36vmc7ntm"]
+[gd_resource type="SpriteFrames" format=3 uid="uid://c73o47gtyvccl"]
 
 [ext_resource type="Texture2D" uid="uid://chkodesxbe6yf" path="res://assets/hornero_sheet.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://drgi8flvrtpv6" path="res://assets/hornero_walk.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="Walk_0"]
+atlas = ExtResource("2")
+region = Rect2(29, 176, 469, 272)
+margin = Rect2(9, 216, 43, 240)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Walk_1"]
+atlas = ExtResource("2")
+region = Rect2(544, 176, 436, 278)
+margin = Rect2(41, 216, 76, 234)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Walk_2"]
+atlas = ExtResource("2")
+region = Rect2(1047, 177, 465, 281)
+margin = Rect2(13, 217, 47, 231)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Walk_3"]
+atlas = ExtResource("2")
+region = Rect2(25, 603, 473, 269)
+margin = Rect2(5, 216, 39, 243)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Walk_4"]
+atlas = ExtResource("2")
+region = Rect2(541, 603, 444, 274)
+margin = Rect2(33, 216, 68, 238)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Walk_5"]
+atlas = ExtResource("2")
+region = Rect2(1050, 605, 462, 274)
+margin = Rect2(15, 217, 50, 238)
+filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Frame_6"]
 atlas = ExtResource("1")
@@ -52,10 +89,28 @@ filter_clip = true
 
 [resource]
 animations = [{
-"frames": [],
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Walk_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Walk_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Walk_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Walk_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("Walk_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("Walk_5")
+}],
 "loop": 1,
-"name": &"Caminar",
-"speed": 5.0
+"name": &"caminar",
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
