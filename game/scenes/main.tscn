@@ -1,19 +1,89 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://3lk284xx4yoy"]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" uid="uid://bve0jmyyfgxqo" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" uid="uid://botl8vytdr4og" path="res://scenes/hornero.tscn" id="2_hornero"]
-[ext_resource type="Script" path="res://scripts/world/platform.gd" id="3_platform"]
+[ext_resource type="Script" uid="uid://bvqibbekykd66" path="res://scripts/world/platform.gd" id="3_platform"]
 [ext_resource type="PackedScene" path="res://scenes/pampas_background.tscn" id="4_background"]
+[ext_resource type="Script" uid="uid://b4ym64cj0gyu6" path="res://scripts/chimango/Chimango.gd" id="5_85g3d"]
+[ext_resource type="Texture2D" uid="uid://b0fq4svickc0l" path="res://assets/chimango/chimango_fly.png" id="5_tbgi4"]
+[ext_resource type="Script" uid="uid://mutqphpmvp01" path="res://scripts/hornero/ground_motor.gd" id="6_o6xl0"]
+[ext_resource type="Script" uid="uid://dporub47gssp2" path="res://scenes/chimango_animator.gd" id="6_tipki"]
+[ext_resource type="Script" uid="uid://bm3x271kf07d4" path="res://scripts/hornero/flight_motor.gd" id="7_tipki"]
 
-[node name="Laboratorio" type="Node2D"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_tefeu"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(0, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o6xl0"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(462, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tipki"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(924, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_85g3d"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(1386, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_choun"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(1848, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ya4ey"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(2310, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eb6dy"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(2772, 0, 462, 724)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_trceg"]
+atlas = ExtResource("5_tbgi4")
+region = Rect2(3234, 0, 462, 724)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2siln"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tefeu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o6xl0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tipki")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_85g3d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_choun")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ya4ey")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eb6dy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_trceg")
+}],
+"loop": 1,
+"name": &"chimango_attack",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_a8y0u"]
+
+[node name="Laboratorio" type="Node2D" unique_id=805606583]
 script = ExtResource("1_main")
 
-[node name="PampasBackground" parent="." instance=ExtResource("4_background")]
-reference_camera_top = 1080.0
+[node name="PampasBackground" parent="." unique_id=1549126932 instance=ExtResource("4_background")]
 
-[node name="World" type="Node2D" parent="."]
+[node name="World" type="Node2D" parent="." unique_id=956585639]
 
-[node name="Piso" type="StaticBody2D" parent="World"]
+[node name="Piso" type="StaticBody2D" parent="World" unique_id=2047084813]
 position = Vector2(0, 1640)
 script = ExtResource("3_platform")
 size = Vector2(6000, 160)
@@ -22,49 +92,49 @@ one_way = false
 fill_color = Color(0.69, 0.48, 0.31, 1)
 top_band = 18.0
 
-[node name="ParedIzquierda" type="StaticBody2D" parent="World"]
+[node name="ParedIzquierda" type="StaticBody2D" parent="World" unique_id=1031541673]
 position = Vector2(-100, -400)
 script = ExtResource("3_platform")
 size = Vector2(100, 2200)
 solid = true
 one_way = false
 
-[node name="ParedDerecha" type="StaticBody2D" parent="World"]
+[node name="ParedDerecha" type="StaticBody2D" parent="World" unique_id=2010138499]
 position = Vector2(6000, -400)
 script = ExtResource("3_platform")
 size = Vector2(100, 2200)
 solid = true
 one_way = false
 
-[node name="Plataforma1" type="StaticBody2D" parent="World"]
+[node name="Plataforma1" type="StaticBody2D" parent="World" unique_id=267946207]
 position = Vector2(900, 1300)
 script = ExtResource("3_platform")
 size = Vector2(520, 110)
 
-[node name="Plataforma2" type="StaticBody2D" parent="World"]
+[node name="Plataforma2" type="StaticBody2D" parent="World" unique_id=1444763660]
 position = Vector2(2000, 1040)
 script = ExtResource("3_platform")
 size = Vector2(420, 100)
 
-[node name="Plataforma3" type="StaticBody2D" parent="World"]
+[node name="Plataforma3" type="StaticBody2D" parent="World" unique_id=1050829898]
 position = Vector2(3100, 1340)
 script = ExtResource("3_platform")
 size = Vector2(600, 120)
 
-[node name="Plataforma4" type="StaticBody2D" parent="World"]
+[node name="Plataforma4" type="StaticBody2D" parent="World" unique_id=796131858]
 position = Vector2(4200, 820)
 script = ExtResource("3_platform")
 size = Vector2(380, 100)
 
-[node name="Plataforma5" type="StaticBody2D" parent="World"]
+[node name="Plataforma5" type="StaticBody2D" parent="World" unique_id=250811008]
 position = Vector2(5000, 1200)
 script = ExtResource("3_platform")
 size = Vector2(500, 110)
 
-[node name="Hornero" parent="." instance=ExtResource("2_hornero")]
+[node name="Hornero" parent="." unique_id=853117226 instance=ExtResource("2_hornero")]
 position = Vector2(500, 900)
 
-[node name="Camera2D" type="Camera2D" parent="Hornero"]
+[node name="Camera2D" type="Camera2D" parent="Hornero" unique_id=2096905684]
 position_smoothing_enabled = true
 position_smoothing_speed = 4.0
 drag_horizontal_enabled = true
@@ -74,9 +144,9 @@ drag_top_margin = 0.15
 drag_right_margin = 0.1
 drag_bottom_margin = 0.15
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1668422236]
 
-[node name="Controles" type="Label" parent="HUD"]
+[node name="Controles" type="Label" parent="HUD" unique_id=331174832]
 offset_left = 24.0
 offset_top = 16.0
 offset_right = 900.0
@@ -85,9 +155,34 @@ theme_override_colors/font_color = Color(0.2, 0.27, 0.25, 1)
 text = "↓/S: nariz arriba  ·  ↑/W: nariz abajo  ·  Espacio: aletear / despegar  ·  ←/A →/D: caminar o darse vuelta
 Amarillo: forward  ·  Celeste: velocidad"
 
-[node name="Status" type="Label" parent="HUD"]
+[node name="Status" type="Label" parent="HUD" unique_id=432993478]
 offset_left = 24.0
 offset_top = 72.0
 offset_right = 900.0
 offset_bottom = 98.0
 theme_override_colors/font_color = Color(0.2, 0.27, 0.25, 1)
+
+[node name="Chimango" type="CharacterBody2D" parent="." unique_id=1104130030]
+script = ExtResource("5_85g3d")
+
+[node name="ChimangoAnimator" type="AnimatedSprite2D" parent="Chimango" unique_id=1938302224]
+sprite_frames = SubResource("SpriteFrames_2siln")
+animation = &"chimango_attack"
+script = ExtResource("6_tipki")
+
+[node name="ChimangoCollision" type="CollisionShape2D" parent="Chimango" unique_id=114115484]
+shape = SubResource("CircleShape2D_a8y0u")
+
+[node name="GroundMotor" type="Node" parent="Chimango" unique_id=484196229]
+script = ExtResource("6_o6xl0")
+metadata/_custom_type_script = "uid://mutqphpmvp01"
+
+[node name="FlightMotor" type="Node" parent="Chimango" unique_id=1882578548]
+script = ExtResource("7_tipki")
+stall_speed = 200.0
+air_drag = 0.2
+limit_pitch = true
+max_pitch_deg = 50.0
+flap_impulse = 400.0
+turn_speed_keep = 0.7
+metadata/_custom_type_script = "uid://bm3x271kf07d4"
