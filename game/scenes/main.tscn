@@ -70,8 +70,8 @@ animations = [{
 "texture": SubResource("AtlasTexture_trceg")
 }],
 "loop": 1,
-"name": &"chimango_attack",
-"speed": 5.0
+"name": &"vuelo",
+"speed": 12.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_a8y0u"]
@@ -167,7 +167,7 @@ script = ExtResource("5_85g3d")
 
 [node name="ChimangoAnimator" type="AnimatedSprite2D" parent="Chimango" unique_id=1938302224]
 sprite_frames = SubResource("SpriteFrames_2siln")
-animation = &"chimango_attack"
+animation = &"vuelo"
 script = ExtResource("6_tipki")
 
 [node name="ChimangoCollision" type="CollisionShape2D" parent="Chimango" unique_id=114115484]
