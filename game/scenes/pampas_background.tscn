@@ -1,0 +1,959 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/world/pampas_background.gd" id="0_script"]
+[ext_resource type="Texture2D" path="res://assets/background/background_assets.png" id="1_atlas"]
+[ext_resource type="Texture2D" path="res://assets/background/clouds.png" id="2_clouds"]
+[ext_resource type="Shader" path="res://scripts/world/distance_haze.gdshader" id="3_haze"]
+
+[sub_resource type="Gradient" id="Cielo_gradiente"]
+offsets = PackedFloat32Array(0, 0.28, 0.46, 0.56, 1)
+colors = PackedColorArray(0.220, 0.475, 0.788, 1, 0.306, 0.569, 0.839, 1, 0.502, 0.729, 0.910, 1, 0.808, 0.902, 0.957, 1, 0.910, 0.953, 0.973, 1)
+
+[sub_resource type="GradientTexture2D" id="Cielo_textura"]
+gradient = SubResource("Cielo_gradiente")
+width = 4
+height = 256
+fill_to = Vector2(0, 1)
+
+[sub_resource type="ShaderMaterial" id="Bruma_lejana"]
+shader = ExtResource("3_haze")
+shader_parameter/haze = 0.42
+
+[sub_resource type="ShaderMaterial" id="Bruma_arboleda"]
+shader = ExtResource("3_haze")
+shader_parameter/haze = 0.6
+
+[sub_resource type="ShaderMaterial" id="Bruma_media"]
+shader = ExtResource("3_haze")
+shader_parameter/haze = 0.24
+
+[sub_resource type="ShaderMaterial" id="Bruma_suave"]
+shader = ExtResource("3_haze")
+shader_parameter/haze = 0.1
+
+[node name="PampasBackground" type="Node2D"]
+texture_filter = 4
+script = ExtResource("0_script")
+
+[node name="Cielo" type="CanvasLayer" parent="."]
+layer = -100
+
+[node name="Gradiente" type="TextureRect" parent="Cielo"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("Cielo_textura")
+expand_mode = 1
+
+[node name="Nubes" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.02, 0)
+repeat_size = Vector2(3600, 0)
+autoscroll = Vector2(-6, 0)
+
+[node name="Nube0" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(520, 150)
+scale = Vector2(0.55, 0.55)
+region_enabled = true
+region_rect = Rect2(4, 4, 747, 267)
+region_filter_clip_enabled = true
+
+[node name="Nube1" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(1350, 120)
+scale = Vector2(0.5, 0.5)
+region_enabled = true
+region_rect = Rect2(4, 275, 464, 187)
+region_filter_clip_enabled = true
+
+[node name="Nube2" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(1980, 245)
+scale = Vector2(0.42, 0.42)
+region_enabled = true
+region_rect = Rect2(4, 466, 460, 94)
+region_filter_clip_enabled = true
+
+[node name="Nube3" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(2420, 95)
+scale = Vector2(0.6, 0.6)
+region_enabled = true
+region_rect = Rect2(472, 275, 222, 94)
+region_filter_clip_enabled = true
+
+[node name="Nube4" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(2950, 175)
+scale = Vector2(0.5, 0.5)
+region_enabled = true
+region_rect = Rect2(468, 466, 287, 92)
+region_filter_clip_enabled = true
+
+[node name="Nube5" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(3380, 285)
+scale = Vector2(0.45, 0.45)
+region_enabled = true
+region_rect = Rect2(759, 466, 229, 76)
+region_filter_clip_enabled = true
+
+[node name="Nube6" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(140, 300)
+scale = Vector2(0.42, 0.42)
+region_enabled = true
+region_rect = Rect2(4, 564, 155, 71)
+region_filter_clip_enabled = true
+
+[node name="Nube7" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(900, 320)
+scale = Vector2(0.4, 0.4)
+region_enabled = true
+region_rect = Rect2(341, 564, 154, 58)
+region_filter_clip_enabled = true
+
+[node name="Nube8" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(1700, 330)
+scale = Vector2(0.38, 0.38)
+region_enabled = true
+region_rect = Rect2(163, 564, 174, 59)
+region_filter_clip_enabled = true
+
+[node name="Nube9" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(2250, 340)
+scale = Vector2(0.36, 0.36)
+region_enabled = true
+region_rect = Rect2(681, 564, 152, 57)
+region_filter_clip_enabled = true
+
+[node name="Nube10" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(2700, 300)
+scale = Vector2(0.4, 0.4)
+region_enabled = true
+region_rect = Rect2(499, 564, 178, 58)
+region_filter_clip_enabled = true
+
+[node name="Nube11" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(3150, 345)
+scale = Vector2(0.36, 0.36)
+region_enabled = true
+region_rect = Rect2(837, 564, 145, 44)
+region_filter_clip_enabled = true
+
+[node name="Nube12" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(1180, 360)
+scale = Vector2(0.4, 0.4)
+region_enabled = true
+region_rect = Rect2(4, 639, 174, 41)
+region_filter_clip_enabled = true
+
+[node name="Nube13" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(3500, 362)
+scale = Vector2(0.36, 0.36)
+region_enabled = true
+region_rect = Rect2(182, 639, 116, 31)
+region_filter_clip_enabled = true
+
+[node name="Nube14" type="Sprite2D" parent="Nubes"]
+texture = ExtResource("2_clouds")
+position = Vector2(2050, 362)
+scale = Vector2(0.3, 0.3)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(4, 564, 155, 71)
+region_filter_clip_enabled = true
+
+[node name="HorizonteLejano" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.03, 0.01)
+repeat_size = Vector2(2246, 0)
+
+[node name="Relleno" type="ColorRect" parent="HorizonteLejano"]
+offset_left = -2
+offset_top = 396
+offset_right = 2248
+offset_bottom = 1796
+mouse_filter = 2
+color = Color(0.588, 0.573, 0.298, 1)
+
+[node name="Lomas0" type="Sprite2D" parent="HorizonteLejano"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(272.75, 363)
+scale = Vector2(1.02, 1)
+region_enabled = true
+region_rect = Rect2(39, 76, 568, 29)
+region_filter_clip_enabled = true
+
+[node name="Lomas1" type="Sprite2D" parent="HorizonteLejano"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(834.25, 363)
+scale = Vector2(0.98, 1)
+region_enabled = true
+region_rect = Rect2(633, 76, 589, 29)
+region_filter_clip_enabled = true
+
+[node name="Lomas2" type="Sprite2D" parent="HorizonteLejano"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(1395.75, 363)
+scale = Vector2(1.02, 1)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(39, 76, 568, 29)
+region_filter_clip_enabled = true
+
+[node name="Lomas3" type="Sprite2D" parent="HorizonteLejano"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(1957.25, 363)
+scale = Vector2(0.98, 1)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(633, 76, 589, 29)
+region_filter_clip_enabled = true
+
+[node name="Monte0" type="Sprite2D" parent="HorizonteLejano"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(0, 359)
+region_enabled = true
+region_rect = Rect2(41, 22, 579, 41)
+region_filter_clip_enabled = true
+
+[node name="Monte1" type="Sprite2D" parent="HorizonteLejano"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(557, 363)
+region_enabled = true
+region_rect = Rect2(634, 26, 588, 37)
+region_filter_clip_enabled = true
+
+[node name="Monte2" type="Sprite2D" parent="HorizonteLejano"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(1123, 359)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(41, 22, 579, 41)
+region_filter_clip_enabled = true
+
+[node name="Monte3" type="Sprite2D" parent="HorizonteLejano"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(1680, 363)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(634, 26, 588, 37)
+region_filter_clip_enabled = true
+
+[node name="LlanuraLejana" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.07, 0.04)
+repeat_size = Vector2(2344, 0)
+
+[node name="Relleno" type="ColorRect" parent="LlanuraLejana"]
+offset_left = -2
+offset_top = 418
+offset_right = 2346
+offset_bottom = 1818
+mouse_filter = 2
+color = Color(0.596, 0.576, 0.275, 1)
+
+[node name="Arboleda0" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(292, 374)
+scale = Vector2(1, 1)
+region_enabled = true
+region_rect = Rect2(31, 119, 587, 33)
+region_filter_clip_enabled = true
+
+[node name="Arboleda1" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(878, 371)
+scale = Vector2(1, 1)
+region_enabled = true
+region_rect = Rect2(637, 118, 587, 36)
+region_filter_clip_enabled = true
+
+[node name="Arboleda2" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(1464, 374)
+scale = Vector2(1, 1)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(31, 119, 587, 33)
+region_filter_clip_enabled = true
+
+[node name="Arboleda3" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(2050, 371)
+scale = Vector2(1, 1)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(637, 118, 587, 36)
+region_filter_clip_enabled = true
+
+[node name="Campo0" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(-1, 382)
+region_enabled = true
+region_rect = Rect2(30, 164, 588, 41)
+region_filter_clip_enabled = true
+
+[node name="Campo1" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(585, 382)
+scale = Vector2(1, 1)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(637, 164, 587, 41)
+region_filter_clip_enabled = true
+
+[node name="Campo2" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(1171, 382)
+region_enabled = true
+region_rect = Rect2(30, 164, 588, 41)
+region_filter_clip_enabled = true
+
+[node name="Campo3" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(1757, 382)
+scale = Vector2(1, 1)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(637, 164, 587, 41)
+region_filter_clip_enabled = true
+
+[node name="MataUnion0" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+position = Vector2(0, 404.64)
+scale = Vector2(0.24, 0.24)
+material = SubResource("Bruma_lejana")
+region_enabled = true
+region_rect = Rect2(29, 608, 104, 57)
+region_filter_clip_enabled = true
+
+[node name="MonteUnion0" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+position = Vector2(293, 401.28)
+scale = Vector2(0.16, 0.16)
+material = SubResource("Bruma_arboleda")
+region_enabled = true
+region_rect = Rect2(443, 634, 55, 38)
+region_filter_clip_enabled = true
+
+[node name="MataUnion1" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+position = Vector2(586, 404.64)
+scale = Vector2(0.24, 0.24)
+flip_h = true
+material = SubResource("Bruma_lejana")
+region_enabled = true
+region_rect = Rect2(29, 608, 104, 57)
+region_filter_clip_enabled = true
+
+[node name="MonteUnion1" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+position = Vector2(879, 399.76)
+scale = Vector2(0.16, 0.16)
+material = SubResource("Bruma_arboleda")
+region_enabled = true
+region_rect = Rect2(29, 608, 104, 57)
+region_filter_clip_enabled = true
+
+[node name="MataUnion2" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+position = Vector2(1172, 403.08)
+scale = Vector2(0.24, 0.24)
+material = SubResource("Bruma_lejana")
+region_enabled = true
+region_rect = Rect2(291, 606, 131, 70)
+region_filter_clip_enabled = true
+
+[node name="MonteUnion2" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+position = Vector2(1465, 399.76)
+scale = Vector2(0.16, 0.16)
+material = SubResource("Bruma_arboleda")
+region_enabled = true
+region_rect = Rect2(29, 608, 104, 57)
+region_filter_clip_enabled = true
+
+[node name="MataUnion3" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+position = Vector2(1758, 403.08)
+scale = Vector2(0.24, 0.24)
+flip_h = true
+material = SubResource("Bruma_lejana")
+region_enabled = true
+region_rect = Rect2(291, 606, 131, 70)
+region_filter_clip_enabled = true
+
+[node name="MonteUnion3" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+position = Vector2(2051, 401.28)
+scale = Vector2(0.16, 0.16)
+material = SubResource("Bruma_arboleda")
+region_enabled = true
+region_rect = Rect2(443, 634, 55, 38)
+region_filter_clip_enabled = true
+
+[node name="Arbolito0" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+position = Vector2(330, 399.5)
+scale = Vector2(0.2, 0.2)
+material = SubResource("Bruma_lejana")
+region_enabled = true
+region_rect = Rect2(469, 696, 109, 99)
+region_filter_clip_enabled = true
+
+[node name="Arbolito1" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+position = Vector2(1270, 399.5)
+scale = Vector2(0.2, 0.2)
+flip_h = true
+material = SubResource("Bruma_lejana")
+region_enabled = true
+region_rect = Rect2(469, 696, 109, 99)
+region_filter_clip_enabled = true
+
+[node name="Arbolito2" type="Sprite2D" parent="LlanuraLejana"]
+texture = ExtResource("1_atlas")
+position = Vector2(1890, 397.6)
+scale = Vector2(0.2, 0.2)
+material = SubResource("Bruma_lejana")
+region_enabled = true
+region_rect = Rect2(1067, 681, 154, 118)
+region_filter_clip_enabled = true
+
+[node name="CampoMedio" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.13, 0.08)
+repeat_size = Vector2(2695.6, 0)
+
+[node name="Relleno" type="ColorRect" parent="CampoMedio"]
+offset_left = -2
+offset_top = 444
+offset_right = 2697.6
+offset_bottom = 1844
+mouse_filter = 2
+color = Color(0.533, 0.525, 0.231, 1)
+
+[node name="Franja0" type="Sprite2D" parent="CampoMedio"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(-1, 391.8)
+scale = Vector2(1.15, 1.15)
+region_enabled = true
+region_rect = Rect2(30, 216, 588, 50)
+region_filter_clip_enabled = true
+
+[node name="Franja1" type="Sprite2D" parent="CampoMedio"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(672.9, 392.95)
+scale = Vector2(1.15, 1.15)
+region_enabled = true
+region_rect = Rect2(638, 217, 587, 49)
+region_filter_clip_enabled = true
+
+[node name="Franja2" type="Sprite2D" parent="CampoMedio"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(1346.8, 391.8)
+scale = Vector2(1.15, 1.15)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(30, 216, 588, 50)
+region_filter_clip_enabled = true
+
+[node name="Franja3" type="Sprite2D" parent="CampoMedio"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(2020.7, 392.95)
+scale = Vector2(1.15, 1.15)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(638, 217, 587, 49)
+region_filter_clip_enabled = true
+
+[node name="MataUnion0" type="Sprite2D" parent="CampoMedio"]
+texture = ExtResource("1_atlas")
+position = Vector2(0, 415.35)
+scale = Vector2(0.36, 0.36)
+flip_h = true
+material = SubResource("Bruma_media")
+region_enabled = true
+region_rect = Rect2(629, 602, 135, 74)
+region_filter_clip_enabled = true
+
+[node name="MataUnion1" type="Sprite2D" parent="CampoMedio"]
+texture = ExtResource("1_atlas")
+position = Vector2(673.9, 416.25)
+scale = Vector2(0.36, 0.36)
+material = SubResource("Bruma_media")
+region_enabled = true
+region_rect = Rect2(1096, 602, 113, 69)
+region_filter_clip_enabled = true
+
+[node name="MataUnion2" type="Sprite2D" parent="CampoMedio"]
+texture = ExtResource("1_atlas")
+position = Vector2(1347.8, 416.07)
+scale = Vector2(0.36, 0.36)
+flip_h = true
+material = SubResource("Bruma_media")
+region_enabled = true
+region_rect = Rect2(878, 606, 90, 70)
+region_filter_clip_enabled = true
+
+[node name="MataUnion3" type="Sprite2D" parent="CampoMedio"]
+texture = ExtResource("1_atlas")
+position = Vector2(2021.7, 415.35)
+scale = Vector2(0.36, 0.36)
+material = SubResource("Bruma_media")
+region_enabled = true
+region_rect = Rect2(153, 603, 122, 74)
+region_filter_clip_enabled = true
+
+[node name="Arbol0" type="Sprite2D" parent="CampoMedio"]
+texture = ExtResource("1_atlas")
+position = Vector2(420, 405.57)
+scale = Vector2(0.34, 0.34)
+material = SubResource("Bruma_media")
+region_enabled = true
+region_rect = Rect2(1067, 681, 154, 118)
+region_filter_clip_enabled = true
+
+[node name="Mata1" type="Sprite2D" parent="CampoMedio"]
+texture = ExtResource("1_atlas")
+position = Vector2(1050, 421.85)
+scale = Vector2(0.3, 0.3)
+material = SubResource("Bruma_media")
+region_enabled = true
+region_rect = Rect2(443, 634, 55, 38)
+region_filter_clip_enabled = true
+
+[node name="Arbol2" type="Sprite2D" parent="CampoMedio"]
+texture = ExtResource("1_atlas")
+position = Vector2(1600, 407.61)
+scale = Vector2(0.34, 0.34)
+material = SubResource("Bruma_media")
+region_enabled = true
+region_rect = Rect2(323, 689, 136, 106)
+region_filter_clip_enabled = true
+
+[node name="Mata3" type="Sprite2D" parent="CampoMedio"]
+texture = ExtResource("1_atlas")
+position = Vector2(2150, 417.05)
+scale = Vector2(0.3, 0.3)
+material = SubResource("Bruma_media")
+region_enabled = true
+region_rect = Rect2(878, 606, 90, 70)
+region_filter_clip_enabled = true
+
+[node name="Arbol4" type="Sprite2D" parent="CampoMedio"]
+texture = ExtResource("1_atlas")
+position = Vector2(2480, 405.57)
+scale = Vector2(0.34, 0.34)
+material = SubResource("Bruma_media")
+region_enabled = true
+region_rect = Rect2(1067, 681, 154, 118)
+region_filter_clip_enabled = true
+
+[node name="VegetacionMedia" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.24, 0.16)
+repeat_size = Vector2(3047.2, 0)
+
+[node name="Relleno" type="ColorRect" parent="VegetacionMedia"]
+offset_left = -2
+offset_top = 481
+offset_right = 3049.2
+offset_bottom = 1881
+mouse_filter = 2
+color = Color(0.392, 0.408, 0.176, 1)
+
+[node name="Franja0" type="Sprite2D" parent="VegetacionMedia"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(-1, 399.5)
+scale = Vector2(1.3, 1.3)
+region_enabled = true
+region_rect = Rect2(30, 275, 587, 67)
+region_filter_clip_enabled = true
+
+[node name="Franja1" type="Sprite2D" parent="VegetacionMedia"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(760.8, 400.8)
+scale = Vector2(1.3, 1.3)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(638, 277, 587, 66)
+region_filter_clip_enabled = true
+
+[node name="Franja2" type="Sprite2D" parent="VegetacionMedia"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(1522.6, 399.5)
+scale = Vector2(1.3, 1.3)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(30, 275, 587, 67)
+region_filter_clip_enabled = true
+
+[node name="Franja3" type="Sprite2D" parent="VegetacionMedia"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(2284.4, 400.8)
+scale = Vector2(1.3, 1.3)
+region_enabled = true
+region_rect = Rect2(638, 277, 587, 66)
+region_filter_clip_enabled = true
+
+[node name="MataUnion0" type="Sprite2D" parent="VegetacionMedia"]
+texture = ExtResource("1_atlas")
+position = Vector2(0, 443.2)
+scale = Vector2(0.5, 0.5)
+material = SubResource("Bruma_suave")
+region_enabled = true
+region_rect = Rect2(780, 602, 84, 74)
+region_filter_clip_enabled = true
+
+[node name="MataUnion1" type="Sprite2D" parent="VegetacionMedia"]
+texture = ExtResource("1_atlas")
+position = Vector2(761.8, 444.45)
+scale = Vector2(0.5, 0.5)
+flip_h = true
+material = SubResource("Bruma_suave")
+region_enabled = true
+region_rect = Rect2(1096, 602, 113, 69)
+region_filter_clip_enabled = true
+
+[node name="MataUnion2" type="Sprite2D" parent="VegetacionMedia"]
+texture = ExtResource("1_atlas")
+position = Vector2(1523.6, 444.2)
+scale = Vector2(0.5, 0.5)
+material = SubResource("Bruma_suave")
+region_enabled = true
+region_rect = Rect2(291, 606, 131, 70)
+region_filter_clip_enabled = true
+
+[node name="MataUnion3" type="Sprite2D" parent="VegetacionMedia"]
+texture = ExtResource("1_atlas")
+position = Vector2(2285.4, 443.2)
+scale = Vector2(0.5, 0.5)
+flip_h = true
+material = SubResource("Bruma_suave")
+region_enabled = true
+region_rect = Rect2(780, 602, 84, 74)
+region_filter_clip_enabled = true
+
+[node name="Isleta0" type="Sprite2D" parent="VegetacionMedia"]
+texture = ExtResource("1_atlas")
+position = Vector2(1150, 429.77)
+scale = Vector2(0.42, 0.42)
+material = SubResource("Bruma_suave")
+region_enabled = true
+region_rect = Rect2(304, 797, 330, 137)
+region_filter_clip_enabled = true
+
+[node name="Arbol0" type="Sprite2D" parent="VegetacionMedia"]
+texture = ExtResource("1_atlas")
+position = Vector2(380, 426.35)
+scale = Vector2(0.55, 0.55)
+material = SubResource("Bruma_suave")
+region_enabled = true
+region_rect = Rect2(1067, 681, 154, 118)
+region_filter_clip_enabled = true
+
+[node name="Arbol1" type="Sprite2D" parent="VegetacionMedia"]
+texture = ExtResource("1_atlas")
+position = Vector2(2350, 432.2)
+scale = Vector2(0.5, 0.5)
+flip_h = true
+material = SubResource("Bruma_suave")
+region_enabled = true
+region_rect = Rect2(323, 689, 136, 106)
+region_filter_clip_enabled = true
+
+[node name="Arbol2" type="Sprite2D" parent="VegetacionMedia"]
+texture = ExtResource("1_atlas")
+position = Vector2(2640, 438.28)
+scale = Vector2(0.42, 0.42)
+material = SubResource("Bruma_suave")
+region_enabled = true
+region_rect = Rect2(588, 696, 123, 106)
+region_filter_clip_enabled = true
+
+[node name="VegetacionCercana" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.4, 0.3)
+repeat_size = Vector2(3398.8, 0)
+
+[node name="Relleno" type="ColorRect" parent="VegetacionCercana"]
+offset_left = -2
+offset_top = 519
+offset_right = 3400.8
+offset_bottom = 1919
+mouse_filter = 2
+color = Color(0.373, 0.392, 0.165, 1)
+
+[node name="Franja0" type="Sprite2D" parent="VegetacionCercana"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(-1, 429.2)
+scale = Vector2(1.45, 1.45)
+region_enabled = true
+region_rect = Rect2(30, 350, 587, 66)
+region_filter_clip_enabled = true
+
+[node name="Franja1" type="Sprite2D" parent="VegetacionCercana"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(848.7, 439.35)
+scale = Vector2(1.45, 1.45)
+region_enabled = true
+region_rect = Rect2(639, 357, 586, 59)
+region_filter_clip_enabled = true
+
+[node name="Franja2" type="Sprite2D" parent="VegetacionCercana"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(1698.4, 429.2)
+scale = Vector2(1.45, 1.45)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(30, 350, 587, 66)
+region_filter_clip_enabled = true
+
+[node name="Franja3" type="Sprite2D" parent="VegetacionCercana"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(2548.1, 439.35)
+scale = Vector2(1.45, 1.45)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(639, 357, 586, 59)
+region_filter_clip_enabled = true
+
+[node name="MataUnion0" type="Sprite2D" parent="VegetacionCercana"]
+texture = ExtResource("1_atlas")
+position = Vector2(0, 480.75)
+scale = Vector2(0.72, 0.72)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(629, 602, 135, 74)
+region_filter_clip_enabled = true
+
+[node name="MataUnion1" type="Sprite2D" parent="VegetacionCercana"]
+texture = ExtResource("1_atlas")
+position = Vector2(849.7, 482.19)
+scale = Vector2(0.72, 0.72)
+region_enabled = true
+region_rect = Rect2(291, 606, 131, 70)
+region_filter_clip_enabled = true
+
+[node name="MataUnion2" type="Sprite2D" parent="VegetacionCercana"]
+texture = ExtResource("1_atlas")
+position = Vector2(1699.4, 482.19)
+scale = Vector2(0.72, 0.72)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(512, 604, 96, 70)
+region_filter_clip_enabled = true
+
+[node name="MataUnion3" type="Sprite2D" parent="VegetacionCercana"]
+texture = ExtResource("1_atlas")
+position = Vector2(2549.1, 480.75)
+scale = Vector2(0.72, 0.72)
+region_enabled = true
+region_rect = Rect2(153, 603, 122, 74)
+region_filter_clip_enabled = true
+
+[node name="Ombu" type="Sprite2D" parent="VegetacionCercana"]
+texture = ExtResource("1_atlas")
+position = Vector2(1500, 436.4)
+scale = Vector2(1.15, 1.15)
+region_enabled = true
+region_rect = Rect2(1067, 681, 154, 118)
+region_filter_clip_enabled = true
+
+[node name="Isleta" type="Sprite2D" parent="VegetacionCercana"]
+texture = ExtResource("1_atlas")
+position = Vector2(2950, 457.32)
+scale = Vector2(0.75, 0.75)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(996, 812, 238, 123)
+region_filter_clip_enabled = true
+
+[node name="Arbol" type="Sprite2D" parent="VegetacionCercana"]
+texture = ExtResource("1_atlas")
+position = Vector2(420, 462.35)
+scale = Vector2(0.8, 0.8)
+region_enabled = true
+region_rect = Rect2(30, 687, 127, 103)
+region_filter_clip_enabled = true
+
+[node name="Mata0" type="Sprite2D" parent="VegetacionCercana"]
+texture = ExtResource("1_atlas")
+position = Vector2(1680, 482.95)
+scale = Vector2(0.6, 0.6)
+region_enabled = true
+region_rect = Rect2(780, 602, 84, 74)
+region_filter_clip_enabled = true
+
+[node name="Mata1" type="Sprite2D" parent="VegetacionCercana"]
+texture = ExtResource("1_atlas")
+position = Vector2(2300, 490.35)
+scale = Vector2(0.8, 0.8)
+region_enabled = true
+region_rect = Rect2(443, 634, 55, 38)
+region_filter_clip_enabled = true
+
+[node name="Alambrado" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.6, 0.48)
+repeat_size = Vector2(292, 0)
+repeat_times = 4
+
+[node name="Tramo" type="Sprite2D" parent="Alambrado"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(0, 469)
+region_enabled = true
+region_rect = Rect2(68, 1136, 292, 80)
+region_filter_clip_enabled = true
+
+[node name="PrimerPlano" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.8, 0.7)
+repeat_size = Vector2(3047.2, 0)
+
+[node name="Relleno" type="ColorRect" parent="PrimerPlano"]
+offset_left = -2
+offset_top = 576
+offset_right = 3049.2
+offset_bottom = 1976
+mouse_filter = 2
+color = Color(0.235, 0.271, 0.137, 1)
+
+[node name="Franja0" type="Sprite2D" parent="PrimerPlano"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(-1, 485.1)
+scale = Vector2(1.31, 1.3)
+region_enabled = true
+region_rect = Rect2(31, 513, 584, 75)
+region_filter_clip_enabled = true
+
+[node name="Franja1" type="Sprite2D" parent="PrimerPlano"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(760.8, 483.8)
+scale = Vector2(1.31, 1.3)
+region_enabled = true
+region_rect = Rect2(31, 428, 584, 76)
+region_filter_clip_enabled = true
+
+[node name="Franja2" type="Sprite2D" parent="PrimerPlano"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(1522.6, 486.4)
+scale = Vector2(1.3, 1.3)
+region_enabled = true
+region_rect = Rect2(639, 515, 586, 74)
+region_filter_clip_enabled = true
+
+[node name="Franja3" type="Sprite2D" parent="PrimerPlano"]
+texture = ExtResource("1_atlas")
+centered = false
+position = Vector2(2284.4, 486.4)
+scale = Vector2(1.3, 1.3)
+region_enabled = true
+region_rect = Rect2(639, 431, 586, 74)
+region_filter_clip_enabled = true
+
+[node name="PastoUnion0" type="Sprite2D" parent="PrimerPlano"]
+texture = ExtResource("1_atlas")
+position = Vector2(0, 525.12)
+scale = Vector2(1.05, 1.05)
+region_enabled = true
+region_rect = Rect2(24, 966, 76, 79)
+region_filter_clip_enabled = true
+
+[node name="PastoUnion1" type="Sprite2D" parent="PrimerPlano"]
+texture = ExtResource("1_atlas")
+position = Vector2(761.8, 521.45)
+scale = Vector2(1.05, 1.05)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(942, 955, 78, 86)
+region_filter_clip_enabled = true
+
+[node name="PastoUnion2" type="Sprite2D" parent="PrimerPlano"]
+texture = ExtResource("1_atlas")
+position = Vector2(1523.6, 526.17)
+scale = Vector2(1.05, 1.05)
+region_enabled = true
+region_rect = Rect2(1141, 1050, 86, 77)
+region_filter_clip_enabled = true
+
+[node name="PastoUnion3" type="Sprite2D" parent="PrimerPlano"]
+texture = ExtResource("1_atlas")
+position = Vector2(2285.4, 526.17)
+scale = Vector2(1.05, 1.05)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(202, 1044, 69, 77)
+region_filter_clip_enabled = true
+
+[node name="Pasto0" type="Sprite2D" parent="PrimerPlano"]
+texture = ExtResource("1_atlas")
+position = Vector2(380, 533.83)
+scale = Vector2(0.95, 0.95)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(202, 1044, 69, 77)
+region_filter_clip_enabled = true
+
+[node name="Pasto1" type="Sprite2D" parent="PrimerPlano"]
+texture = ExtResource("1_atlas")
+position = Vector2(1180, 525.75)
+scale = Vector2(0.95, 0.95)
+region_enabled = true
+region_rect = Rect2(609, 950, 85, 94)
+region_filter_clip_enabled = true
+
+[node name="Pasto2" type="Sprite2D" parent="PrimerPlano"]
+texture = ExtResource("1_atlas")
+position = Vector2(1900, 534.77)
+scale = Vector2(0.95, 0.95)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(794, 965, 62, 75)
+region_filter_clip_enabled = true
+
+[node name="Pasto3" type="Sprite2D" parent="PrimerPlano"]
+texture = ExtResource("1_atlas")
+position = Vector2(2620, 536.2)
+scale = Vector2(0.95, 0.95)
+region_enabled = true
+region_rect = Rect2(361, 1048, 63, 72)
+region_filter_clip_enabled = true

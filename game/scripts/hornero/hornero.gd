@@ -9,7 +9,7 @@ extends CharacterBody2D
 signal state_changed(previous: State, current: State)
 signal flapped
 
-enum State { FLYING, GLIDING, GROUND }
+enum State { FLYING, GLIDING, GROUND, FALLING, RECOVERING }
 
 ## Tiempo que el hornero se considera aleteando (FLYING) tras cada aleteo.
 @export var flap_state_duration := 0.45
@@ -42,16 +42,38 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	var input := HorneroInput.read()
-	if state == State.GROUND:
-		_ground_step(input, delta)
-	else:
-		_air_step(input, delta)
+	if input.fall:
+		knock_down()
+	match state:
+		State.GROUND:
+			_ground_step(input, delta)
+		State.FALLING:
+			_fall_step(delta)
+		State.RECOVERING:
+			_recover_step(delta)
+		_:
+			_air_step(input, delta)
 	move_and_slide()
 	_resolve_contacts(input, delta)
 
 
 func is_airborne() -> bool:
-	return state != State.GROUND
+	return state != State.GROUND and state != State.RECOVERING
+
+
+## Aturde al hornero: cae sin control hasta tocar el piso y se recupera.
+func knock_down() -> void:
+	if state == State.FALLING or state == State.RECOVERING:
+		return
+	pitch = 0.0
+	_apply_orientation()
+	_set_state(State.FALLING)
+
+
+## La llama el animador cuando termina la animación de recuperarse.
+func finish_recovery() -> void:
+	if state == State.RECOVERING:
+		_set_state(State.GROUND)
 
 
 # --- Aire ---------------------------------------------------------------
@@ -72,6 +94,17 @@ func _flap() -> void:
 	_flap_time_left = flap_state_duration
 	_set_state(State.FLYING)
 	flapped.emit()
+
+
+# --- Caída ---------------------------------------------------------------
+
+## Sin input: sólo gravedad y resistencia del aire, sin sustentación.
+func _fall_step(delta: float) -> void:
+	velocity = _flight.integrate_fall(velocity, delta)
+
+
+func _recover_step(delta: float) -> void:
+	velocity = _ground.integrate(velocity, 0.0, delta)
 
 
 # --- Suelo ---------------------------------------------------------------
@@ -102,16 +135,25 @@ func _land(input: HorneroInput) -> void:
 	_set_state(State.GROUND)
 
 
+func _crash_land() -> void:
+	velocity.y = 0.0
+	_set_state(State.RECOVERING)
+
+
 # --- Transiciones ---------------------------------------------------------
 
 ## Decide el estado a partir de lo que reportó la física en move_and_slide().
 func _resolve_contacts(input: HorneroInput, delta: float) -> void:
 	_flap_time_left = maxf(_flap_time_left - delta, 0.0)
 	if is_on_floor():
-		if is_airborne():
+		if state == State.FALLING:
+			_crash_land()
+		elif is_airborne():
 			_land(input)
 	elif state == State.GROUND:
 		_set_state(State.GLIDING) # Caminó fuera de un borde.
+	elif state == State.RECOVERING:
+		_set_state(State.FALLING)
 	elif state == State.FLYING and _flap_time_left == 0.0:
 		_set_state(State.GLIDING)
 

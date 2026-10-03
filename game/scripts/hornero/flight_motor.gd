@@ -58,6 +58,14 @@ func integrate(velocity: Vector2, forward: Vector2, delta: float) -> Vector2:
 	return velocity
 
 
+## Caída sin control: gravedad y resistencia, sin sustentación ni input.
+func integrate_fall(velocity: Vector2, delta: float) -> Vector2:
+	velocity.y += gravity * delta
+	velocity -= velocity * air_drag * delta
+	velocity.y = minf(velocity.y, max_fall_speed)
+	return velocity
+
+
 ## Nuevo pitch a partir del input y de la pérdida de sustentación.
 ## facing: 1 derecha, -1 izquierda. Pitch positivo = nariz arriba.
 func update_pitch(pitch: float, pitch_input: float, velocity: Vector2,

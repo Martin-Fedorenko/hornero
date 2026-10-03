@@ -18,10 +18,10 @@ script = ExtResource("1_body")
 shape = SubResource("BodyShape")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-scale = Vector2(0.24, 0.24)
+scale = Vector2(0.2, 0.2)
 sprite_frames = ExtResource("2_frames")
 animation = &"planeo"
-offset = Vector2(20, -46)
+offset = Vector2(-12, -12)
 script = ExtResource("3_anim")
 
 [node name="FlightDebug" type="Node2D" parent="."]

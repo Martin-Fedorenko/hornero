@@ -3,9 +3,13 @@
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" uid="uid://botl8vytdr4og" path="res://scenes/hornero.tscn" id="2_hornero"]
 [ext_resource type="Script" path="res://scripts/world/platform.gd" id="3_platform"]
+[ext_resource type="PackedScene" path="res://scenes/pampas_background.tscn" id="4_background"]
 
 [node name="Laboratorio" type="Node2D"]
 script = ExtResource("1_main")
+
+[node name="PampasBackground" parent="." instance=ExtResource("4_background")]
+reference_camera_top = 1080.0
 
 [node name="World" type="Node2D" parent="."]
 

@@ -7,6 +7,7 @@ Prototipo jugable de vuelo y planeo. Abrí `project.godot` y pulsá **F5**.
 | ↓ / S, ↑ / W | Nariz arriba / abajo, como un avión. Rotación libre: permite loops |
 | Espacio | Aletear; en el suelo, despegar |
 | ← / A, → / D | Caminar en el suelo; en el aire, darse vuelta |
+| O | Caer aturdido: sin control hasta el piso, se recupera y vuelve a reposo |
 
 ## Estructura
 
@@ -18,11 +19,15 @@ scenes/hornero.tscn         Hornero (CharacterBody2D)
 ├── FlightDebug             Flecha amarilla = forward, celeste = velocidad
 ├── FlightMotor             Física de vuelo y todos sus parámetros
 └── GroundMotor             Caminar
-scripts/hornero/hornero.gd        Máquina de estados FLYING / GLIDING / GROUND
+scripts/hornero/hornero.gd        Máquina de estados FLYING / GLIDING / GROUND /
+                                  FALLING / RECOVERING
 scripts/hornero/hornero_input.gd  Única lectura del teclado
 scripts/world/platform.gd         Rectángulo visible con collider (sólo borde
                                   superior, o sólido con `solid`)
-assets/hornero_frames.tres        Animaciones: vuelo, planeo, reposo, caminar
+assets/hornero_frames.tres        Animaciones: vuelo, planeo, reposo, caminar,
+                                  caida, recuperarse
+assets/hornero_recover_frames.png Cuadros de hornero_recover.png separados
+                                  (en el original se superponen)
 ```
 
 ## Modelo de vuelo
