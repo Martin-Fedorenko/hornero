@@ -50,7 +50,7 @@ const PAUSA_SIN_DANIO := 0.2
 
 @export_group("Contador")
 ## Tamaño de la letra del contador en píxeles de la textura (el nido está escalado).
-@export var contador_font_size := 110
+@export var contador_font_size := 40
 ## Separación entre el borde superior del nido y el contador, en píxeles de la textura.
 @export var contador_margen := 20.0
 
@@ -162,7 +162,8 @@ func _crear_contador() -> void:
 	_contador.add_theme_font_size_override("font_size", contador_font_size)
 	_contador.add_theme_color_override("font_color", Color("f8dc9c"))
 	_contador.add_theme_color_override("font_outline_color", Color("5a2e12"))
-	_contador.add_theme_constant_override("outline_size", 24)
+	# El contorno acompaña al tamaño de la letra (24 era para 110).
+	_contador.add_theme_constant_override("outline_size", roundi(contador_font_size * 24.0 / 110.0))
 	_contador.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_contador.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
 	_contador.mouse_filter = Control.MOUSE_FILTER_IGNORE
