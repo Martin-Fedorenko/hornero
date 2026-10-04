@@ -19,7 +19,7 @@ Ingeniero Fedorenko Martin · Villadeza Eric · Brian Moulia
 Godot Engine
 
 [b][color=#f8dc9c]AGRADECIMIENTOS[/color][/b]
-A nuestras novias: la Ingeniera Caruso Abril y la Ingeniera Becker Arabella ♥.
+A nuestras novias: Esposa Brian, la Ingeniera Caruso Abril y la Ingeniera Becker Arabella ♥.
 
 Al maestro Gustavo Santaolalla, por crear una obra maestra como "De Ushuaia a La Quiaca". Y perdón por tomarnos el atrevimiento de sumarle el noble cantar del hornero a su pieza.
 
