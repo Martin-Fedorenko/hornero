@@ -4,22 +4,22 @@ extends Control
 # Texto con BBCode, igual que "Cómo jugar". En cada categoría van los tres
 # autores, en distinto orden.
 @export_multiline var creditos: String = """[b][color=#f8dc9c]DIRECCIÓN DE SONIDO[/color][/b]
-Villadeza Eric · El Brian · Ingeniero Fedorenko
+Ingeniero Fedorenko Martin · Villadeza Eric · Brian Moulia
 
 [b][color=#f8dc9c]DIRECCIÓN DE IMAGEN[/color][/b]
-Ingeniero Fedorenko · Villadeza Eric · El Brian
+Ingeniero Fedorenko Martin · Villadeza Eric · Brian Moulia
 
 [b][color=#f8dc9c]AMBIENTE[/color][/b]
-El Brian · Ingeniero Fedorenko · Villadeza Eric
+Ingeniero Fedorenko Martin · Villadeza Eric · Brian Moulia
 
 [b][color=#f8dc9c]MAQUILLAJE[/color][/b]
-Ingeniero Fedorenko · El Brian · Villadeza Eric
+Ingeniero Fedorenko Martin · Villadeza Eric · Brian Moulia
 
 [b][color=#f8dc9c]MOTOR[/color][/b]
 Godot Engine
 
 [b][color=#f8dc9c]AGRADECIMIENTOS[/color][/b]
-A nuestras novias: NOMBRE, la Ingeniera Caruso Abril y la Ingeniera Becker Arabella ♥.
+A nuestras novias: la Ingeniera Caruso Abril y la Ingeniera Becker Arabella ♥.
 
 Al maestro Gustavo Santaolalla, por crear una obra maestra como "De Ushuaia a La Quiaca". Y perdón por tomarnos el atrevimiento de sumarle el noble cantar del hornero a su pieza.
 

@@ -48,11 +48,18 @@ const PAUSA_SIN_DANIO := 0.2
 ## Titileos por segundo cuando la construcción está por romperse.
 @export_range(0.5, 20.0, 0.5) var titileos_max := 10.0
 
+@export_group("Contador")
+## Tamaño de la letra del contador en píxeles de la textura (el nido está escalado).
+@export var contador_font_size := 110
+## Separación entre el borde superior del nido y el contador, en píxeles de la textura.
+@export var contador_margen := 20.0
+
 @onready var _delivery_area: Area2D = $DeliveryArea
 @onready var _aura: Node2D = $DestelloLevantable
 var _materiales_recibidos: int = 0
 var _occupied := false
 var _front := Sprite2D.new()
+var _contador := Label.new()
 
 ## Resistencia de la construcción de más arriba: 1 = intacta, 0 = se rompe.
 var resistencia := 1.0
@@ -75,6 +82,9 @@ func _ready() -> void:
 	add_child(_front)
 	frame_changed.connect(_update_front)
 	_update_front()
+	_crear_contador()
+	frame_changed.connect(_actualizar_contador)
+	_actualizar_contador()
 	_color_normal = self_modulate
 	_delivery_area.body_entered.connect(_on_delivery_body_entered)
 	# La zona de entrega es exactamente el círculo del aura.
@@ -142,6 +152,33 @@ func _update_front() -> void:
 	var stage := sprite_frames.get_frame_texture(animation, frame) as AtlasTexture
 	_front.region_rect = stage.region
 	_front.visible = _occupied and not is_closed()
+
+## Contador "construcciones/total" arriba del nido, con la fuente del juego.
+func _crear_contador() -> void:
+	var fuente := SystemFont.new()
+	fuente.font_names = PackedStringArray(["Georgia", "Times New Roman", "serif"])
+	fuente.font_weight = 700
+	_contador.add_theme_font_override("font", fuente)
+	_contador.add_theme_font_size_override("font_size", contador_font_size)
+	_contador.add_theme_color_override("font_color", Color("f8dc9c"))
+	_contador.add_theme_color_override("font_outline_color", Color("5a2e12"))
+	_contador.add_theme_constant_override("outline_size", 24)
+	_contador.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_contador.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	_contador.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_contador.z_index = 2
+	# Caja centrada en x = 0 cuyo borde inferior queda justo encima del nido.
+	var ancho := 600.0
+	var alto := float(contador_font_size) * 1.5
+	_contador.size = Vector2(ancho, alto)
+	_contador.position = Vector2(-ancho * 0.5, offset.y - contador_margen - alto)
+	add_child(_contador)
+
+
+func _actualizar_contador() -> void:
+	var total := sprite_frames.get_frame_count(&"crecer") - 1
+	_contador.text = "%d/%d" % [frame, total]
+
 
 ## Las primeras etapas son una taza abierta; las últimas, el horno con entrada.
 func is_closed() -> bool:
