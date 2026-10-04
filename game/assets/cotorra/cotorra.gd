@@ -38,6 +38,7 @@ var _dir_huida := Vector2.ZERO
 var _t_hover := 0.0
 
 func _ready() -> void:
+	add_to_group("cotorras")
 	if nido == null:
 		push_error("Cotorra: falta asignar 'nido' en el inspector")
 	if hornero == null:

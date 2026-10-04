@@ -1,6 +1,6 @@
 extends Control
 ## Flecha en el borde de la pantalla que apunta al nido cuando éste queda
-## fuera de cámara.
+## fuera de cámara. Titila en rojo mientras alguna Cotorra lo está picando.
 
 const TEXTURE := preload("res://assets/hud/arrow_assets.png")
 ## Flecha verde (con el nido en la cola) dentro de `arrow_assets.png`. La
@@ -20,8 +20,17 @@ const TEXTURE_LENGTH := 1033.0
 ## Cuánto puede salirse el nido de la pantalla antes de mostrar la flecha.
 @export var visibility_margin := 40.0
 
+@export_group("Alerta")
+## Color del parpadeo mientras atacan el nido. Los valores por encima de 1
+## hacen que el rojo quede vivo sobre la madera en vez de oscurecerla.
+@export var alert_color := Color(1.6, 0.3, 0.3)
+## Cuántas veces por segundo titila (0 = rojo fijo).
+@export var blinks_per_second := 3.0
+
 var _angle := 0.0
 var _tip_position := Vector2.ZERO
+var _under_attack := false
+var _alert_time := 0.0
 
 
 func _ready() -> void:
@@ -30,7 +39,7 @@ func _ready() -> void:
 	hide()
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not is_instance_valid(target):
 		hide()
 		return
@@ -47,6 +56,7 @@ func _process(_delta: float) -> void:
 	var scale_y := half.y / absf(direction.y) if direction.y != 0.0 else INF
 	_angle = direction.angle()
 	_tip_position = center + direction * minf(scale_x, scale_y)
+	_update_alert(delta)
 	show()
 	queue_redraw()
 
@@ -57,5 +67,31 @@ func _draw() -> void:
 	# la izquierda se espeja en Y para que el nido no quede boca abajo.
 	var flip := -1.0 if absf(_angle) > PI * 0.5 else 1.0
 	draw_set_transform(_tip_position, _angle, Vector2(scale_factor, scale_factor * flip))
-	draw_texture_rect_region(TEXTURE, Rect2(REGION.position - TIP, REGION.size), REGION)
+	draw_texture_rect_region(TEXTURE, Rect2(REGION.position - TIP, REGION.size), REGION, _current_color())
 	draw_set_transform_matrix(Transform2D.IDENTITY)
+
+
+func _update_alert(delta: float) -> void:
+	var attacked := _is_nest_attacked()
+	if attacked and not _under_attack:
+		_alert_time = 0.0  # Que arranque en rojo apenas empieza el ataque
+	_under_attack = attacked
+	_alert_time += delta
+
+
+## true si alguna Cotorra está picando el nido en este momento.
+func _is_nest_attacked() -> bool:
+	for node in get_tree().get_nodes_in_group("cotorras"):
+		var cotorra := node as Cotorra
+		if cotorra and cotorra.modo == Cotorra.Modo.PICANDO:
+			return true
+	return false
+
+
+func _current_color() -> Color:
+	if not _under_attack:
+		return Color.WHITE
+	# Primera mitad de cada ciclo en rojo, segunda mitad con el color normal.
+	if fmod(_alert_time * blinks_per_second, 1.0) < 0.5:
+		return alert_color
+	return Color.WHITE

@@ -18,11 +18,7 @@
 [ext_resource type="PackedScene" path="res://objetos_hornero/ramitas.tscn" id="10_ramitas"]
 [ext_resource type="Script" uid="uid://b4fuied2nfcsy" path="res://scripts/ui/vitals_hud.gd" id="11_vitals_hud"]
 [ext_resource type="PackedScene" uid="uid://4jpbvg34m0h6" path="res://scenes/gato_montes.tscn" id="11_ya4ey"]
-<<<<<<< HEAD
-[ext_resource type="Script" uid="uid://dd7q7ynvslfy" path="res://scripts/ui/death_screen.gd" id="12_death_screen"]
-=======
 [ext_resource type="Script" uid="uid://dd7q7ynvslfy" path="res://scripts/ui/game_menu.gd" id="12_game_menu"]
->>>>>>> origin/main
 [ext_resource type="PackedScene" path="res://scenes/arbol.tscn" id="13_arbol"]
 [ext_resource type="Script" uid="uid://2816edmgmc6c" path="res://scripts/gatoMontez/gato_spawner.gd" id="20_gqmmt"]
 [ext_resource type="SpriteFrames" uid="uid://nwsbcs3312hy" path="res://assets/cotorra/Cotorra.tres" id="22_jscy8"]
@@ -169,41 +165,42 @@ tipo = 3
 
 [node name="Arbol5" parent="World/Arboles" unique_id=66274276 instance=ExtResource("13_arbol")]
 position = Vector2(5420, 1648)
-[node name="Arboles" type="Node2D" parent="World" unique_id=339296598]
 
-[node name="Arbol1" parent="World/Arboles" unique_id=1623985648 instance=ExtResource("13_arbol")]
+[node name="Arbol6" parent="World/Arboles" unique_id=1623985648 instance=ExtResource("13_arbol")]
 position = Vector2(518, 1648)
 tipo = 3
 
-[node name="Arbol2" parent="World/Arboles" unique_id=1403721663 instance=ExtResource("13_arbol")]
+[node name="Arbol7" parent="World/Arboles" unique_id=1403721663 instance=ExtResource("13_arbol")]
 position = Vector2(1493, 1648)
 tipo = 1
 flip = true
 
-[node name="Arbol3" parent="World/Arboles" unique_id=1610146855 instance=ExtResource("13_arbol")]
+[node name="Arbol8" parent="World/Arboles" unique_id=1610146855 instance=ExtResource("13_arbol")]
 position = Vector2(2855, 1648)
 
-[node name="Arbol4" parent="World/Arboles" unique_id=362903366 instance=ExtResource("13_arbol")]
+[node name="Arbol9" parent="World/Arboles" unique_id=362903366 instance=ExtResource("13_arbol")]
 position = Vector2(4644, 1648)
 tipo = 2
 flip = true
 
-[node name="Arbol5" parent="World/Arboles" unique_id=922969770 instance=ExtResource("13_arbol")]
+[node name="Arbol10" parent="World/Arboles" unique_id=922969770 instance=ExtResource("13_arbol")]
 position = Vector2(7272, 1648)
 tipo = 2
 
-[node name="Arbol6" parent="World/Arboles" unique_id=380908427 instance=ExtResource("13_arbol")]
+[node name="Arbol11" parent="World/Arboles" unique_id=380908427 instance=ExtResource("13_arbol")]
 position = Vector2(9096, 1648)
 tipo = 1
 
-[node name="Arbol7" parent="World/Arboles" unique_id=1338589954 instance=ExtResource("13_arbol")]
+[node name="Arbol12" parent="World/Arboles" unique_id=1338589954 instance=ExtResource("13_arbol")]
 position = Vector2(10092, 1648)
 tipo = 3
 flip = true
 
-[node name="Arbol8" parent="World/Arboles" unique_id=374492154 instance=ExtResource("13_arbol")]
+[node name="Arbol13" parent="World/Arboles" unique_id=374492154 instance=ExtResource("13_arbol")]
 position = Vector2(11446, 1648)
 flip = true
+
+[node name="Arboles2" type="Node2D" parent="World" unique_id=339296598]
 
 [node name="NestTree" parent="World" unique_id=748560120 instance=ExtResource("6_nest_tree")]
 position = Vector2(6000, 1648)
@@ -359,9 +356,8 @@ escena_gato = ExtResource("11_ya4ey")
 jugador = NodePath("../Hornero")
 cantidad = 8
 x_fin = 12000.0
-<<<<<<< HEAD
 
-[node name="Cotorra" type="CharacterBody2D" parent="." unique_id=229894616 node_paths=PackedStringArray("nido", "hornero")]
+[node name="Cotorra" type="CharacterBody2D" parent="." unique_id=927530705 node_paths=PackedStringArray("nido", "hornero")]
 script = ExtResource("22_pm3ni")
 nido = NodePath("../World/NestTree/Nest")
 hornero = NodePath("../Hornero")
@@ -376,4 +372,3 @@ sprite_mira_derecha = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Cotorra" unique_id=492410362]
 disabled = true
-
