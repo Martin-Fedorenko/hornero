@@ -71,4 +71,4 @@ shape = SubResource("DeliveryShape")
 position = Vector2(0, -143)
 scale = Vector2(3.1056, 3.1056)
 script = ExtResource("3_destello")
-radio = 60.0
+radio = 72.0
