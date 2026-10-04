@@ -218,7 +218,7 @@ func interactuar() -> void:
 	sprite.stop()
 	sprite.animation = &"picotear"
 	sprite.centered = true
-	sprite.offset = Vector2.ZERO
+	sprite.offset = _offset_picoteo()
 		# Compensar el giro del cuerpo cuando mira hacia la izquierda.
 	var signo_vertical := -1.0 if int(hornero.get("facing")) < 0 else 1.0
 	sprite.scale = Vector2(escala_picoteo, escala_picoteo * signo_vertical)
@@ -234,6 +234,10 @@ func interactuar() -> void:
 		await get_tree().create_timer(0.08 if i == 3 else 0.0045, false).timeout
 		_log("POSICION_HORNERO | frame=%d global=%s delta=%s" % [
 			i, hornero.global_position, hornero.global_position - posicion_hornero_inicio])
+		# Un enemigo lo golpeó o lo agarró en pleno picoteo: se corta el gesto
+		# para que se vea la caída enseguida.
+		if _picoteo_interrumpido():
+			break
 	sprite.scale = escala_anterior
 	sprite.rotation = rotacion_anterior
 	sprite.centered = centrado_anterior
@@ -247,11 +251,28 @@ func interactuar() -> void:
 	_seguir_pico()
 	_log("POSICION_HORNERO | fin=%s delta_total=%s" % [
 		hornero.global_position, hornero.global_position - posicion_hornero_inicio])
-	if procesaba and not _capturado \
-		and hornero.state != Hornero.State.FALLING \
-		and hornero.state != Hornero.State.RECOVERING:
+	# Se devuelve la física aunque lo hayan derribado durante el picoteo: si
+	# no, queda congelado en la pose de caída. Sólo se la deja apagada si un
+	# depredador lo tiene agarrado; ése se la devuelve al soltarlo.
+	if procesaba and not _capturado and not hornero.has_meta(&"agarrado_por"):
 		hornero.set_physics_process(true)
 	_imprimir_estado("FIN_PICOTEO", _error_actual())
+
+## Desplazamiento del dibujo del picoteo para que las patas queden a la misma
+## altura que parado; centrado y sin desplazar, el gesto se hunde en el piso.
+func _offset_picoteo() -> Vector2:
+	var cuadro := CUADROS.get_frame_texture(&"picotear", 0) as AtlasTexture
+	# Las patas son el borde de abajo del dibujo dentro del cuadro.
+	var patas := cuadro.margin.position.y + cuadro.region.size.y - cuadro.get_size().y * 0.5
+	var animador := sprite as HorneroAnimator
+	var patas_parado := animador.idle_point_offset(Vector2(0.0, animador.nest_feet)).y
+	return Vector2(0.0, patas_parado / escala_picoteo - patas)
+
+func _picoteo_interrumpido() -> bool:
+	return _capturado or hornero.has_meta(&"agarrado_por") \
+		or hornero.state == Hornero.State.FALLING \
+		or hornero.state == Hornero.State.RECOVERING \
+		or hornero.state == Hornero.State.DEAD
 
 func _al_agregarse_nodo(nodo: Node) -> void:
 	if nodo is Chimango:

@@ -28,7 +28,14 @@ enum Modo { AUSENTE, YENDO, PICANDO, HUYENDO }
 @export var tiempo_ausente_max := 15.0
 @export var distancia_aparicion := 1200.0  ## Desde qué distancia del nido aparece
 
+@export_group("Sonido")
+## Distancia al Hornero a partir de la cual ya no se la escucha. Más cerca,
+## más fuerte; el volumen máximo es el del nodo Voz.
+@export var distancia_audible := 900.0
+
 @onready var _notifier: VisibleOnScreenNotifier2D = $VisibleOnScreenNotifier2D
+@onready var _voz: AudioStreamPlayer = get_node_or_null(^"Voz")
+@onready var _volumen_max := _voz.volume_linear if _voz else 1.0
 
 var modo := Modo.AUSENTE
 var facing := 1
@@ -43,6 +50,27 @@ func _ready() -> void:
 	if hornero == null:
 		push_error("Cotorra: falta asignar 'hornero' en el inspector")
 	_pasar_a_ausente()
+
+func _process(_delta: float) -> void:
+	_actualizar_voz()
+
+
+## Canta mientras está en escena; el volumen sube a medida que se acerca al
+## Hornero y baja cuando se aleja.
+func _actualizar_voz() -> void:
+	if _voz == null:
+		return
+	if modo == Modo.AUSENTE or hornero == null:
+		if _voz.playing:
+			_voz.stop()
+		return
+	var distancia := global_position.distance_to(hornero.global_position)
+	var cercania := clampf(1.0 - distancia / distancia_audible, 0.0, 1.0)
+	# Al cuadrado: el oído percibe el volumen así, y el cambio se siente parejo.
+	_voz.volume_linear = _volumen_max * cercania * cercania
+	if not _voz.playing:
+		_voz.play()
+
 
 func _physics_process(delta: float) -> void:
 	if nido == null:

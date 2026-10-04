@@ -23,6 +23,7 @@
 [ext_resource type="SpriteFrames" uid="uid://nwsbcs3312hy" path="res://assets/cotorra/Cotorra.tres" id="22_jscy8"]
 [ext_resource type="Script" uid="uid://dyhfl3hj853x0" path="res://assets/cotorra/cotorra.gd" id="22_pm3ni"]
 [ext_resource type="Script" uid="uid://x4cgawbc11iu" path="res://assets/cotorra/cotorra_animator.gd" id="24_y6deb"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/Aves/Cotorra argentina - vocalización.mp3" id="26_cotorra_voz"]
 
 [node name="Laboratorio" type="Node2D" unique_id=1659740675]
 script = ExtResource("1_main")
@@ -235,6 +236,10 @@ sprite_frames = ExtResource("22_jscy8")
 animation = &"volar"
 script = ExtResource("24_y6deb")
 sprite_mira_derecha = true
+
+[node name="Voz" type="AudioStreamPlayer" parent="Cotorra"]
+stream = ExtResource("26_cotorra_voz")
+volume_db = -5.0
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="Cotorra" unique_id=1213480180]
 
