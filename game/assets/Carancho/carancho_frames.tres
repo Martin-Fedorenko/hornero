@@ -1,0 +1,101 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://dwywt00hylghg"]
+
+[ext_resource type="Texture2D" uid="uid://cs2umj7l7i868" path="res://assets/Carancho/carancho_vuelo.png" id="1_vuelo"]
+[ext_resource type="Texture2D" uid="uid://bkdehgk06u2gn" path="res://assets/Carancho/carancho_ataque.png" id="2_ataque"]
+
+[sub_resource type="AtlasTexture" id="ataque_0"]
+atlas = ExtResource("2_ataque")
+region = Rect2(0, 0, 561, 512)
+
+[sub_resource type="AtlasTexture" id="ataque_1"]
+atlas = ExtResource("2_ataque")
+region = Rect2(561, 0, 561, 512)
+
+[sub_resource type="AtlasTexture" id="ataque_2"]
+atlas = ExtResource("2_ataque")
+region = Rect2(1122, 0, 561, 512)
+
+[sub_resource type="AtlasTexture" id="ataque_3"]
+atlas = ExtResource("2_ataque")
+region = Rect2(1683, 0, 561, 512)
+
+[sub_resource type="AtlasTexture" id="ataque_4"]
+atlas = ExtResource("2_ataque")
+region = Rect2(2244, 0, 561, 512)
+
+[sub_resource type="AtlasTexture" id="ataque_5"]
+atlas = ExtResource("2_ataque")
+region = Rect2(2805, 0, 561, 512)
+
+[sub_resource type="AtlasTexture" id="vuelo_0"]
+atlas = ExtResource("1_vuelo")
+region = Rect2(0, 0, 510, 608)
+
+[sub_resource type="AtlasTexture" id="vuelo_1"]
+atlas = ExtResource("1_vuelo")
+region = Rect2(510, 0, 510, 608)
+
+[sub_resource type="AtlasTexture" id="vuelo_2"]
+atlas = ExtResource("1_vuelo")
+region = Rect2(1020, 0, 510, 608)
+
+[sub_resource type="AtlasTexture" id="vuelo_3"]
+atlas = ExtResource("1_vuelo")
+region = Rect2(1530, 0, 510, 608)
+
+[sub_resource type="AtlasTexture" id="vuelo_4"]
+atlas = ExtResource("1_vuelo")
+region = Rect2(2040, 0, 510, 608)
+
+[sub_resource type="AtlasTexture" id="vuelo_5"]
+atlas = ExtResource("1_vuelo")
+region = Rect2(2550, 0, 510, 608)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("ataque_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("ataque_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("ataque_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("ataque_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("ataque_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("ataque_5")
+}],
+"loop": 1,
+"name": &"ataque",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("vuelo_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("vuelo_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("vuelo_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("vuelo_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("vuelo_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("vuelo_5")
+}],
+"loop": 1,
+"name": &"vuelo",
+"speed": 12.0
+}]

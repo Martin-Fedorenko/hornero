@@ -4,137 +4,21 @@
 [ext_resource type="PackedScene" uid="uid://botl8vytdr4og" path="res://scenes/hornero.tscn" id="2_hornero"]
 [ext_resource type="Script" uid="uid://bvqibbekykd66" path="res://scripts/world/platform.gd" id="3_platform"]
 [ext_resource type="PackedScene" path="res://scenes/pampas_background.tscn" id="4_background"]
-[ext_resource type="Script" uid="uid://b4ym64cj0gyu6" path="res://scripts/chimango/Chimango.gd" id="5_85g3d"]
 [ext_resource type="Script" uid="uid://cmk8t0yvmtd8n" path="res://scripts/world/meadow_floor.gd" id="5_floor"]
-[ext_resource type="Texture2D" uid="uid://b0fq4svickc0l" path="res://assets/chimango/chimango_fly.png" id="5_tbgi4"]
-[ext_resource type="Texture2D" uid="uid://pqx4iomj67k6" path="res://assets/chimango/chimango_attack.png" id="6_choun"]
 [ext_resource type="PackedScene" path="res://scenes/nest_tree.tscn" id="6_nest_tree"]
-[ext_resource type="Script" uid="uid://mutqphpmvp01" path="res://scripts/hornero/ground_motor.gd" id="6_o6xl0"]
-[ext_resource type="Script" uid="uid://dporub47gssp2" path="res://scenes/chimango_animator.gd" id="6_tipki"]
 [ext_resource type="PackedScene" path="res://scenes/nest.tscn" id="7_nest"]
-[ext_resource type="Script" uid="uid://bm3x271kf07d4" path="res://scripts/hornero/flight_motor.gd" id="7_tipki"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/piedra.tscn" id="8_piedra"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/paja.tscn" id="9_paja"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/ramitas.tscn" id="10_ramitas"]
 [ext_resource type="Script" uid="uid://b4fuied2nfcsy" path="res://scripts/ui/vitals_hud.gd" id="11_vitals_hud"]
+[ext_resource type="PackedScene" uid="uid://4jpbvg34m0h6" path="res://scenes/gato_montes.tscn" id="11_ya4ey"]
 [ext_resource type="Script" uid="uid://dd7q7ynvslfy" path="res://scripts/ui/death_screen.gd" id="12_death_screen"]
 [ext_resource type="PackedScene" path="res://scenes/arbol.tscn" id="13_arbol"]
-[ext_resource type="AudioStream" path="res://Musica/Sonidos/¿Escuchaste este sonido Es un CHIMANGO!.mp3" id="14_grito"]
-[ext_resource type="PackedScene" uid="uid://4jpbvg34m0h6" path="res://scenes/gato_montes.tscn" id="11_ya4ey"]
 [ext_resource type="Script" uid="uid://2816edmgmc6c" path="res://scripts/gatoMontez/gato_spawner.gd" id="20_gqmmt"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
-atlas = ExtResource("6_choun")
-region = Rect2(0, 0, 692, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jkv2x"]
-atlas = ExtResource("6_choun")
-region = Rect2(692, 0, 692, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jbj1t"]
-atlas = ExtResource("6_choun")
-region = Rect2(1384, 0, 692, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_muem4"]
-atlas = ExtResource("6_choun")
-region = Rect2(2076, 0, 692, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dp3eg"]
-atlas = ExtResource("6_choun")
-region = Rect2(2768, 0, 692, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_0ld40"]
-atlas = ExtResource("6_choun")
-region = Rect2(3460, 0, 692, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_tefeu"]
-atlas = ExtResource("5_tbgi4")
-region = Rect2(0, 0, 462, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_o6xl0"]
-atlas = ExtResource("5_tbgi4")
-region = Rect2(462, 0, 462, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_tipki"]
-atlas = ExtResource("5_tbgi4")
-region = Rect2(924, 0, 462, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_85g3d"]
-atlas = ExtResource("5_tbgi4")
-region = Rect2(1386, 0, 462, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_choun"]
-atlas = ExtResource("5_tbgi4")
-region = Rect2(1848, 0, 462, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ya4ey"]
-atlas = ExtResource("5_tbgi4")
-region = Rect2(2310, 0, 462, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_eb6dy"]
-atlas = ExtResource("5_tbgi4")
-region = Rect2(2772, 0, 462, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_trceg"]
-atlas = ExtResource("5_tbgi4")
-region = Rect2(3234, 0, 462, 724)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_2siln"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_a8y0u")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jkv2x")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jbj1t")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_muem4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dp3eg")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_0ld40")
-}],
-"loop": 1,
-"name": &"ataque",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_tefeu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_o6xl0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_tipki")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_85g3d")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_choun")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ya4ey")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_eb6dy")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_trceg")
-}],
-"loop": 1,
-"name": &"vuelo",
-"speed": 12.0
-}]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_a8y0u"]
+[ext_resource type="Script" path="res://scripts/world/rapaces_spawner.gd" id="21_rapaces"]
+[ext_resource type="PackedScene" path="res://scenes/chimango.tscn" id="22_chimango"]
+[ext_resource type="PackedScene" path="res://scenes/aguilucho.tscn" id="23_aguilucho"]
+[ext_resource type="PackedScene" path="res://scenes/carancho.tscn" id="24_carancho"]
 
 [node name="Laboratorio" type="Node2D" unique_id=1659740675]
 script = ExtResource("1_main")
@@ -143,25 +27,25 @@ script = ExtResource("1_main")
 
 [node name="World" type="Node2D" parent="." unique_id=1661870613]
 
-[node name="Arboles" type="Node2D" parent="World"]
+[node name="Arboles" type="Node2D" parent="World" unique_id=541435501]
 
-[node name="Arbol1" parent="World/Arboles" instance=ExtResource("13_arbol")]
+[node name="Arbol1" parent="World/Arboles" unique_id=1299317631 instance=ExtResource("13_arbol")]
 position = Vector2(1050, 1648)
 
-[node name="Arbol2" parent="World/Arboles" instance=ExtResource("13_arbol")]
+[node name="Arbol2" parent="World/Arboles" unique_id=1560066609 instance=ExtResource("13_arbol")]
 position = Vector2(1900, 1648)
 tipo = 1
 flip = true
 
-[node name="Arbol3" parent="World/Arboles" instance=ExtResource("13_arbol")]
+[node name="Arbol3" parent="World/Arboles" unique_id=197330715 instance=ExtResource("13_arbol")]
 position = Vector2(3950, 1648)
 tipo = 2
 
-[node name="Arbol4" parent="World/Arboles" instance=ExtResource("13_arbol")]
+[node name="Arbol4" parent="World/Arboles" unique_id=188274384 instance=ExtResource("13_arbol")]
 position = Vector2(5000, 1648)
 tipo = 3
 
-[node name="Arbol5" parent="World/Arboles" instance=ExtResource("13_arbol")]
+[node name="Arbol5" parent="World/Arboles" unique_id=1363494149 instance=ExtResource("13_arbol")]
 position = Vector2(5420, 1648)
 flip = true
 
@@ -291,35 +175,10 @@ position = Vector2(1030, 1280)
 [node name="Ramitas" parent="." unique_id=1631829200 instance=ExtResource("10_ramitas")]
 position = Vector2(1270, 1280)
 
-[node name="Chimango" type="CharacterBody2D" parent="." unique_id=1104130030]
-script = ExtResource("5_85g3d")
-empezar_ausente = true
-tiempo_ausente_max = 10.0
-
-[node name="GritoAudio" type="AudioStreamPlayer" parent="Chimango"]
-stream = ExtResource("14_grito")
-
-[node name="ChimangoAnimator" type="AnimatedSprite2D" parent="Chimango" unique_id=1938302224]
-sprite_frames = SubResource("SpriteFrames_2siln")
-animation = &"ataque"
-script = ExtResource("6_tipki")
-
-[node name="ChimangoCollision" type="CollisionShape2D" parent="Chimango" unique_id=114115484]
-shape = SubResource("CircleShape2D_a8y0u")
-
-[node name="GroundMotor" type="Node" parent="Chimango" unique_id=484196229]
-script = ExtResource("6_o6xl0")
-metadata/_custom_type_script = "uid://mutqphpmvp01"
-
-[node name="FlightMotor" type="Node" parent="Chimango" unique_id=1882578548]
-script = ExtResource("7_tipki")
-stall_speed = 200.0
-air_drag = 0.2
-limit_pitch = true
-max_pitch_deg = 50.0
-flap_impulse = 400.0
-turn_speed_keep = 0.7
-metadata/_custom_type_script = "uid://bm3x271kf07d4"
+[node name="Rapaces" type="Node2D" parent="." node_paths=PackedStringArray("jugador")]
+script = ExtResource("21_rapaces")
+escenas = Array[PackedScene]([ExtResource("22_chimango"), ExtResource("23_aguilucho"), ExtResource("24_carancho")])
+jugador = NodePath("../Hornero")
 
 [node name="GatoMontes" parent="." unique_id=840224556 instance=ExtResource("11_ya4ey")]
 

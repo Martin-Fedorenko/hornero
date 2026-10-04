@@ -15,6 +15,11 @@ func _ready() -> void:
 	bolas_restantes = bolas_maximas
 	_crear_bola()
 
+## La bola ya no cuelga del charco: si el piso se rearma, se lleva la suya.
+func _exit_tree() -> void:
+	if is_instance_valid(bola_disponible) and bola_disponible.get("recogida") != true:
+		bola_disponible.queue_free()
+
 func configurar_charco(dibujo: Sprite2D, tamano: Vector2) -> void:
 	dibujo_charco = dibujo
 	tamano_charco = tamano
@@ -49,12 +54,27 @@ func _crear_bola() -> void:
 	if nueva_bola == null:
 		push_error("La escena de bola de barro debe tener un RigidBody2D como raíz.")
 		return
-	var contenedor := get_parent()
-	if contenedor == null:
-		contenedor = get_tree().current_scene
-	if contenedor == null:
-		return
-	contenedor.add_child(nueva_bola)
 	nueva_bola.set("fuente", self)
-	nueva_bola.global_position = global_position + posicion_bola
 	bola_disponible = nueva_bola
+	# Diferido: el charco nace mientras se arma el piso y la escena todavía no
+	# acepta hijos nuevos.
+	_colocar_bola.call_deferred(nueva_bola)
+
+## La bola va junto a los demás levantables (hijos de la escena principal) y
+## no dentro de las capas del piso, donde quedaría tapada por el pasto.
+func _colocar_bola(bola: RigidBody2D) -> void:
+	if not is_instance_valid(bola) or not is_inside_tree():
+		return
+	var escena := get_tree().current_scene
+	var vecino: Node = null
+	if escena != null:
+		for candidato in escena.get_children():
+			if candidato != bola and candidato.is_in_group(&"levantables"):
+				vecino = candidato
+	if vecino != null:
+		vecino.add_sibling(bola)
+	elif escena != null:
+		escena.add_child(bola)
+	else:
+		get_parent().add_child(bola)
+	bola.global_position = global_position + posicion_bola

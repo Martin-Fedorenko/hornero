@@ -7,10 +7,10 @@
 [ext_resource type="Script" uid="uid://bm3x271kf07d4" path="res://scripts/hornero/flight_motor.gd" id="5_flight"]
 [ext_resource type="Script" uid="uid://mutqphpmvp01" path="res://scripts/hornero/ground_motor.gd" id="6_ground"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/interaccion.tscn" id="7_5fmsy"]
-[ext_resource type="Script" path="res://scripts/hornero/hornero_vitals.gd" id="8_vitals"]
-[ext_resource type="AudioStream" path="res://Musica/Sonidos/Sound of beating wings - Efecto de sonido (HD).mp3" id="9_flap"]
-[ext_resource type="Script" path="res://scripts/hornero/hornero_comer.gd" id="10_comer"]
-[ext_resource type="AudioStream" path="res://Musica/Sonidos/Hornero Canto2.mp3" id="11_canto"]
+[ext_resource type="Script" uid="uid://dtfxlnn4pyatu" path="res://scripts/hornero/hornero_vitals.gd" id="8_vitals"]
+[ext_resource type="AudioStream" uid="uid://51rshykyx2ee" path="res://Musica/Sonidos/Sound of beating wings - Efecto de sonido (HD).mp3" id="9_flap"]
+[ext_resource type="Script" uid="uid://cmgyysq78uxsm" path="res://scripts/hornero/hornero_comer.gd" id="10_comer"]
+[ext_resource type="AudioStream" uid="uid://bim8ip1ndgkaw" path="res://Musica/Sonidos/Hornero Canto2.mp3" id="11_canto"]
 
 [sub_resource type="CircleShape2D" id="BodyShape"]
 radius = 16.0
@@ -50,31 +50,31 @@ script = ExtResource("5_flight")
 [node name="GroundMotor" type="Node" parent="." unique_id=1633563894]
 script = ExtResource("6_ground")
 
-[node name="Vitals" type="Node" parent="."]
+[node name="Vitals" type="Node" parent="." unique_id=840839481]
 script = ExtResource("8_vitals")
 
-[node name="AleteoAudio" type="AudioStreamPlayer2D" parent="."]
+[node name="AleteoAudio" type="AudioStreamPlayer2D" parent="." unique_id=1154304438]
 stream = ExtResource("9_flap")
 volume_db = -4.0
 max_distance = 1600.0
 
-[node name="AleteoAudioTimer" type="Timer" parent="."]
+[node name="AleteoAudioTimer" type="Timer" parent="." unique_id=1530120570]
 one_shot = true
 
-[node name="CantoAudio" type="AudioStreamPlayer2D" parent="."]
+[node name="CantoAudio" type="AudioStreamPlayer2D" parent="." unique_id=990211037]
 stream = ExtResource("11_canto")
+volume_db = -10.0
 max_distance = 1600.0
 
-[node name="CantoTimer" type="Timer" parent="."]
-wait_time = 1.0
+[node name="CantoTimer" type="Timer" parent="." unique_id=965154267]
 one_shot = true
 
-[node name="Comer" type="Area2D" parent="."]
+[node name="Comer" type="Area2D" parent="." unique_id=1032302054]
 position = Vector2(30, 0)
 collision_layer = 0
 collision_mask = 8
 monitorable = false
 script = ExtResource("10_comer")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Comer"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Comer" unique_id=261527022]
 shape = SubResource("BeakShape")

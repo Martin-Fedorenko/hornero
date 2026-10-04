@@ -49,9 +49,13 @@ enum Modo { PERSECUCION, AVISO, PICADA, AGARRE, HUIDA, AUSENTE }
 @export var velocidad_huida := 700.0
 @export var duracion_huida_max := 4.0
 @export var margen_pantalla := 120.0
+## Si es falso, aparece una sola vez: cuando se va no vuelve (lo reemplaza
+## RapacesSpawner por otra rapaz al azar).
+@export var reaparecer := true
 
 @export_group("Sonido")
 ## Segundos del grito que se reproducen al aparecer (0 = el audio entero).
+## Pasado ese tiempo se apaga con el mismo fundido que al irse.
 @export var duracion_grito := 0.0
 ## Segundos que tarda el grito en apagarse cuando el chimango se va.
 @export var fundido_grito := 2.0
@@ -79,6 +83,7 @@ var _lado := 1
 var _dir_picada := Vector2.RIGHT
 var _dir_huida := Vector2.UP
 var _presiones := 0
+var _ya_aparecio := false
 
 @onready var _grito: AudioStreamPlayer = get_node_or_null("GritoAudio")
 @onready var _volumen_grito := _grito.volume_linear if _grito else 1.0
@@ -86,6 +91,11 @@ var _fundido: Tween
 
 func _ready() -> void:
 	_apply_orientation()
+	# Chimango, aguilucho y carancho comparten este script: no chocan entre sí
+	add_to_group(&"rapaces")
+	for otra in get_tree().get_nodes_in_group(&"rapaces"):
+		if otra != self and otra is PhysicsBody2D:
+			add_collision_exception_with(otra)
 	if not is_instance_valid(target):
 		target = get_parent().get_node_or_null("Hornero") as Node2D
 	if is_instance_valid(target):
@@ -97,7 +107,14 @@ func _ready() -> void:
 	if empezar_ausente:
 		_ocultar()
 	else:
+		_ya_aparecio = true
 		_gritar()
+
+func _exit_tree() -> void:
+	# Si desaparece con el Hornero en las garras, lo libera
+	if modo == Modo.AGARRE and is_instance_valid(target):
+		target.remove_meta(&"agarrado_por")
+		target.set_physics_process(true)
 
 func _physics_process(delta: float) -> void:
 	if debug_print and Engine.get_physics_frames() % 30 == 0:
@@ -203,6 +220,9 @@ func _objetivo_refugiado() -> bool:
 func _puede_agarrar() -> bool:
 	if _objetivo_refugiado():
 		return false
+	# Ya lo tiene otro depredador (otra rapaz o un gato)
+	if target.has_meta(&"agarrado_por") and target.get_meta(&"agarrado_por") != self:
+		return false
 	if target is Hornero:
 		var h := target as Hornero
 		return h.state != Hornero.State.FALLING and h.state != Hornero.State.RECOVERING \
@@ -212,6 +232,7 @@ func _puede_agarrar() -> bool:
 func _agarrar() -> void:
 	_cambiar_modo(Modo.AGARRE, duracion_agarre)
 	_presiones = 0
+	target.set_meta(&"agarrado_por", self)
 	target.set_physics_process(false)
 	if target is CharacterBody2D:
 		(target as CharacterBody2D).velocity = Vector2.ZERO
@@ -233,6 +254,7 @@ func _cargar(delta: float) -> Vector2:
 	return Vector2(facing, -0.5).normalized() * velocidad_carga
 
 func _escapar() -> void:
+	target.remove_meta(&"agarrado_por")
 	target.set_physics_process(true)
 	if target is Hornero:
 		(target as Hornero).escape_capture(Vector2(-facing * 150.0, -300.0))
@@ -243,6 +265,7 @@ func _escapar() -> void:
 	_irse()
 
 func _soltar() -> void:
+	target.remove_meta(&"agarrado_por")
 	target.set_physics_process(true)
 	if target is CharacterBody2D:
 		(target as CharacterBody2D).velocity = velocity
@@ -283,10 +306,11 @@ func _ocultar() -> void:
 
 func _esperar_ausente(delta: float) -> void:
 	_modo_timer -= delta
-	if _modo_timer <= 0.0 and is_instance_valid(target):
+	if _modo_timer <= 0.0 and (reaparecer or not _ya_aparecio) and is_instance_valid(target):
 		_reaparecer()
 
 func _reaparecer() -> void:
+	_ya_aparecio = true
 	global_position = _punto_de_entrada()
 	_target_prev_pos = target.global_position
 	_target_vel = Vector2.ZERO
@@ -305,7 +329,7 @@ func _gritar() -> void:
 	_grito.volume_linear = _volumen_grito
 	_grito.play()
 	if duracion_grito > 0.0:
-		get_tree().create_timer(duracion_grito).timeout.connect(_grito.stop)
+		get_tree().create_timer(duracion_grito).timeout.connect(_apagar_grito)
 
 ## Baja el volumen del grito hasta silenciarlo, en vez de cortarlo de golpe.
 func _apagar_grito() -> void:

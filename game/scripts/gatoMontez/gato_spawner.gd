@@ -4,7 +4,7 @@ extends Node2D
 
 @export var escena_gato: PackedScene
 @export var jugador: Node2D
-@export var cantidad := 4
+@export var cantidad := 5
 @export_group("Rango del mapa")
 @export var x_inicio := 0.0
 @export var x_fin := 5000.0

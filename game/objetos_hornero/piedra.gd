@@ -4,6 +4,10 @@ var recogida: bool = false
 var entregado: bool = false
 @export var tipo_recurso: StringName = &"piedra"
 
+func _ready() -> void:
+	# Nunca queda tapado por el pasto y las matas del plano de adelante.
+	z_index = MeadowFloor.FRONT_Z + 1
+
 func recoger() -> void:
 	recogida = true
 	freeze = true
