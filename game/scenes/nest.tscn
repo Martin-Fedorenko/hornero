@@ -1,7 +1,8 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bml4ak5v6veuo"]
 
 [ext_resource type="Texture2D" uid="uid://b3bamy0vnm4fg" path="res://assets/base/nest_asset.png" id="1_nest"]
-[ext_resource type="Script" path="res://scenes/nest.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://b62olvry0w2uu" path="res://scenes/nest.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://dtxp4pijnet0i" path="res://objetos_hornero/destello_levantable.gd" id="3_destello"]
 
 [sub_resource type="AtlasTexture" id="Nest0"]
 atlas = ExtResource("1_nest")
@@ -28,44 +29,46 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("Nest0")
-},
-{
+}, {
 "duration": 1.0,
 "texture": SubResource("Nest1")
-},
-{
+}, {
 "duration": 1.0,
 "texture": SubResource("Nest2")
-},
-{
+}, {
 "duration": 1.0,
 "texture": SubResource("Nest3")
-},
-{
+}, {
 "duration": 5.0,
 "texture": SubResource("Nest4")
 }],
-"loop": false,
+"loop": 0,
 "name": &"crecer",
 "speed": 1.0
 }]
 
-[sub_resource type="RectangleShape2D" id="DeliveryShape"]
-size = Vector2(280, 140)
+[sub_resource type="CircleShape2D" id="DeliveryShape"]
+radius = 214.3
 
-[node name="Nest" type="AnimatedSprite2D"]
+[node name="Nest" type="AnimatedSprite2D" unique_id=2102261471]
 scale = Vector2(0.28, 0.28)
 sprite_frames = SubResource("NestFrames")
 animation = &"crecer"
-frame = 0
 centered = false
 offset = Vector2(-175, -288)
 script = ExtResource("2_script")
+segundos_por_construccion = 5.0
 
-[node name="DeliveryArea" type="Area2D" parent="."]
-position = Vector2(0, -120)
+[node name="DeliveryArea" type="Area2D" parent="." unique_id=195444174]
+position = Vector2(0, -143)
 collision_layer = 0
-collision_mask = 2
+collision_mask = 3
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DeliveryArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DeliveryArea" unique_id=1174122112]
 shape = SubResource("DeliveryShape")
+
+[node name="DestelloLevantable" type="Node2D" parent="." unique_id=736606216]
+position = Vector2(0, -143)
+scale = Vector2(3.5714, 3.5714)
+script = ExtResource("3_destello")
+radio = 60.0

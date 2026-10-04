@@ -76,9 +76,10 @@ volume_db = 0.951
 
 [node name="CantoHornero" type="AudioStreamPlayer" parent="." unique_id=151156535]
 stream = ExtResource("11_canto")
-volume_db = -24.0
+volume_db = -30.0
 
 [node name="TemporizadorCantoHornero" type="Timer" parent="." unique_id=674221885]
+wait_time = 5.0
 one_shot = true
 
 [node name="Contenido" type="MarginContainer" parent="." unique_id=1870174885]

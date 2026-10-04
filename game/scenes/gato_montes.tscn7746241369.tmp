@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://4jpbvg34m0h6"]
+
+[ext_resource type="Script" uid="uid://b3kjkx4ljaxnq" path="res://scripts/gatoMontez/GatoMontes.gd" id="1_7l07r"]
+[ext_resource type="SpriteFrames" uid="uid://cr3sak31u67vf" path="res://assets/gato_montez/gato_montez.tres" id="2_4vtc2"]
+[ext_resource type="Script" uid="uid://cxbxwinpxxkqw" path="res://scripts/gatoMontez/gato_animator.gd" id="3_l3ilh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l3ilh"]
+
+[node name="GatoMontes" type="CharacterBody2D" unique_id=840224556]
+script = ExtResource("1_7l07r")
+debug_print = true
+debug_draw = true
+radio_agarre = 30.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=169201341]
+scale = Vector2(0.3, 0.3)
+sprite_frames = ExtResource("2_4vtc2")
+animation = &"gatoMontez_salto"
+offset = Vector2(0, -62)
+script = ExtResource("3_l3ilh")
+base_scale = 0.3
+sprite_mira_derecha = true
+umbral_quieto = 10.0
+alinear_patas_abajo = true
+animacion_caminar = &"gatoMontez_caminar"
+animacion_correr = &"gatoMontez_correr"
+animacion_salto = &"gatoMontez_salto"
+animacion_ataque = &"gatoMontez_ataque"
+frame_agarre = 6
+escala_caminar = 1.0
+offset_caminar = Vector2(0, 300)
+escala_correr = 1.0
+offset_correr = Vector2(0, 300)
+escala_salto = 1.0
+offset_salto = Vector2(0, 300)
+escala_ataque = 1.0
+offset_ataque = Vector2(0, 300)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1172860399]
+shape = SubResource("RectangleShape2D_l3ilh")

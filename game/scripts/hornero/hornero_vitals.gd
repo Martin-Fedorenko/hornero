@@ -5,6 +5,8 @@ extends Node
 
 signal health_changed(current: float, maximum: float)
 signal stamina_changed(current: float, maximum: float)
+## Recibió daño (se emite antes que `died`).
+signal damaged(amount: float)
 signal died
 
 @export_group("Vida")
@@ -19,13 +21,15 @@ signal died
 ## Stamina que cuesta cada aleteo (también el despegue).
 @export var flap_cost := 1.0
 ## Recuperación por segundo mientras planea.
-@export var glide_regen := 4.0
+@export var glide_regen := 7.0
 ## Recuperación por segundo mientras está en el suelo.
-@export var ground_regen := 30.0
+@export var ground_regen := 80.0
 ## Recuperación por segundo mientras descansa en el nido.
 @export var nest_regen := 10.0
-## Si está activo, al caer al piso tras ser derribado pierde toda la stamina.
+## Si está activo, al caer al piso tras ser derribado pierde stamina.
 @export var drain_on_crash := true
+## Fracción de la stamina actual que pierde en esa caída (0.5 = la mitad).
+@export_range(0.0, 1.0) var crash_stamina_loss := 0.5
 
 var health := 0.0
 var stamina := 0.0
@@ -49,8 +53,9 @@ func regenerate(rate: float, delta: float) -> void:
 		_set_stamina(stamina + rate * delta)
 
 
+## Caída tras ser derribado: pierde `crash_stamina_loss` de la stamina actual.
 func drain_stamina() -> void:
-	_set_stamina(0.0)
+	_set_stamina(stamina * (1.0 - crash_stamina_loss))
 
 
 func take_damage(amount: float) -> void:
@@ -58,6 +63,7 @@ func take_damage(amount: float) -> void:
 		return
 	health = maxf(health - amount, 0.0)
 	health_changed.emit(health, max_health)
+	damaged.emit(amount)
 	if health == 0.0:
 		died.emit()
 

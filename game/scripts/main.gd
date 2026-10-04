@@ -1,37 +1,19 @@
 extends Node2D
-## Nivel de prueba de vuelo: límites de cámara y HUD de depuración.
+## Nivel de prueba de vuelo: límites de cámara y HUD.
 ## El fondo es la escena PampasBackground (parallax).
 
-const INVENTORY_ORDER: Array[StringName] = [&"paja", &"piedra", &"maderita", &"barro"]
-const INVENTORY_ICONS := {
-	&"paja": preload("res://objetos_hornero/paja.svg"),
-	&"piedra": preload("res://objetos_hornero/piedra.svg"),
-	&"maderita": preload("res://objetos_hornero/ramitas.svg"),
-	&"barro": preload("res://objetos_hornero/bola_barro.svg"),
-}
+const NestArrow := preload("res://scripts/ui/nest_arrow.gd")
 
 ## Área jugable. La cámara no muestra nada fuera de este rectángulo.
-@export var world_rect := Rect2(0, -400, 6000, 2200)
-## Escena a la que vuelve al apretar Esc.
-@export_file("*.tscn") var menu_scene := "res://Hornero_Menu_Inicio/menu_hornero/menu_inicio.tscn"
-@export var nest_interaction_distance := 140.0
+@export var world_rect := Rect2(0, -400, 12000, 2065)
 @export var nest_exit_distance := 180.0
 
 @onready var _hornero: Hornero = $Hornero
 @onready var _hornero_animator: HorneroAnimator = $Hornero/AnimatedSprite2D
 @onready var _camera: Camera2D = $Hornero/Camera2D
-@onready var _status: Label = $HUD/Status
 @onready var _nest: Nest = $World/NestTree/Nest
 @onready var _vitals_hud: Control = $HUD/Vitales
-@onready var _death_screen: Control = $HUD/Muerte
-
-var _inventory_counts := {
-	&"paja": 0,
-	&"piedra": 0,
-	&"maderita": 0,
-	&"barro": 0,
-}
-var _inventory_labels: Dictionary = {}
+@onready var _menu: Control = $HUD/MenuJuego
 
 
 func _ready() -> void:
@@ -40,17 +22,29 @@ func _ready() -> void:
 	_camera.limit_right = int(world_rect.end.x)
 	_camera.limit_bottom = int(world_rect.end.y)
 	_camera.reset_smoothing()
-	_nest.connect(&"material_delivered", _on_material_delivered)
-	_hornero.state_changed.connect(_on_hornero_state_changed)
-	_create_inventory_hud()
+	_create_nest_arrow()
 	_vitals_hud.track(_hornero.vitals)
-	_hornero.died.connect(_death_screen.show_after_delay)
+	_hornero.died.connect(_menu.abrir_muerte)
+	_hornero.state_changed.connect(_on_hornero_state_changed)
+	# Si el nido crece o pierde una etapa con el hornero adentro, se reacomoda.
+	_nest.material_delivered.connect(_on_nest_changed.unbind(1))
+	_nest.construccion_perdida.connect(_on_nest_changed)
+
+
+func _create_nest_arrow() -> void:
+	var arrow := NestArrow.new()
+	arrow.name = "FlechaNido"
+	arrow.target = _nest
+	$HUD.add_child(arrow)
+	# Debajo del menú de pausa / muerte / victoria.
+	$HUD.move_child(arrow, _menu.get_index())
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"ui_cancel"):
 		get_viewport().set_input_as_handled()
-		get_tree().change_scene_to_file(menu_scene)
+		if not _menu.esta_abierto() and not _hornero.is_dead():
+			_menu.abrir_pausa()
 		return
 	if event is InputEventKey and event.pressed and not event.echo \
 		and event.physical_keycode == KEY_G:
@@ -68,14 +62,17 @@ func _toggle_nest_pose() -> void:
 		or _hornero.state == Hornero.State.RECOVERING \
 		or _hornero.state == Hornero.State.DEAD:
 		return
-	if _hornero.global_position.distance_to(_nest.global_position) > nest_interaction_distance:
+	if not _nest.esta_en_aura(_hornero.global_position):
 		return
 	_perch_in_nest()
+	# Entrar al nido terminado gana la partida.
+	if _nest.esta_completo():
+		_menu.abrir_victoria()
 
 
 ## Acomoda al hornero en el nido según lo construido: en la taza abierta se
 ## hunde más cuanto más alta es la pared (la pared delantera lo tapa); en el
-## horno cerrado sólo asoma la cabeza por la entrada.
+## horno cerrado sólo asoma la cabeza por la entrada y queda protegido.
 func _perch_in_nest() -> void:
 	if _nest.is_closed():
 		var hole := _nest.hole_global_center()
@@ -95,64 +92,6 @@ func _on_hornero_state_changed(_previous: Hornero.State, current: Hornero.State)
 	_nest.set_occupied(current == Hornero.State.NESTED)
 
 
-func _process(_delta: float) -> void:
-	_status.text = "Estado: %s   ·   Velocidad: %4.0f px/s   ·   Pitch: %+3.0f°" % [
-		Hornero.State.keys()[_hornero.state],
-		_hornero.velocity.length(),
-		rad_to_deg(_hornero.pitch),
-	]
-
-
-func _create_inventory_hud() -> void:
-	var panel := PanelContainer.new()
-	panel.name = "Inventario"
-	panel.anchor_left = 1.0
-	panel.anchor_right = 1.0
-	panel.offset_left = -332.0
-	panel.offset_right = -18.0
-	panel.offset_top = 18.0
-	panel.offset_bottom = 72.0
-	var panel_style := StyleBoxFlat.new()
-	panel_style.bg_color = Color(0.08, 0.12, 0.10, 0.9)
-	panel_style.border_color = Color("c6a56b")
-	panel_style.set_border_width_all(1)
-	panel_style.set_corner_radius_all(6)
-	panel_style.content_margin_left = 9.0
-	panel_style.content_margin_right = 9.0
-	panel_style.content_margin_top = 5.0
-	panel_style.content_margin_bottom = 5.0
-	panel.add_theme_stylebox_override("panel", panel_style)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 8)
-	panel.add_child(row)
-	$HUD.add_child(panel)
-
-	for material in INVENTORY_ORDER:
-		var slot := HBoxContainer.new()
-		slot.add_theme_constant_override("separation", 3)
-		var icon := TextureRect.new()
-		icon.texture = INVENTORY_ICONS[material]
-		icon.custom_minimum_size = Vector2(30.0, 30.0)
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.tooltip_text = String(material)
-		var count := Label.new()
-		count.text = "0"
-		count.custom_minimum_size.x = 24.0
-		count.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		count.add_theme_font_size_override("font_size", 18)
-		count.add_theme_color_override("font_color", Color("fff3d4"))
-		slot.add_child(icon)
-		slot.add_child(count)
-		row.add_child(slot)
-		_inventory_labels[material] = count
-
-
-func _on_material_delivered(material: StringName) -> void:
-	if not _inventory_counts.has(material):
-		return
-	_inventory_counts[material] = int(_inventory_counts[material]) + 1
-	var count: Label = _inventory_labels[material]
-	count.text = str(_inventory_counts[material])
+func _on_nest_changed() -> void:
 	if _hornero.state == Hornero.State.NESTED:
 		_perch_in_nest()

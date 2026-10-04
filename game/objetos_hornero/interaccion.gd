@@ -6,6 +6,10 @@ extends Node
 @export var usar_pico_automatico: bool = true
 @export var intervalo_logs: float = 0.75
 @export var escala_picoteo: float = 0.19
+## Al soltar un objeto no choca con el hornero durante al menos este tiempo
+## (segundos) y hasta que se separen `distancia_sin_choque` px.
+@export var tiempo_sin_choque: float = 0.5
+@export var distancia_sin_choque: float = 60.0
 
 const CUADROS: SpriteFrames = preload("res://objetos_hornero/picoteo_frames.tres")
 const DEBUG_PICO = preload("res://objetos_hornero/debug_pico.gd")
@@ -185,6 +189,11 @@ func interactuar() -> void:
 	if ocupado or _capturado or hornero.state == Hornero.State.FALLING \
 		or hornero.state == Hornero.State.RECOVERING:
 		return
+	# En el aire no se picotea: agarra o suelta al instante, sin animación y
+	# sin frenar el vuelo. El picoteo sólo se hace parado en la tierra.
+	if hornero.state == Hornero.State.FLYING or hornero.state == Hornero.State.GLIDING:
+		_accion_en_contacto()
+		return
 	ocupado = true
 	var posicion_hornero_inicio := hornero.global_position
 	var procesaba := hornero.is_physics_processing()
@@ -309,7 +318,29 @@ func _soltar_objeto_en_pico() -> void:
 	objeto.call("soltar", destino)
 	objeto.physics_interpolation_mode = _interpolacion_original
 	objeto.reset_physics_interpolation()
+	_ignorar_al_soltar(objeto)
 	objeto = null
+
+
+## El objeto recién soltado no choca con el hornero hasta que se alejan.
+func _ignorar_al_soltar(soltado: RigidBody2D) -> void:
+	soltado.add_collision_exception_with(hornero)
+	var desde := Time.get_ticks_msec()
+	while is_instance_valid(soltado) and soltado.get("recogida") != true 			and (Time.get_ticks_msec() - desde < tiempo_sin_choque * 1000.0 			or soltado.global_position.distance_to(hornero.global_position) < distancia_sin_choque):
+		await get_tree().physics_frame
+	if is_instance_valid(soltado):
+		soltado.remove_collision_exception_with(hornero)
+
+## Entrega lo que lleva en el pico (lo usa el nido al pasar por encima).
+## Devuelve el objeto, que queda sin soltar ni seguir al pico, o null.
+func entregar_objeto() -> RigidBody2D:
+	if not is_instance_valid(objeto):
+		return null
+	var entregado := objeto
+	objeto = null
+	entregado.physics_interpolation_mode = _interpolacion_original
+	_log("ENTREGAR | %s al nido" % entregado.name)
+	return entregado
 
 func _imprimir_estado(evento: String, error_antes: float) -> void:
 	if not debug_logs:

@@ -13,7 +13,8 @@ extends AnimatedSprite2D
 @export var animacion_salto := &"gatoMontez_salto"
 @export var animacion_ataque := &"gatoMontez_ataque"
 ## Frame del salto que se muestra mientras sostiene al Hornero (-1 = el último).
-@export var frame_agarre := 5
+## Es el número que muestra el panel de SpriteFrames (empieza en 0).
+@export var frame_agarre := 6
 
 @export_group("Ajuste Caminar")
 @export var escala_caminar := 1.0
@@ -67,8 +68,8 @@ func _process(_delta: float) -> void:
 			if cambio:
 				_reproducir_desde_cero(animacion_salto)
 		GatoMontes.Modo.AGARRE:
-			if cambio:
-				_congelar_frame(animacion_salto, frame_agarre)
+			# Se reasegura cada frame, por si algo lo pisa
+			_congelar_frame(animacion_salto, frame_agarre)
 		_:
 			_movimiento()
 
@@ -132,10 +133,14 @@ func _reproducir_desde_cero(anim: StringName) -> void:
 func _congelar_frame(anim: StringName, cual: int) -> void:
 	if not _existe(anim):
 		return
-	animation = anim # cambiar la animación resetea el frame a 0
+	if animation != anim:
+		animation = anim # cambiar la animación resetea el frame a 0
 	var total := sprite_frames.get_frame_count(anim)
-	frame = total - 1 if cual < 0 else clampi(cual, 0, total - 1)
-	pause() # pause conserva el frame
+	var objetivo := total - 1 if cual < 0 else clampi(cual, 0, total - 1)
+	if is_playing():
+		pause() # pause conserva el frame
+	if frame != objetivo:
+		frame = objetivo
 
 
 func _quieto(anim: StringName) -> void:

@@ -1,6 +1,6 @@
 extends Node2D
 
-@export_range(12.0, 48.0, 1.0) var radio: float = 22.0
+@export_range(12.0, 120.0, 1.0) var radio: float = 22.0
 
 var _tiempo := 0.0
 
