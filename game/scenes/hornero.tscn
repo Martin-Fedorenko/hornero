@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/hornero/hornero_vitals.gd" id="8_vitals"]
 [ext_resource type="AudioStream" path="res://Musica/Sonidos/Sound of beating wings - Efecto de sonido (HD).mp3" id="9_flap"]
 [ext_resource type="Script" path="res://scripts/hornero/hornero_comer.gd" id="10_comer"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/Hornero Canto2.mp3" id="11_canto"]
 
 [sub_resource type="CircleShape2D" id="BodyShape"]
 radius = 16.0
@@ -58,6 +59,14 @@ volume_db = -4.0
 max_distance = 1600.0
 
 [node name="AleteoAudioTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="CantoAudio" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("11_canto")
+max_distance = 1600.0
+
+[node name="CantoTimer" type="Timer" parent="."]
+wait_time = 1.0
 one_shot = true
 
 [node name="Comer" type="Area2D" parent="."]

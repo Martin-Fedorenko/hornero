@@ -38,6 +38,8 @@ var forward := Vector2.RIGHT
 ## En el suelo, si se está apretando una dirección. Al darse vuelta caminando
 ## la velocidad pasa por 0, pero sigue caminando.
 var wants_to_walk := false
+## Está adentro del nido ya techado: los depredadores no lo pueden atacar.
+var sheltered := false
 
 var _flap_time_left := 0.0
 ## Tras enderezarse, la tecla de dirección que se venía apretando apunta al
@@ -53,12 +55,16 @@ var _pitch_inverted := false
 @onready var vitals: HorneroVitals = $Vitals
 @onready var _flap_audio: AudioStreamPlayer2D = $AleteoAudio
 @onready var _flap_audio_timer: Timer = $AleteoAudioTimer
+## Al rato de entrar al nido, el hornero canta (la espera está en CantoTimer).
+@onready var _song_audio: AudioStreamPlayer2D = $CantoAudio
+@onready var _song_timer: Timer = $CantoTimer
 
 
 func _ready() -> void:
 	_debug.visible = debug_draw_flight_direction
 	flapped.connect(_play_flap_sound)
 	_flap_audio_timer.timeout.connect(_stop_flap_sound)
+	_song_timer.timeout.connect(_song_audio.play)
 	_apply_orientation()
 
 
@@ -81,6 +87,7 @@ func _stop_flap_sound() -> void:
 func _physics_process(delta: float) -> void:
 	if state == State.NESTED:
 		velocity = Vector2.ZERO
+		_regenerate_stamina(delta)
 		return
 	if state == State.DEAD:
 		velocity = _ground.integrate(velocity, 0.0, delta)
@@ -131,9 +138,11 @@ func escape_capture(escape_velocity: Vector2) -> void:
 	_set_state(State.GLIDING)
 
 
-func enter_nest(nest_position: Vector2) -> void:
+## covered: el nido ya tiene techo, así que adentro queda protegido.
+func enter_nest(nest_position: Vector2, covered := false) -> void:
 	if state == State.FALLING or state == State.RECOVERING or state == State.DEAD:
 		return
+	sheltered = covered
 	global_position = nest_position
 	velocity = Vector2.ZERO
 	pitch = 0.0
@@ -265,6 +274,9 @@ func _regenerate_stamina(delta: float) -> void:
 			vitals.regenerate(vitals.ground_regen, delta)
 		State.GLIDING:
 			vitals.regenerate(vitals.glide_regen, delta)
+		State.NESTED:
+			vitals.regenerate(vitals.nest_regen, delta)
+			vitals.heal(vitals.nest_heal * delta)
 
 
 # --- Transiciones ---------------------------------------------------------
@@ -290,6 +302,12 @@ func _set_state(next: State) -> void:
 		return
 	var previous := state
 	state = next
+	if next == State.NESTED:
+		_song_timer.start()
+	else:
+		sheltered = false
+		_song_timer.stop()
+		_song_audio.stop()
 	state_changed.emit(previous, next)
 
 

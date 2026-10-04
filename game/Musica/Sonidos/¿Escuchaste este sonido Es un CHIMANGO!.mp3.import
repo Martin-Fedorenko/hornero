@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://ctsv4q50bogkt"
+path="res://.godot/imported/¿Escuchaste este sonido Es un CHIMANGO!.mp3-2dfe24cb3a34e82d2ba3493470558097.mp3str"
+
+[deps]
+
+source_file="res://Musica/Sonidos/¿Escuchaste este sonido Es un CHIMANGO!.mp3"
+dest_files=["res://.godot/imported/¿Escuchaste este sonido Es un CHIMANGO!.mp3-2dfe24cb3a34e82d2ba3493470558097.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

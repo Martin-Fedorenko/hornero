@@ -15,13 +15,13 @@ const INVENTORY_ICONS := {
 ## Escena a la que vuelve al apretar Esc.
 @export_file("*.tscn") var menu_scene := "res://Hornero_Menu_Inicio/menu_hornero/menu_inicio.tscn"
 @export var nest_interaction_distance := 140.0
-@export var nest_perch_offset := Vector2(0, -18)
 @export var nest_exit_distance := 180.0
 
 @onready var _hornero: Hornero = $Hornero
+@onready var _hornero_animator: HorneroAnimator = $Hornero/AnimatedSprite2D
 @onready var _camera: Camera2D = $Hornero/Camera2D
 @onready var _status: Label = $HUD/Status
-@onready var _nest: AnimatedSprite2D = $World/NestTree/Nest
+@onready var _nest: Nest = $World/NestTree/Nest
 @onready var _vitals_hud: Control = $HUD/Vitales
 @onready var _death_screen: Control = $HUD/Muerte
 
@@ -41,6 +41,7 @@ func _ready() -> void:
 	_camera.limit_bottom = int(world_rect.end.y)
 	_camera.reset_smoothing()
 	_nest.connect(&"material_delivered", _on_material_delivered)
+	_hornero.state_changed.connect(_on_hornero_state_changed)
 	_create_inventory_hud()
 	_vitals_hud.track(_hornero.vitals)
 	_hornero.died.connect(_death_screen.show_after_delay)
@@ -69,7 +70,29 @@ func _toggle_nest_pose() -> void:
 		return
 	if _hornero.global_position.distance_to(_nest.global_position) > nest_interaction_distance:
 		return
-	_hornero.enter_nest(_nest.global_position + nest_perch_offset)
+	_perch_in_nest()
+
+
+## Acomoda al hornero en el nido según lo construido: en la taza abierta se
+## hunde más cuanto más alta es la pared (la pared delantera lo tapa); en el
+## horno cerrado sólo asoma la cabeza por la entrada.
+func _perch_in_nest() -> void:
+	if _nest.is_closed():
+		var hole := _nest.hole_global_center()
+		_hornero.enter_nest(hole - _hornero_animator.idle_point_offset(_hornero_animator.nest_head), true)
+		_hornero_animator.clip_to_circle(hole, _nest.hole_global_radius())
+		return
+	var rim_y := _nest.rim_global_y()
+	var top := _hornero_animator.idle_point_offset(Vector2(0.0, _hornero_animator.nest_top)).y
+	var feet := _hornero_animator.idle_point_offset(Vector2(0.0, _hornero_animator.nest_feet)).y
+	var sink := (feet - top) * _nest.hidden_fraction()
+	var head_x := _hornero_animator.idle_point_offset(_hornero_animator.nest_head).x
+	_hornero.enter_nest(Vector2(_nest.cup_head_global_x(_hornero.facing) - head_x, rim_y - feet + sink))
+	_hornero_animator.clip_below(_nest.bottom_global_y())
+
+
+func _on_hornero_state_changed(_previous: Hornero.State, current: Hornero.State) -> void:
+	_nest.set_occupied(current == Hornero.State.NESTED)
 
 
 func _process(_delta: float) -> void:
@@ -131,3 +154,5 @@ func _on_material_delivered(material: StringName) -> void:
 	_inventory_counts[material] = int(_inventory_counts[material]) + 1
 	var count: Label = _inventory_labels[material]
 	count.text = str(_inventory_counts[material])
+	if _hornero.state == Hornero.State.NESTED:
+		_perch_in_nest()

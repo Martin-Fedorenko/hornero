@@ -19,6 +19,7 @@
 [ext_resource type="Script" path="res://scripts/ui/vitals_hud.gd" id="11_vitals_hud"]
 [ext_resource type="Script" path="res://scripts/ui/death_screen.gd" id="12_death_screen"]
 [ext_resource type="PackedScene" path="res://scenes/arbol.tscn" id="13_arbol"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/¿Escuchaste este sonido Es un CHIMANGO!.mp3" id="14_grito"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
 atlas = ExtResource("6_choun")
@@ -293,6 +294,9 @@ script = ExtResource("5_85g3d")
 empezar_ausente = true
 tiempo_ausente_min = 10.0
 tiempo_ausente_max = 10.0
+
+[node name="GritoAudio" type="AudioStreamPlayer" parent="Chimango"]
+stream = ExtResource("14_grito")
 
 [node name="ChimangoAnimator" type="AnimatedSprite2D" parent="Chimango" unique_id=1938302224]
 sprite_frames = SubResource("SpriteFrames_2siln")
