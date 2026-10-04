@@ -63,6 +63,16 @@ enum Modo { PASEO, PERSECUCION, ZARPAZO, SALTO, AGARRE, RECUPERACION, RETIRADA }
 @export var distancia_separacion := 120.0   # se alejan si otro gato está más cerca que esto
 @export var variacion_velocidad := 0.15     # cada gato es hasta 15% más rápido o lento
 
+@export_group("Sonido")
+## Suena cuando descubre al Hornero y sale a cazarlo.
+@export var sonido_deteccion: AudioStream
+## Cada tanto maúlla uno de estos al azar.
+@export var maullidos: Array[AudioStream] = []
+## Maullido especial que muy de vez en cuando reemplaza al común.
+@export var maullido_raro: AudioStream
+@export var intervalo_maullido := 5.0
+@export_range(0.0, 1.0, 0.0001) var probabilidad_raro := 0.001
+
 @export_group("Física")
 @export var aceleracion := 1800.0
 @export var friccion := 2200.0
@@ -89,6 +99,8 @@ var _ray_borde: RayCast2D
 var _colision: CollisionShape2D
 var _salto_vel := Vector2.ZERO  # salto calculado por _puede_saltar()
 var _salto_facing := 1
+var _maullido_timer := 0.0
+@onready var _voz: AudioStreamPlayer2D = get_node_or_null("Voz")
 
 @onready var _marker_boca: Marker2D = get_node_or_null("Boca")
 
@@ -128,6 +140,8 @@ func _ready() -> void:
 	facing = [-1, 1].pick_random()
 	_paseo_dir = facing
 	_paseo_timer = randf_range(tiempo_caminar_min, tiempo_caminar_max)
+	# Desfasado para que los gatos no maúllen todos a la vez
+	_maullido_timer = randf_range(0.0, intervalo_maullido)
 	_mult_vel = randf_range(1.0 - variacion_velocidad, 1.0 + variacion_velocidad)
 
 
@@ -149,6 +163,7 @@ func _physics_process(delta: float) -> void:
 		velocity.y += gravedad * delta
 	_modo_timer += delta
 	_cooldown_salto_timer = maxf(_cooldown_salto_timer - delta, 0.0)
+	_maullar_cada_tanto(delta)
 
 	match modo:
 		Modo.PASEO:
@@ -519,8 +534,34 @@ func _y_hornero_en_piso() -> float:
 # ---------- Utilidades ----------
 
 func _cambiar_modo(nuevo: Modo) -> void:
+	# Descubrió al Hornero: deja de pasear y sale a perseguirlo o a saltarle
+	if modo == Modo.PASEO and (nuevo == Modo.PERSECUCION or nuevo == Modo.SALTO):
+		_sonar(sonido_deteccion)
 	modo = nuevo
 	_modo_timer = 0.0
+
+
+# ---------- Sonido ----------
+
+func _maullar_cada_tanto(delta: float) -> void:
+	_maullido_timer -= delta
+	if _maullido_timer > 0.0:
+		return
+	_maullido_timer = intervalo_maullido
+	# Si todavía está sonando otra cosa (el enojo, por ejemplo), espera al próximo
+	if _voz == null or _voz.playing:
+		return
+	if maullido_raro != null and randf() < probabilidad_raro:
+		_sonar(maullido_raro)
+	elif not maullidos.is_empty():
+		_sonar(maullidos.pick_random())
+
+
+func _sonar(sonido: AudioStream) -> void:
+	if _voz == null or sonido == null:
+		return
+	_voz.stream = sonido
+	_voz.play()
 
 
 func _volver_a_pasear() -> void:
@@ -574,8 +615,9 @@ func _hornero_disponible() -> bool:
 		return false
 	if target is Hornero:
 		var h := target as Hornero
+		# Adentro del nido techado está a salvo
 		return h.state != Hornero.State.FALLING and h.state != Hornero.State.RECOVERING \
-			and h.state != Hornero.State.DEAD
+			and h.state != Hornero.State.DEAD and not h.sheltered
 	return true
 
 

@@ -55,11 +55,11 @@ func _ready() -> void:
 	_log("Pico automático=%s. Verde=pico usado; rosa=Marker2D; amarillo=objeto." % usar_pico_automatico)
 	sprite.animation_changed.connect(_diagnosticar_cambio_animacion)
 	hornero.state_changed.connect(_al_cambiar_estado_hornero)
-	var chimango := hornero.get_parent().get_node_or_null("Chimango") as Chimango
-	if chimango != null:
-		chimango.agarro_jugador.connect(_al_ser_capturado)
-		chimango.jugador_escapo.connect(_al_ser_liberado)
-		chimango.solto_jugador.connect(_al_ser_liberado)
+	# Rapaces (chimango, aguilucho, carancho): las que ya están y las que
+	# el spawner vaya creando durante el juego.
+	for rapaz in get_tree().get_nodes_in_group(&"rapaces"):
+		_escuchar_rapaz(rapaz)
+	get_tree().node_added.connect(_al_agregarse_nodo)
 	
 	
 func _unhandled_input(event: InputEvent) -> void:
@@ -252,6 +252,17 @@ func interactuar() -> void:
 		and hornero.state != Hornero.State.RECOVERING:
 		hornero.set_physics_process(true)
 	_imprimir_estado("FIN_PICOTEO", _error_actual())
+
+func _al_agregarse_nodo(nodo: Node) -> void:
+	if nodo is Chimango:
+		_escuchar_rapaz(nodo)
+
+func _escuchar_rapaz(rapaz: Chimango) -> void:
+	if rapaz.agarro_jugador.is_connected(_al_ser_capturado):
+		return
+	rapaz.agarro_jugador.connect(_al_ser_capturado)
+	rapaz.jugador_escapo.connect(_al_ser_liberado)
+	rapaz.solto_jugador.connect(_al_ser_liberado)
 
 func _al_cambiar_estado_hornero(_anterior: Hornero.State, actual: Hornero.State) -> void:
 	if actual == Hornero.State.FALLING:

@@ -42,6 +42,15 @@ extends AnimatedSprite2D
 @export var roll_scale := 0.44
 @export var roll_offset := Vector2(0, 0)
 
+@export_group("Nido")
+## Puntos del dibujo de reposo, en píxeles de la textura: centro de cabeza y
+## pico (lo que asoma por la entrada), lo más alto de la cabeza y las patas.
+@export var nest_head := Vector2(366, 256)
+@export var nest_top := 222.0
+@export var nest_feet := 415.0
+
+const NEST_CLIP_SHADER := preload("res://scripts/hornero/nest_clip.gdshader")
+
 @export_group("Daño")
 ## Color del parpadeo al recibir daño.
 @export var damage_color := Color(1.0, 0.2, 0.2)
@@ -55,9 +64,12 @@ var _transition := &""
 var _damage_tween: Tween
 
 @onready var _body: Hornero = get_parent()
+var _clip_material := ShaderMaterial.new()
 
 
 func _ready() -> void:
+	_clip_material.shader = NEST_CLIP_SHADER
+	material = _clip_material
 	_body.flapped.connect(_on_flapped)
 	_body.rolled_upright.connect(_play_transition.bind(roll_animation))
 	animation_finished.connect(_on_animation_finished)
@@ -66,6 +78,8 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	if _body.state != Hornero.State.NESTED:
+		clear_clip()
 	if is_instance_valid(interaccion_picoteo):
 		if interaccion_picoteo.get("ocupado") == true:
 			return
@@ -124,6 +138,31 @@ func _apply_pose(animation_name: StringName) -> void:
 	# El cuerpo gira 180° al mirar a la izquierda; invertir Y deja el dibujo
 	# derecho y espejado, y el offset queda espejado junto con él.
 	scale = Vector2(pose_scale, pose_scale * _body.facing)
+
+
+## Desplazamiento desde el cuerpo hasta un punto del dibujo de reposo (en
+## píxeles de la textura), ya escalado y espejado según hacia dónde mira.
+func idle_point_offset(texture_point: Vector2) -> Vector2:
+	var half_size := sprite_frames.get_frame_texture(idle_animation, 0).get_size() * 0.5
+	var local := (texture_point - half_size + idle_offset) * idle_scale
+	return Vector2(local.x * _body.facing, local.y)
+
+
+## Oculta lo que queda por debajo de world_y (borde de un nido abierto).
+func clip_below(world_y: float) -> void:
+	_clip_material.set_shader_parameter(&"clip_mode", 1)
+	_clip_material.set_shader_parameter(&"clip_line", world_y)
+
+
+## Sólo deja ver lo que cae dentro del círculo (entrada del nido cerrado).
+func clip_to_circle(world_center: Vector2, world_radius: float) -> void:
+	_clip_material.set_shader_parameter(&"clip_mode", 2)
+	_clip_material.set_shader_parameter(&"clip_center", world_center)
+	_clip_material.set_shader_parameter(&"clip_radius", world_radius)
+
+
+func clear_clip() -> void:
+	_clip_material.set_shader_parameter(&"clip_mode", 0)
 
 
 func _show_dead() -> void:

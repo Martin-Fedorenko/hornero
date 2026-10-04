@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://b0hxn54mvrmlr" path="res://Menu_hornero_frames/hornero_viento_05_casi_reposo.png" id="8_s1htw"]
 [ext_resource type="Texture2D" uid="uid://dlgxku8fw4umo" path="res://Hornero_Menu_Inicio/menu_hornero/Logotipo rústico HORNERO con ramita dorada-5.png" id="9_yyglp"]
 [ext_resource type="AudioStream" uid="uid://bos2qhat74jxb" path="res://Musica/Gustavo Santaolalla - De Ushuaia a La Quiaca (Encuentro en el Estudio).mp3" id="10_musica"]
-[ext_resource type="AudioStream" path="res://Musica/Sonidos/canto de hornero 🐦🕊️.mp3" id="11_canto"]
+[ext_resource type="AudioStream" uid="uid://donnc0cfwqgxe" path="res://Musica/Sonidos/canto de hornero 🐦🕊️.mp3" id="11_canto"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_73d2e"]
 animations = [{
@@ -74,11 +74,12 @@ stretch_mode = 6
 stream = ExtResource("10_musica")
 volume_db = 0.951
 
-[node name="CantoHornero" type="AudioStreamPlayer" parent="."]
+[node name="CantoHornero" type="AudioStreamPlayer" parent="." unique_id=151156535]
 stream = ExtResource("11_canto")
-volume_db = -24.0
+volume_db = -30.0
 
-[node name="TemporizadorCantoHornero" type="Timer" parent="."]
+[node name="TemporizadorCantoHornero" type="Timer" parent="." unique_id=674221885]
+wait_time = 5.0
 one_shot = true
 
 [node name="Contenido" type="MarginContainer" parent="." unique_id=1870174885]

@@ -6,6 +6,8 @@ var entregado: bool = false
 var tipo_recurso: StringName = &"barro"
 
 func _ready() -> void:
+	# Nunca queda tapada por el pasto y las matas del plano de adelante.
+	z_index = MeadowFloor.FRONT_Z + 1
 	contact_monitor = true
 	max_contacts_reported = 4
 	body_entered.connect(_al_tocar_cuerpo)

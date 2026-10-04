@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cwb1n8xnw0eth"
+path="res://.godot/imported/Sonidos del campo Argentino, siesta.mp3-fd26968ece2faffa342ccfb9362671ad.mp3str"
+
+[deps]
+
+source_file="res://Musica/Sonidos/Sonidos del campo Argentino, siesta.mp3"
+dest_files=["res://.godot/imported/Sonidos del campo Argentino, siesta.mp3-fd26968ece2faffa342ccfb9362671ad.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

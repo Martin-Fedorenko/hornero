@@ -13,15 +13,19 @@ signal died
 @export var max_health := 100.0
 ## Daño que recibe cuando un chimango lo agarra y lo suelta.
 @export var grab_damage := 25.0
+## Vida que recupera por segundo mientras descansa en el nido.
+@export var nest_heal := 2.0
 
 @export_group("Stamina")
 @export var max_stamina := 100.0
 ## Stamina que cuesta cada aleteo (también el despegue).
-@export var flap_cost := 7.0
+@export var flap_cost := 1.0
 ## Recuperación por segundo mientras planea.
 @export var glide_regen := 7.0
 ## Recuperación por segundo mientras está en el suelo.
 @export var ground_regen := 80.0
+## Recuperación por segundo mientras descansa en el nido.
+@export var nest_regen := 10.0
 ## Si está activo, al caer al piso tras ser derribado pierde stamina.
 @export var drain_on_crash := true
 ## Fracción de la stamina actual que pierde en esa caída (0.5 = la mitad).

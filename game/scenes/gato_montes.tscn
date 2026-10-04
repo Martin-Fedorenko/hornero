@@ -3,12 +3,23 @@
 [ext_resource type="Script" uid="uid://b3kjkx4ljaxnq" path="res://scripts/gatoMontez/GatoMontes.gd" id="1_7l07r"]
 [ext_resource type="SpriteFrames" uid="uid://cr3sak31u67vf" path="res://assets/gato_montez/gato_montez.tres" id="2_4vtc2"]
 [ext_resource type="Script" uid="uid://cxbxwinpxxkqw" path="res://scripts/gatoMontez/gato_animator.gd" id="3_l3ilh"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/Maullidos/angrycat.mp3" id="4_enojo"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/Maullidos/cat-meow-mp3.mp3" id="5_m1"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/Maullidos/gato-miau.mp3" id="6_m2"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/Maullidos/meow2.mp3" id="7_m3"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/Maullidos/meow_jEHtSyd.mp3" id="8_m4"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/Maullidos/scratch-cat-meow.mp3" id="9_m5"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/Maullidos/the-end-meow-by-nekocat-just-3-second-1.mp3" id="10_m6"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/Maullidos/miau_troll.mp3" id="11_troll"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_l3ilh"]
 
 [node name="GatoMontes" type="CharacterBody2D" unique_id=840224556]
 collision_layer = 16
 script = ExtResource("1_7l07r")
+sonido_deteccion = ExtResource("4_enojo")
+maullidos = Array[AudioStream]([ExtResource("5_m1"), ExtResource("6_m2"), ExtResource("7_m3"), ExtResource("8_m4"), ExtResource("9_m5"), ExtResource("10_m6")])
+maullido_raro = ExtResource("11_troll")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=169201341]
 scale = Vector2(0.4, 0.4)
@@ -25,3 +36,6 @@ metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1172860399]
 shape = SubResource("RectangleShape2D_l3ilh")
+
+[node name="Voz" type="AudioStreamPlayer2D" parent="."]
+max_distance = 1000.0

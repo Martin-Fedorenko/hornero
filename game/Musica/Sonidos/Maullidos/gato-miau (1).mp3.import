@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c1t5tujd74r7m"
+path="res://.godot/imported/gato-miau (1).mp3-ccb5e80431cb69516d1b8bc8269b7b05.mp3str"
+
+[deps]
+
+source_file="res://Musica/Sonidos/Maullidos/gato-miau (1).mp3"
+dest_files=["res://.godot/imported/gato-miau (1).mp3-ccb5e80431cb69516d1b8bc8269b7b05.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

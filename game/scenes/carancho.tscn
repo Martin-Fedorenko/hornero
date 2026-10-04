@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/chimango.tscn" id="1_base"]
+[ext_resource type="SpriteFrames" path="res://assets/Carancho/carancho_frames.tres" id="2_frames"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/Aves/Carancho Cantando Sonido para Llamar El Mejor.mp3" id="3_grito"]
+
+[node name="Carancho" instance=ExtResource("1_base")]
+duracion_grito = 10.0
+
+[node name="Animador" parent="."]
+sprite_frames = ExtResource("2_frames")
+animation = &"vuelo"
+base_scale = 0.19
+
+[node name="GritoAudio" parent="."]
+stream = ExtResource("3_grito")

@@ -14,8 +14,8 @@ const BOTON_SALIR: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/B
 # Colores de las letras del logo "HORNERO".
 const COLOR_LETRAS: Color = Color("f8dc9c")
 const COLOR_BORDE_LETRAS: Color = Color("5a2e12")
-@export_range(10.0, 30.0, 1.0) var intervalo_canto_minimo := 10.0
-@export_range(10.0, 30.0, 1.0) var intervalo_canto_maximo := 30.0
+@export_range(10.0, 30.0, 1.0) var intervalo_canto_minimo := 0.0
+@export_range(10.0, 30.0, 1.0) var intervalo_canto_maximo := 10.0
 
 @onready var start: Button = $Contenido/Columna/Start
 @onready var ayuda: Button = $Contenido/Columna/ComoJugar
