@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://bml4ak5v6veuo"]
+[gd_scene format=3 uid="uid://bh5ump12c34xo"]
 
 [ext_resource type="Texture2D" uid="uid://b3bamy0vnm4fg" path="res://assets/base/nest_asset.png" id="1_nest"]
 [ext_resource type="Script" uid="uid://b62olvry0w2uu" path="res://scenes/nest.gd" id="2_script"]
