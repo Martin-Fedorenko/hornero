@@ -79,7 +79,7 @@ stream = ExtResource("11_canto")
 volume_db = -30.0
 
 [node name="TemporizadorCantoHornero" type="Timer" parent="." unique_id=674221885]
-wait_time = 5.0
+wait_time = 10.0
 one_shot = true
 
 [node name="Contenido" type="MarginContainer" parent="." unique_id=1870174885]
@@ -179,6 +179,7 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/default_color = Color(0.95, 0.92, 0.83, 1)
 theme_override_font_sizes/normal_font_size = 20
+theme_override_font_sizes/bold_font_size = 20
 
 [node name="Cerrar" type="Button" parent="Ventana/Panel/Margen/Columna" unique_id=688007889]
 custom_minimum_size = Vector2(0, 52)

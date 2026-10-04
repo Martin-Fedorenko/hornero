@@ -11,6 +11,8 @@ const MENU_PRINCIPAL := "res://Hornero_Menu_Inicio/menu_hornero/menu_inicio.tscn
 const COLOR_LETRAS := Color("f8dc9c")
 const COLOR_SELECCION := Color("fff4d0")
 const COLOR_BORDE_LETRAS := Color("5a2e12")
+const IMAGEN_DERROTA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Hornero ante su nido roto.png")
+const IMAGEN_VICTORIA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Hornero dormido bajo la luna.png")
 
 ## Segundos que el hornero queda tirado antes de mostrar "HAS FALLADO".
 @export var death_delay := 1.0
@@ -21,9 +23,20 @@ const COLOR_BORDE_LETRAS := Color("5a2e12")
 @export var option_font_size := 36
 ## Escala de la opción seleccionada.
 @export var selected_scale := 1.12
+## Duración del fundido de la imagen de fondo al perder o ganar.
+@export var end_image_fade_time := 2.5
+## Franja horizontal (0-1, izquierda y derecha) donde va el menú al perder o ganar: la zona oscura de la imagen.
+@export var end_menu_area := Vector2(0.03, 0.42)
+## Tamaño del título al perder o ganar, para que entre en esa franja.
+@export var end_title_size := 64
 
 var tipo := Tipo.PAUSA
+var _imagen_final: TextureRect
+var _anclas_textos: Array[float]
+var _offsets_textos: Array[float]
+var _tamano_titulo: int
 
+@onready var _textos: VBoxContainer = $Textos
 @onready var _titulo: Label = $Textos/Titulo
 @onready var _opciones: VBoxContainer = $Textos/Opciones
 
@@ -33,6 +46,18 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
 	_titulo.add_theme_font_override("font", _fuente())
+	# La imagen va debajo del título y las opciones.
+	_imagen_final = TextureRect.new()
+	_imagen_final.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_imagen_final.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_imagen_final.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_imagen_final.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_imagen_final.visible = false
+	add_child(_imagen_final)
+	move_child(_imagen_final, _textos.get_index())
+	_anclas_textos = [_textos.anchor_left, _textos.anchor_right]
+	_offsets_textos = [_textos.offset_left, _textos.offset_right]
+	_tamano_titulo = _titulo.get_theme_font_size(&"font_size")
 
 
 func esta_abierto() -> bool:
@@ -67,11 +92,36 @@ func _abrir(nuevo_tipo: Tipo) -> void:
 		Tipo.VICTORIA:
 			_poner_titulo("¡HAS GANADO!", Color("efb760"))
 			_poner_opciones([["Volver a jugar", _volver_a_jugar]])
+	match tipo:
+		Tipo.MUERTE: _preparar_imagen_final(IMAGEN_DERROTA)
+		Tipo.VICTORIA: _preparar_imagen_final(IMAGEN_VICTORIA)
+		_: _preparar_imagen_final(null)
 	get_tree().paused = true
 	modulate.a = 0.0
 	visible = true
 	create_tween().tween_property(self, ^"modulate:a", 1.0, fade_time)
 	(_opciones.get_child(0) as Button).grab_focus()
+
+
+## Al perder o ganar: la imagen va apareciendo de a poco y el menú se corre a la izquierda.
+## Sin imagen (pausa), el menú vuelve al centro.
+func _preparar_imagen_final(imagen: Texture2D) -> void:
+	_imagen_final.texture = imagen
+	_imagen_final.visible = imagen != null
+	if imagen:
+		_imagen_final.modulate.a = 0.0
+		create_tween().tween_property(_imagen_final, ^"modulate:a", 1.0, end_image_fade_time)
+		_textos.anchor_left = end_menu_area.x
+		_textos.anchor_right = end_menu_area.y
+		_textos.offset_left = 0.0
+		_textos.offset_right = 0.0
+		_titulo.add_theme_font_size_override("font_size", end_title_size)
+	else:
+		_textos.anchor_left = _anclas_textos[0]
+		_textos.anchor_right = _anclas_textos[1]
+		_textos.offset_left = _offsets_textos[0]
+		_textos.offset_right = _offsets_textos[1]
+		_titulo.add_theme_font_size_override("font_size", _tamano_titulo)
 
 
 func _poner_titulo(texto: String, color: Color) -> void:

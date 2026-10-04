@@ -51,7 +51,7 @@ animations = [{
 radius = 214.3
 
 [node name="Nest" type="AnimatedSprite2D" unique_id=2102261471]
-scale = Vector2(0.28, 0.28)
+scale = Vector2(0.322, 0.322)
 sprite_frames = SubResource("NestFrames")
 animation = &"crecer"
 centered = false
@@ -69,6 +69,6 @@ shape = SubResource("DeliveryShape")
 
 [node name="DestelloLevantable" type="Node2D" parent="." unique_id=736606216]
 position = Vector2(0, -143)
-scale = Vector2(3.5714, 3.5714)
+scale = Vector2(3.1056, 3.1056)
 script = ExtResource("3_destello")
 radio = 60.0

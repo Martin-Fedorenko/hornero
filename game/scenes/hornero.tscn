@@ -11,6 +11,7 @@
 [ext_resource type="AudioStream" uid="uid://51rshykyx2ee" path="res://Musica/Sonidos/Sound of beating wings - Efecto de sonido (HD).mp3" id="9_flap"]
 [ext_resource type="Script" uid="uid://cmgyysq78uxsm" path="res://scripts/hornero/hornero_comer.gd" id="10_comer"]
 [ext_resource type="AudioStream" uid="uid://bim8ip1ndgkaw" path="res://Musica/Sonidos/Hornero Canto2.mp3" id="11_canto"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/Efecto de sonido de viento.mp3" id="12_viento"]
 
 [sub_resource type="CircleShape2D" id="BodyShape"]
 radius = 16.0
@@ -68,6 +69,9 @@ max_distance = 1600.0
 
 [node name="CantoTimer" type="Timer" parent="." unique_id=965154267]
 one_shot = true
+
+[node name="VientoAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("12_viento")
 
 [node name="Comer" type="Area2D" parent="." unique_id=1032302054]
 position = Vector2(30, 0)
