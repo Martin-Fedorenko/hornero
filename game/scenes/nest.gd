@@ -11,6 +11,7 @@ const MATERIALS: Array[StringName] = [&"paja", &"piedra", &"maderita", &"barro"]
 const FRONT_TEXTURE := preload("res://assets/base/nest_front.png")
 ## Si no recibe daño durante este tiempo, se considera que nadie lo está picando.
 const PAUSA_SIN_DANIO := 0.2
+const TextoJuego := preload("res://scripts/ui/texto_juego.gd")
 
 @export_group("Hornero adentro")
 ## Etapas abiertas (taza): altura del borde delantero en el centro, en
@@ -49,15 +50,21 @@ const PAUSA_SIN_DANIO := 0.2
 @export_group("Contador")
 ## Tamaño de la letra del contador en píxeles de la textura (el nido está escalado).
 @export var contador_font_size := 68
-## Separación entre el borde superior del nido y el contador, en píxeles de la textura.
-@export var contador_margen := 20.0
+## Separación entre el borde superior del nido y el contador, en píxeles de la
+## textura. Deja lugar abajo para el aviso de la tecla G.
+@export var contador_margen := 110.0
+## Tamaño de la letra del aviso "Apretá G…" en píxeles de la textura.
+@export var aviso_font_size := 50
+## Separación entre el borde superior del nido y el aviso, en píxeles de la textura.
+@export var aviso_margen := 20.0
 
 @onready var _delivery_area: Area2D = $DeliveryArea
 @onready var _aura: Node2D = $DestelloLevantable
 var _materiales_recibidos: int = 0
 var _occupied := false
 var _front := Sprite2D.new()
-var _contador := Label.new()
+var _contador: Label
+var _aviso: Label
 
 ## Resistencia de la construcción de más arriba: 1 = intacta, 0 = se rompe.
 var resistencia := 1.0
@@ -83,6 +90,7 @@ func _ready() -> void:
 	_crear_contador()
 	frame_changed.connect(_actualizar_contador)
 	_actualizar_contador()
+	_crear_aviso()
 	_color_normal = self_modulate
 	_delivery_area.body_entered.connect(_on_delivery_body_entered)
 	# La zona de entrega es exactamente el círculo del aura.
@@ -153,25 +161,25 @@ func _update_front() -> void:
 
 ## Contador "construcciones/total" arriba del nido, con la fuente del juego.
 func _crear_contador() -> void:
-	var fuente := SystemFont.new()
-	fuente.font_names = PackedStringArray(["Georgia", "Times New Roman", "serif"])
-	fuente.font_weight = 700
-	_contador.add_theme_font_override("font", fuente)
-	_contador.add_theme_font_size_override("font_size", contador_font_size)
-	_contador.add_theme_color_override("font_color", Color("f8dc9c"))
-	_contador.add_theme_color_override("font_outline_color", Color("5a2e12"))
-	# El contorno acompaña al tamaño de la letra (24 era para 110).
-	_contador.add_theme_constant_override("outline_size", roundi(contador_font_size * 24.0 / 110.0))
-	_contador.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_contador.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
-	_contador.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_contador = TextoJuego.crear(contador_font_size)
 	_contador.z_index = 2
-	# Caja centrada en x = 0 cuyo borde inferior queda justo encima del nido.
-	var ancho := 600.0
-	var alto := float(contador_font_size) * 1.5
-	_contador.size = Vector2(ancho, alto)
-	_contador.position = Vector2(-ancho * 0.5, offset.y - contador_margen - alto)
+	_contador.position = TextoJuego.ubicar(_contador, Vector2(0.0, offset.y - contador_margen))
 	add_child(_contador)
+
+
+## Aviso de la tecla G entre el nido y el contador; arranca oculto.
+func _crear_aviso() -> void:
+	_aviso = TextoJuego.crear(aviso_font_size)
+	_aviso.z_index = 2
+	_aviso.position = TextoJuego.ubicar(_aviso, Vector2(0.0, offset.y - aviso_margen))
+	_aviso.visible = false
+	add_child(_aviso)
+
+
+## Muestra el aviso arriba del nido; con texto vacío lo oculta.
+func mostrar_aviso(texto: String) -> void:
+	_aviso.text = texto
+	_aviso.visible = texto != ""
 
 
 func _actualizar_contador() -> void:

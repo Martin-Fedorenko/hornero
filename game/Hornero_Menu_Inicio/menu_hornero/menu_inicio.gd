@@ -3,9 +3,7 @@ extends Control
 @export_file("*.tscn") var escena_juego: String = "res://scenes/main.tscn"
 # Texto con BBCode, igual que "Cómo jugar". En cada categoría van los tres
 # autores, en distinto orden.
-@export_multiline var creditos: String = """[b][color=#f8dc9c]DIRECCIÓN DE SONIDO[/color][/b]
-Ingeniero Fedorenko Martin · Villadeza Eric · Brian Moulia
-
+@export_multiline var creditos: String = """
 [b][color=#f8dc9c]DIRECCIÓN DE IMAGEN, SONIDO, AMBIENTE Y DESARROLLO[/color][/b]
 Ingeniero Fedorenko Martin · Villadeza Eric · Brian Moulia
 
@@ -133,6 +131,10 @@ const COLOR_LETRAS: Color = Color("f8dc9c")
 const COLOR_BORDE_LETRAS: Color = Color("5a2e12")
 @export_range(10.0, 30.0, 1.0) var intervalo_canto_minimo := 5.0
 @export_range(10.0, 30.0, 1.0) var intervalo_canto_maximo := 10.0
+## Píxeles por segundo al desplazar el texto de la ventana con flechas o W/S.
+@export var velocidad_scroll_teclas := 600.0
+## Píxeles por cada paso de la rueda del mouse.
+@export var paso_scroll_rueda := 60.0
 
 @onready var start: Button = $Contenido/Columna/Start
 @onready var ayuda: Button = $Contenido/Columna/ComoJugar
@@ -305,6 +307,7 @@ func _cortar_hoja(hoja: Texture2D, columnas: int, filas_y: Array, alto: float) -
 	return cuadros
 
 func _process(delta: float) -> void:
+	_scroll_con_teclas(delta)
 	if _fauna == null or not _fauna.is_visible_in_tree():
 		return
 	_tiempo_fauna += delta
@@ -323,6 +326,41 @@ func _cerrar() -> void:
 		foco_anterior.grab_focus()
 	else:
 		start.grab_focus()
+
+## Barra vertical de lo que se está leyendo en la ventana (texto o fauna).
+func _barra_scroll() -> VScrollBar:
+	if _fauna.visible:
+		return _fauna.get_v_scroll_bar()
+	return texto_ventana.get_v_scroll_bar()
+
+func _desplazar(pixeles: float) -> void:
+	var barra := _barra_scroll()
+	barra.value = clampf(barra.value + pixeles, barra.min_value, barra.max_value - barra.page)
+
+# Mientras se mantiene apretada la tecla, el texto se desliza de corrido.
+func _scroll_con_teclas(delta: float) -> void:
+	if not ventana.visible:
+		return
+	var direccion := 0.0
+	if Input.is_physical_key_pressed(KEY_DOWN) or Input.is_physical_key_pressed(KEY_S):
+		direccion += 1.0
+	if Input.is_physical_key_pressed(KEY_UP) or Input.is_physical_key_pressed(KEY_W):
+		direccion -= 1.0
+	if direccion != 0.0:
+		_desplazar(direccion * velocidad_scroll_teclas * delta)
+
+# Con la ventana abierta, la rueda desplaza el texto esté donde esté el mouse,
+# y arriba/abajo no mueven el foco entre los botones de la ventana.
+func _input(event: InputEvent) -> void:
+	if not ventana.visible:
+		return
+	if event is InputEventMouseButton and event.pressed \
+		and (event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_DOWN):
+		var sentido := -1.0 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0
+		_desplazar(sentido * paso_scroll_rueda * maxf(event.factor, 1.0))
+		get_viewport().set_input_as_handled()
+	elif event is InputEventKey and event.physical_keycode in [KEY_UP, KEY_DOWN, KEY_W, KEY_S]:
+		get_viewport().set_input_as_handled()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and ventana.visible:

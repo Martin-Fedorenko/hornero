@@ -44,7 +44,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"viento",
-"speed": 5.0
+"speed": 9.0
 }]
 
 [sub_resource type="ImageTexture" id="ImageTexture_73d2e"]

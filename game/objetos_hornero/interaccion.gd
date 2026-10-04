@@ -10,9 +10,14 @@ extends Node
 ## (segundos) y hasta que se separen `distancia_sin_choque` px.
 @export var tiempo_sin_choque: float = 0.5
 @export var distancia_sin_choque: float = 60.0
+## Tamaño de la letra del aviso "E para agarrar" (píxeles del mundo).
+@export var aviso_font_size: int = 16
+## Altura sobre el centro del hornero donde queda la base del aviso.
+@export var aviso_altura: float = 40.0
 
 const CUADROS: SpriteFrames = preload("res://objetos_hornero/picoteo_frames.tres")
 const DEBUG_PICO = preload("res://objetos_hornero/debug_pico.gd")
+const TextoJuego := preload("res://scripts/ui/texto_juego.gd")
 # Puntas del pico en coordenadas locales de cada nuevo cuadro (640x640).
 const PICOS: Array[Vector2] = [
 	Vector2(205,-25), Vector2(190,87), Vector2(133,188),
@@ -25,6 +30,9 @@ var _reloj: float = 0.0
 var _picos_cache: Dictionary = {}
 var _imagenes_cache: Dictionary = {}
 var _debug: Node2D
+var _aviso: Label
+## El aviso de E sólo se muestra hasta que agarra algo por primera vez.
+var _ya_agarro: bool = false
 var _interpolacion_original: Node.PhysicsInterpolationMode = Node.PHYSICS_INTERPOLATION_MODE_INHERIT
 @onready var hornero: CharacterBody2D = get_parent() as CharacterBody2D
 @onready var sprite: AnimatedSprite2D = get_parent().get_node("AnimatedSprite2D")
@@ -51,6 +59,14 @@ func _ready() -> void:
 	hornero.add_child.call_deferred(_debug)
 	_debug.top_level = true
 	_debug.z_index = 100
+	# top_level: el cuerpo del hornero rota al volar y el texto no debe girar.
+	_aviso = TextoJuego.crear(aviso_font_size)
+	_aviso.name = "AvisoAgarrar"
+	_aviso.text = "E para agarrar"
+	_aviso.top_level = true
+	_aviso.z_index = 100
+	_aviso.visible = false
+	hornero.add_child.call_deferred(_aviso)
 	_log("INICIO | E = recoger/soltar. L = una muestra de diagnóstico.")
 	_log("Pico automático=%s. Verde=pico usado; rosa=Marker2D; amarillo=objeto." % usar_pico_automatico)
 	sprite.animation_changed.connect(_diagnosticar_cambio_animacion)
@@ -72,6 +88,7 @@ func _process(delta: float) -> void:
 	# NO mover sprite.position: el gesto ahora está dibujado en los cuadros.
 	var error_antes := _error_actual()
 	_seguir_pico()
+	_actualizar_aviso()
 	if is_instance_valid(_debug) and _debug.is_inside_tree():
 		_debug.global_transform = Transform2D.IDENTITY
 		_debug.visible = mostrar_puntos
@@ -88,6 +105,23 @@ func _process(delta: float) -> void:
 	if is_instance_valid(objeto) and _reloj >= maxf(intervalo_logs, 0.25):
 		_reloj = 0.0
 		_imprimir_estado("SEGUIMIENTO", error_antes)
+
+## Arriba del hornero, cuando con E agarraría algo (mismo criterio que la acción).
+func _actualizar_aviso() -> void:
+	if not is_instance_valid(_aviso) or not _aviso.is_inside_tree():
+		return
+	_aviso.visible = not _ya_agarro and _puede_agarrar() and _objeto_cercano() != null
+	if _aviso.visible:
+		_aviso.global_position = TextoJuego.ubicar(
+			_aviso, hornero.global_position - Vector2(0.0, aviso_altura))
+
+func _puede_agarrar() -> bool:
+	return not is_instance_valid(objeto) and not ocupado and not _capturado \
+		and not hornero.has_meta(&"agarrado_por") \
+		and hornero.state != Hornero.State.FALLING \
+		and hornero.state != Hornero.State.RECOVERING \
+		and hornero.state != Hornero.State.DEAD \
+		and hornero.state != Hornero.State.NESTED
 
 func _marcador() -> Marker2D:
 	var nombre := "PicoCaminar" if sprite.animation == &"caminar" else "Pico"
@@ -309,6 +343,7 @@ func _accion_en_contacto() -> void:
 		_log("SIN_OBJETO | ningún levantable visible dentro de %.1f px" % alcance)
 		return
 	objeto = cercano
+	_ya_agarro = true
 	_interpolacion_original = objeto.physics_interpolation_mode
 	objeto.call("recoger")
 	# Asegurar que la simulación no desplace una carga sostenida.
