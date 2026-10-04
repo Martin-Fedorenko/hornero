@@ -18,6 +18,16 @@ enum State { FLYING, GLIDING, GROUND, FALLING, RECOVERING, DEAD, NESTED }
 ## Tiempo que el hornero se considera aleteando (FLYING) tras cada aleteo.
 @export var flap_state_duration := 0.45
 @export_range(0.05, 5.0, 0.05) var flap_sound_duration := 1.0
+
+@export_group("Viento")
+## Velocidad (px/s) a partir de la cual se escucha el viento. Planeando suele
+## ir a ~650; en picada llega a ~900 y aleteando seguido al máximo, 1100.
+@export var wind_speed := 800.0
+## Segundos que tarda el viento en llegar a su volumen al pasar wind_speed.
+@export var wind_fade_in := 0.6
+## Segundos que tarda en apagarse cuando baja de wind_speed.
+@export var wind_fade_out := 1.0
+@export_group("")
 ## Cuánto puede pasarse de la vertical antes de rodar para no quedar panza
 ## arriba (grados). Evita que ruede de ida y vuelta justo en la vertical.
 @export_range(0.0, 45.0) var upright_roll_margin_deg := 15.0
@@ -58,6 +68,9 @@ var _pitch_inverted := false
 ## Al rato de entrar al nido, el hornero canta (la espera está en CantoTimer).
 @onready var _song_audio: AudioStreamPlayer2D = $CantoAudio
 @onready var _song_timer: Timer = $CantoTimer
+@onready var _wind_audio: AudioStreamPlayer = $VientoAudio
+## Volumen elegido en el nodo VientoAudio: el fundido sube hasta ahí.
+@onready var _wind_volume := _wind_audio.volume_linear
 
 
 func _ready() -> void:
@@ -65,6 +78,7 @@ func _ready() -> void:
 	flapped.connect(_play_flap_sound)
 	_flap_audio_timer.timeout.connect(_stop_flap_sound)
 	_song_timer.timeout.connect(_song_audio.play)
+	_wind_audio.volume_linear = 0.0
 	_apply_orientation()
 
 
@@ -82,6 +96,24 @@ func _play_flap_sound() -> void:
 
 func _stop_flap_sound() -> void:
 	_flap_audio.stop()
+
+
+func _process(delta: float) -> void:
+	_update_wind(delta)
+
+
+## A alta velocidad suena el viento: entra y sale con fundido, así no se
+## corta de golpe si la velocidad ronda el umbral.
+func _update_wind(delta: float) -> void:
+	var fast := velocity.length() > wind_speed and state != State.DEAD
+	var target := _wind_volume if fast else 0.0
+	var fade := wind_fade_in if fast else wind_fade_out
+	var step := _wind_volume * delta / maxf(fade, 0.01)
+	_wind_audio.volume_linear = move_toward(_wind_audio.volume_linear, target, step)
+	if fast and not _wind_audio.playing:
+		_wind_audio.play()
+	elif not fast and _wind_audio.playing and _wind_audio.volume_linear <= 0.0:
+		_wind_audio.stop()
 
 
 func _physics_process(delta: float) -> void:

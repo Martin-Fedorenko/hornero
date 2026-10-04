@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c1hoprs0hvai4"
+path="res://.godot/imported/Efecto de sonido de viento.mp3-ac62745b643ef74f4aa9876069874bee.mp3str"
+
+[deps]
+
+source_file="res://Musica/Sonidos/Efecto de sonido de viento.mp3"
+dest_files=["res://.godot/imported/Efecto de sonido de viento.mp3-ac62745b643ef74f4aa9876069874bee.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
