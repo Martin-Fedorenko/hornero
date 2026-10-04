@@ -13,4 +13,4 @@ offset = Vector2(-821.5, -1012)
 [node name="Bichos" type="Node2D" parent="." node_paths=PackedStringArray("sprite")]
 script = ExtResource("2_bugs")
 sprite = NodePath("../Arbol")
-bug_count = 6
+bug_count = 3

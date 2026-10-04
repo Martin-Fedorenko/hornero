@@ -6,26 +6,20 @@ extends Control
 @export_multiline var creditos: String = """[b][color=#f8dc9c]DIRECCIÓN DE SONIDO[/color][/b]
 Ingeniero Fedorenko Martin · Villadeza Eric · Brian Moulia
 
-[b][color=#f8dc9c]DIRECCIÓN DE IMAGEN[/color][/b]
-Ingeniero Fedorenko Martin · Villadeza Eric · Brian Moulia
-
-[b][color=#f8dc9c]AMBIENTE[/color][/b]
-Ingeniero Fedorenko Martin · Villadeza Eric · Brian Moulia
-
-[b][color=#f8dc9c]MAQUILLAJE[/color][/b]
+[b][color=#f8dc9c]DIRECCIÓN DE IMAGEN, SONIDO, AMBIENTE Y DESARROLLO[/color][/b]
 Ingeniero Fedorenko Martin · Villadeza Eric · Brian Moulia
 
 [b][color=#f8dc9c]MOTOR[/color][/b]
 Godot Engine
 
 [b][color=#f8dc9c]AGRADECIMIENTOS[/color][/b]
-A nuestras novias: Esposa Brian, la Ingeniera Caruso Abril y la Ingeniera Becker Arabella ♥.
+A nuestras novias: la Magíster Cyntia V ♥, la Ingeniera Abril C ♥ y la Ingeniera Arabella B ♥.
 
 Al maestro Gustavo Santaolalla, por crear una obra maestra como "De Ushuaia a La Quiaca". Y perdón por tomarnos el atrevimiento de sumarle el noble cantar del hornero a su pieza.
 
 A la Universidad Tecnológica Nacional, Facultad Regional Buenos Aires, por formarnos como profesionales.
 
-Y sin dudas, a nuestros padres."""
+Y sin dudas, a nuestros padres y familia."""
 
 # Texto con BBCode: los títulos usan el dorado del logo (COLOR_LETRAS).
 const AYUDA: String = """[b][color=#f8dc9c]OBJETIVO[/color][/b]
@@ -47,7 +41,7 @@ En el piso la stamina se recupera rápido; planeando, de a poco.
 [b][color=#f8dc9c]E — PICO[/color][/b]
 Cerca de un material, [b]E[/b] lo levanta con el pico. Con algo en el pico, [b]E[/b] lo suelta.
 Para entregarlo, soltalo sobre el nido o pasá volando por encima con él.
-Los bichos se comen pasando por encima: devuelven vida y stamina.
+Cada tanto aparecen bichos en las hojas y los troncos de los árboles. Se comen pasando por encima: devuelven vida y stamina.
 
 [b][color=#f8dc9c]G — NIDO[/color][/b]
 Dentro del círculo del nido, [b]G[/b] te mete adentro; otra vez [b]G[/b] te saca.
@@ -57,7 +51,7 @@ Con el nido techado quedás a salvo: ningún depredador te puede atacar.
 [b][color=#f8dc9c]PELIGROS[/color][/b]
 [b]Chimango, aguilucho y carancho[/b] atacan desde el aire. Si te agarran, apretá [b]Espacio[/b] varias veces para soltarte; si te sueltan, caés aturdido y perdés vida y stamina.
 [b]Gato montés[/b]: acecha en el piso y salta si volás bajo cerca de él.
-[b]Cotorra[/b]: pica tu nido y le rompe etapas. Acercate para espantarla.
+[b]Cotorra[/b]: pica tu nido y, si la dejás 15 segundos, le rompe una etapa y se va. Acercate para espantarla: si se va antes, no rompe nada.
 
 [b]Esc[/b]: pausa."""
 const HISTORIA: String = """[b][color=#f8dc9c]EL PRIMER INGENIERO ARGENTINO[/color][/b]

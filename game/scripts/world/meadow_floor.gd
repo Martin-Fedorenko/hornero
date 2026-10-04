@@ -296,13 +296,17 @@ func _add_puddles(rng: RandomNumberGenerator) -> void:
 		sprite.scale = size / region.size
 		sprite.position = Vector2(x, FLAT_CENTER - size.y * 0.5)
 		_layers["plano"].add_child(sprite)
+		_puddle_spans.append(Vector2(x - PUDDLE_PADDING, x + size.x + PUDDLE_PADDING))
+		# El script del charco no es @tool: en el editor sería un placeholder
+		# sin métodos. Tampoco hace falta, sólo da barro al jugar.
+		if Engine.is_editor_hint():
+			continue
 		var source := MUD_SOURCE_SCENE.instantiate()
 		source.call("configurar_charco", sprite, size)
 		source.set("textura_seca", DRY_PUDDLE_ATLAS)
 		source.set("posicion_bola", Vector2(0, -14))
 		source.position = sprite.position + size * 0.5
 		_layers["plano"].add_child(source)
-		_puddle_spans.append(Vector2(x - PUDDLE_PADDING, x + size.x + PUDDLE_PADDING))
 
 
 ## Le quita a cada tramo la parte que se superpone con `cut`.

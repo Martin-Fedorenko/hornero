@@ -34,11 +34,9 @@ const PAUSA_SIN_DANIO := 0.2
 
 @export_group("Resistencia")
 ## Segundos que tarda una cotorra picando sin parar en romper una construcción.
-## Si pican dos a la vez, tardan la mitad.
-@export_range(0.5, 60.0, 0.5, "or_greater") var segundos_por_construccion := 10.0
-## Segundos que tarda la barra en llenarse sola, desde vacía, cuando nadie pica.
-## En 0 no se regenera.
-@export_range(0.0, 120.0, 0.5, "or_greater") var segundos_regeneracion := 0.0
+## Si pican dos a la vez, tardan la mitad. Si dejan de picar antes, la
+## construcción queda intacta: cada visita arranca de cero.
+@export_range(0.5, 60.0, 0.5, "or_greater") var segundos_por_construccion := 15.0
 
 @export_group("Alerta")
 ## Color del titileo mientras pican el nido. Valores mayores a 1 hacen que brille.
@@ -50,7 +48,7 @@ const PAUSA_SIN_DANIO := 0.2
 
 @export_group("Contador")
 ## Tamaño de la letra del contador en píxeles de la textura (el nido está escalado).
-@export var contador_font_size := 40
+@export var contador_font_size := 68
 ## Separación entre el borde superior del nido y el contador, en píxeles de la textura.
 @export var contador_margen := 20.0
 
@@ -260,12 +258,12 @@ func _perder_construccion() -> void:
 	construccion_perdida.emit()
 
 
-## Si nadie está picando, la barra se recupera de a poco (si está activado).
+## Las etapas no quedan a medio romper: si nadie está picando, la
+## construcción vuelve a estar intacta.
 func _regenerar(delta: float) -> void:
 	_tiempo_sin_danio += delta
-	if segundos_regeneracion <= 0.0 or _tiempo_sin_danio < PAUSA_SIN_DANIO:
-		return
-	resistencia = minf(resistencia + delta / segundos_regeneracion, 1.0)
+	if _tiempo_sin_danio >= PAUSA_SIN_DANIO:
+		resistencia = 1.0
 
 
 ## Titila en rojo mientras lo pican; más rápido cuanto menos resistencia queda.

@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/world/bicho.gd" id="1_bicho"]
+[ext_resource type="Script" path="res://objetos_hornero/destello_levantable.gd" id="2_destello"]
 
 [sub_resource type="CircleShape2D" id="Shape"]
 radius = 16.0
@@ -15,3 +16,6 @@ script = ExtResource("1_bicho")
 shape = SubResource("Shape")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="DestelloLevantable" type="Node2D" parent="."]
+script = ExtResource("2_destello")

@@ -57,7 +57,7 @@ animation = &"crecer"
 centered = false
 offset = Vector2(-175, -288)
 script = ExtResource("2_script")
-segundos_por_construccion = 5.0
+segundos_por_construccion = 15.0
 
 [node name="DeliveryArea" type="Area2D" parent="." unique_id=195444174]
 position = Vector2(0, -143)

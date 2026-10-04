@@ -4,8 +4,8 @@ extends Node2D
 ## Árbol decorativo (sin collider) con bichitos posados en las hojas.
 ##
 ## El origen es la base del tronco: se apoya directo sobre la línea de suelo.
-## Al jugar reparte `bug_count` bichos en puntos verdes de la copa elegidos
-## al azar, y repone cada bicho comido pasado `respawn_time`.
+## Al jugar reparte `bug_count` bichos en las hojas y el tronco, y cada tanto
+## (`spawn_interval`) aparece uno nuevo, hasta `max_bugs`.
 
 enum Tipo { ANCHO, ALTO, INCLINADO, ESBELTO }
 
@@ -39,9 +39,13 @@ const SINK := 6.0
 		_update_sprite()
 
 @export_group("Bichos")
-@export var bug_count := 5
-## Segundos hasta reponer un bicho comido. 0 = no se repone.
-@export var respawn_time := 25.0
+@export var bug_count := 2
+## Tope de bichos a la vez en el árbol.
+@export var max_bugs := 4
+## Segundos (en promedio) entre la aparición de un bicho nuevo. 0 = no aparecen.
+@export var spawn_interval := 60.0
+## Probabilidad de que un bicho nuevo aparezca en el tronco en vez de las hojas.
+@export_range(0.0, 1.0) var trunk_chance := 0.35
 ## Distancia mínima entre bichos del mismo árbol (px en pantalla).
 @export var bug_spacing := 70.0
 
@@ -58,7 +62,9 @@ func _ready() -> void:
 	var bugs := BugSpawner.new()
 	bugs.sprite = _sprite
 	bugs.bug_count = bug_count
-	bugs.respawn_time = respawn_time
+	bugs.max_bugs = max_bugs
+	bugs.spawn_interval = spawn_interval
+	bugs.trunk_chance = trunk_chance
 	bugs.bug_spacing = bug_spacing
 	add_child(bugs, false, Node.INTERNAL_MODE_BACK)
 

@@ -42,6 +42,8 @@ var facing := 1
 var _timer := 0.0
 var _dir_huida := Vector2.ZERO
 var _t_hover := 0.0
+## Etapa del nido cuando llegó a picar: rompe una sola por visita.
+var _frame_al_llegar := 0
 
 func _ready() -> void:
 	add_to_group("cotorras")
@@ -113,6 +115,7 @@ func _yendo(delta: float) -> void:
 	if dist < radio_llegada:
 		modo = Modo.PICANDO
 		velocity = Vector2.ZERO
+		_frame_al_llegar = nido.frame
 		empezo_a_picar.emit(nido)
 		return
 
@@ -130,6 +133,10 @@ func _picando(delta: float) -> void:
 	# Le avisa al nido cuántos segundos estuvo picando
 	if nido.has_method("recibir_danio"):
 		nido.recibir_danio(delta)
+
+	# Ya rompió su etapa en esta visita: se va.
+	if nido.frame < _frame_al_llegar:
+		_huir()
 
 func _huyendo(delta: float) -> void:
 	velocity = velocity.move_toward(_dir_huida * velocidad_huida, aceleracion * 2.0 * delta)

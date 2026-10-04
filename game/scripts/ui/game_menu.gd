@@ -13,6 +13,8 @@ const COLOR_SELECCION := Color("fff4d0")
 const COLOR_BORDE_LETRAS := Color("5a2e12")
 const IMAGEN_DERROTA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Hornero ante su nido roto.png")
 const IMAGEN_VICTORIA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Hornero dormido bajo la luna.png")
+## Mismo texto de "Cómo jugar" que el menú principal.
+const MenuInicio := preload("res://Hornero_Menu_Inicio/menu_hornero/menu_inicio.gd")
 
 ## Segundos que el hornero queda tirado antes de mostrar "HAS FALLADO".
 @export var death_delay := 1.0
@@ -35,6 +37,10 @@ var _imagen_final: TextureRect
 var _anclas_textos: Array[float]
 var _offsets_textos: Array[float]
 var _tamano_titulo: int
+var _ayuda: Control
+var _texto_ayuda: RichTextLabel
+var _boton_cerrar_ayuda: Button
+var _foco_antes_de_ayuda: Control
 
 @onready var _textos: VBoxContainer = $Textos
 @onready var _titulo: Label = $Textos/Titulo
@@ -58,6 +64,7 @@ func _ready() -> void:
 	_anclas_textos = [_textos.anchor_left, _textos.anchor_right]
 	_offsets_textos = [_textos.offset_left, _textos.offset_right]
 	_tamano_titulo = _titulo.get_theme_font_size(&"font_size")
+	_crear_ayuda()
 
 
 func esta_abierto() -> bool:
@@ -85,7 +92,8 @@ func _abrir(nuevo_tipo: Tipo) -> void:
 	match tipo:
 		Tipo.PAUSA:
 			_poner_titulo("PAUSA", COLOR_LETRAS)
-			_poner_opciones([["Continuar", _continuar]])
+			_poner_opciones([["Continuar", _continuar], ["Cómo jugar", _mostrar_ayuda],
+					["Reiniciar", _volver_a_jugar]])
 		Tipo.MUERTE:
 			_poner_titulo("HAS FALLADO", Color(0.85, 0.2, 0.18))
 			_poner_opciones([["Volver a jugar", _volver_a_jugar]])
@@ -169,13 +177,110 @@ func _resaltar(boton: Button, seleccionado: bool) -> void:
 	create_tween().tween_property(boton, ^"scale", escala, 0.1)
 
 
+## Ventana de instrucciones (igual a "Cómo jugar" del menú principal), con botón para cerrar.
+func _crear_ayuda() -> void:
+	_ayuda = Control.new()
+	_ayuda.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_ayuda.visible = false
+	add_child(_ayuda)
+
+	var sombra := ColorRect.new()
+	sombra.set_anchors_preset(Control.PRESET_FULL_RECT)
+	sombra.color = Color(0.02, 0.06, 0.05, 0.78)
+	_ayuda.add_child(sombra)
+
+	var panel := PanelContainer.new()
+	panel.anchor_left = 0.2
+	panel.anchor_top = 0.1
+	panel.anchor_right = 0.8
+	panel.anchor_bottom = 0.9
+	panel.add_theme_stylebox_override("panel", _caja(Color("243936"), Color("bca571"), 20))
+	_ayuda.add_child(panel)
+
+	var columna := VBoxContainer.new()
+	columna.add_theme_constant_override("separation", 18)
+	panel.add_child(columna)
+
+	var titulo := Label.new()
+	titulo.text = "Cómo jugar"
+	titulo.add_theme_color_override("font_color", Color(0.98, 0.92, 0.77))
+	titulo.add_theme_font_size_override("font_size", 34)
+	columna.add_child(titulo)
+
+	var texto := RichTextLabel.new()
+	texto.bbcode_enabled = true
+	texto.text = MenuInicio.AYUDA
+	texto.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	texto.add_theme_color_override("default_color", Color(0.95, 0.92, 0.83))
+	texto.add_theme_font_size_override("normal_font_size", 20)
+	texto.add_theme_font_size_override("bold_font_size", 20)
+	columna.add_child(texto)
+	_texto_ayuda = texto
+
+	_boton_cerrar_ayuda = Button.new()
+	_boton_cerrar_ayuda.text = "Cerrar"
+	_boton_cerrar_ayuda.custom_minimum_size = Vector2(0, 52)
+	_boton_cerrar_ayuda.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_boton_cerrar_ayuda.add_theme_font_size_override("font_size", 23)
+	for color in ["font_color", "font_focus_color"]:
+		_boton_cerrar_ayuda.add_theme_color_override(color, Color("24342d"))
+	for color in ["font_hover_color", "font_pressed_color"]:
+		_boton_cerrar_ayuda.add_theme_color_override(color, Color("25352e"))
+	_boton_cerrar_ayuda.add_theme_stylebox_override("normal", _caja(Color("e5be72"), Color("bd9c61")))
+	_boton_cerrar_ayuda.add_theme_stylebox_override("hover", _caja(Color("f4d79b"), Color("fff2c4")))
+	_boton_cerrar_ayuda.add_theme_stylebox_override("pressed", _caja(Color("c89a52"), Color("f4d79b")))
+	var foco := _caja(Color(0, 0, 0, 0), Color("fff1c1"))
+	foco.draw_center = false
+	foco.set_border_width_all(3)
+	_boton_cerrar_ayuda.add_theme_stylebox_override("focus", foco)
+	_boton_cerrar_ayuda.pressed.connect(_cerrar_ayuda)
+	columna.add_child(_boton_cerrar_ayuda)
+
+
+func _mostrar_ayuda() -> void:
+	_foco_antes_de_ayuda = get_viewport().gui_get_focus_owner()
+	_texto_ayuda.scroll_to_line(0)
+	_ayuda.visible = true
+	# Que Tab o las flechas no lleguen a las opciones de atrás.
+	for boton in _opciones.get_children():
+		boton.focus_mode = Control.FOCUS_NONE
+	_boton_cerrar_ayuda.grab_focus()
+
+
+func _cerrar_ayuda() -> void:
+	_ayuda.visible = false
+	for boton in _opciones.get_children():
+		boton.focus_mode = Control.FOCUS_ALL
+	if is_instance_valid(_foco_antes_de_ayuda):
+		_foco_antes_de_ayuda.grab_focus()
+
+
+static func _caja(fondo: Color, borde: Color, radio: int = 12) -> StyleBoxFlat:
+	var estilo := StyleBoxFlat.new()
+	estilo.bg_color = fondo
+	estilo.border_color = borde
+	estilo.set_border_width_all(2)
+	estilo.set_corner_radius_all(radio)
+	estilo.content_margin_left = 22.0
+	estilo.content_margin_right = 22.0
+	estilo.content_margin_top = 10.0
+	estilo.content_margin_bottom = 10.0
+	return estilo
+
+
 func _unhandled_input(event: InputEvent) -> void:
-	if visible and tipo == Tipo.PAUSA and event.is_action_pressed(&"ui_cancel"):
+	if not visible or not event.is_action_pressed(&"ui_cancel"):
+		return
+	if _ayuda.visible:
+		get_viewport().set_input_as_handled()
+		_cerrar_ayuda()
+	elif tipo == Tipo.PAUSA:
 		get_viewport().set_input_as_handled()
 		_continuar()
 
 
 func _continuar() -> void:
+	_cerrar_ayuda()
 	visible = false
 	get_tree().paused = false
 

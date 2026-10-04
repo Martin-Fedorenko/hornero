@@ -6,6 +6,10 @@ extends Node2D
 ## Tamaño de las estrellitas que giran alrededor (1 = el tamaño original).
 @export_range(0.5, 4.0, 0.1) var escala_destellos := 2.0
 
+## Material aditivo compartido por todos los resplandores: con uno solo,
+## Godot puede dibujarlos juntos en vez de uno por uno.
+static var _mezcla: CanvasItemMaterial
+
 var _tiempo := 0.0
 var _fondo: Node2D
 
@@ -20,9 +24,10 @@ func _ready() -> void:
 		_fondo.name = "Resplandor"
 		_fondo.show_behind_parent = true
 		_fondo.transform = transform
-		var mezcla := CanvasItemMaterial.new()
-		mezcla.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
-		_fondo.material = mezcla
+		if _mezcla == null:
+			_mezcla = CanvasItemMaterial.new()
+			_mezcla.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+		_fondo.material = _mezcla
 		_fondo.draw.connect(_dibujar_resplandor)
 		# Diferido: el padre todavía está armando sus hijos.
 		get_parent().add_child.call_deferred(_fondo)
@@ -31,9 +36,14 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_tiempo = fmod(_tiempo + delta, 2.4)
 	visible = get_parent().get("recogida") != true
-	queue_redraw()
 	if _fondo:
 		_fondo.visible = visible
+	# Fuera de pantalla no se redibuja: con muchos bichos en los árboles
+	# esto es lo que más pesa.
+	if not visible or not _en_pantalla():
+		return
+	queue_redraw()
+	if _fondo:
 		_fondo.queue_redraw()
 
 
@@ -42,17 +52,24 @@ func _exit_tree() -> void:
 		_fondo.queue_free()
 
 
+func _en_pantalla() -> bool:
+	var en_canvas := get_global_transform_with_canvas()
+	var margen := (radio + 10.0) * escala_destellos * en_canvas.get_scale().x
+	return get_viewport_rect().grow(margen).has_point(en_canvas.origin)
+
+
 func _pulso() -> float:
 	return 0.5 + 0.5 * sin(_tiempo * TAU / 2.4)
 
 
 func _dibujar_resplandor() -> void:
 	# Círculos superpuestos: el centro acumula más luz que el borde.
-	var capas := 16
+	# 8 capas con el doble de alfa: el mismo brillo con la mitad de círculos.
+	var capas := 8
 	for i in capas:
 		var t := float(i) / capas
 		var r := radio * (1.15 - t * 0.85) * (0.92 + _pulso() * 0.12)
-		_fondo.draw_circle(Vector2.ZERO, r, Color(1.0, 0.8, 0.35, 0.022 + _pulso() * 0.018))
+		_fondo.draw_circle(Vector2.ZERO, r, Color(1.0, 0.8, 0.35, 0.044 + _pulso() * 0.036))
 
 
 func _draw() -> void:
