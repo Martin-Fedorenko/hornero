@@ -42,9 +42,17 @@ extends AnimatedSprite2D
 @export var roll_scale := 0.44
 @export var roll_offset := Vector2(0, 0)
 
+@export_group("Daño")
+## Color del parpadeo al recibir daño.
+@export var damage_color := Color(1.0, 0.2, 0.2)
+@export var damage_blinks := 4
+## Duración de cada mitad del parpadeo (rojo y normal), en segundos.
+@export var damage_blink_time := 0.12
+
 ## Animación de transición en curso (rueda), o vacío. Tiene
 ## prioridad sobre vuelo y planeo hasta que termina.
 var _transition := &""
+var _damage_tween: Tween
 
 @onready var _body: Hornero = get_parent()
 
@@ -53,6 +61,8 @@ func _ready() -> void:
 	_body.flapped.connect(_on_flapped)
 	_body.rolled_upright.connect(_play_transition.bind(roll_animation))
 	animation_finished.connect(_on_animation_finished)
+	# Vitals todavía no está listo (es hermano posterior), pero ya se puede conectar.
+	(_body.get_node(^"Vitals") as HorneroVitals).damaged.connect(_on_damaged)
 
 
 func _process(_delta: float) -> void:
@@ -145,3 +155,15 @@ func _play_transition(animation_name: StringName) -> void:
 	_apply_pose(animation_name)
 	play(animation_name)
 	frame = 0
+
+
+## Parpadea en rojo `damage_blinks` veces.
+func _on_damaged(_amount: float) -> void:
+	if _damage_tween != null:
+		_damage_tween.kill()
+	_damage_tween = create_tween()
+	for i in damage_blinks:
+		_damage_tween.tween_callback(set.bind(&"self_modulate", damage_color))
+		_damage_tween.tween_interval(damage_blink_time)
+		_damage_tween.tween_callback(set.bind(&"self_modulate", Color.WHITE))
+		_damage_tween.tween_interval(damage_blink_time)

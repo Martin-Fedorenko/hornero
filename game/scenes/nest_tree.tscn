@@ -1,13 +1,16 @@
 [gd_scene format=3]
 
-[ext_resource type="Texture2D" uid="uid://cmn2fpxl8x78x" path="res://assets/base/tree_asset.png" id="1_tree"]
+[ext_resource type="Texture2D" path="res://assets/base/tree_asset_new.png" id="1_tree"]
+[ext_resource type="Script" path="res://scripts/world/bug_spawner.gd" id="2_bugs"]
 
 [node name="NestTree" type="Node2D"]
 
 [node name="Arbol" type="Sprite2D" parent="."]
-scale = Vector2(2.2, 2.2)
 texture = ExtResource("1_tree")
 centered = false
-offset = Vector2(-264, -450)
-region_enabled = true
-region_rect = Rect2(12, 130, 538, 452)
+offset = Vector2(-821.5, -1012)
+
+[node name="Bichos" type="Node2D" parent="." node_paths=PackedStringArray("sprite")]
+script = ExtResource("2_bugs")
+sprite = NodePath("../Arbol")
+bug_count = 6

@@ -11,6 +11,9 @@ const BOTON_AYUDA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/B
 const BOTON_HISTORIA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón Historia estilo fileteado porteño-3.png")
 const BOTON_CREDITOS: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Créditos en madera con fileteado porteño-1.png")
 const BOTON_SALIR: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón SALIR con fileteado porteño-5.png")
+# Colores de las letras del logo "HORNERO".
+const COLOR_LETRAS: Color = Color("f8dc9c")
+const COLOR_BORDE_LETRAS: Color = Color("5a2e12")
 @export_range(10.0, 30.0, 1.0) var intervalo_canto_minimo := 10.0
 @export_range(10.0, 30.0, 1.0) var intervalo_canto_maximo := 30.0
 
@@ -36,11 +39,11 @@ func _ready() -> void:
 	salir.pressed.connect(_salir)
 	cerrar.pressed.connect(_cerrar)
 	musica_menu.finished.connect(_reiniciar_musica)
-	_estilizar_boton_con_imagen(start, BOTON_JUGAR)
-	_estilizar_boton_con_imagen(ayuda, BOTON_AYUDA)
-	_estilizar_boton_con_imagen(historia, BOTON_HISTORIA)
-	_estilizar_boton_con_imagen(boton_creditos, BOTON_CREDITOS)
-	_estilizar_boton_con_imagen(salir, BOTON_SALIR)
+	_estilizar_boton_con_imagen(start, BOTON_JUGAR, "JUGAR")
+	_estilizar_boton_con_imagen(ayuda, BOTON_AYUDA, "CÓMO JUGAR")
+	_estilizar_boton_con_imagen(historia, BOTON_HISTORIA, "HISTORIA")
+	_estilizar_boton_con_imagen(boton_creditos, BOTON_CREDITOS, "CRÉDITOS")
+	_estilizar_boton_con_imagen(salir, BOTON_SALIR, "SALIR")
 	_estilizar_boton(cerrar, false)
 	$Ventana/Panel.add_theme_stylebox_override("panel", _caja(Color("243936"), Color("bca571"), 20))
 	ventana.hide()
@@ -129,21 +132,30 @@ func _estilizar_boton(boton: Button, principal: bool) -> void:
 	foco.set_border_width_all(3)
 	boton.add_theme_stylebox_override("focus", foco)
 
-func _estilizar_boton_con_imagen(boton: Button, imagen: Texture2D) -> void:
-	boton.text = ""
-	boton.icon = imagen
+# Sólo el botón seleccionado muestra el cartel fileteado; el resto, la palabra.
+func _estilizar_boton_con_imagen(boton: Button, imagen: Texture2D, texto: String) -> void:
 	boton.expand_icon = true
 	boton.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	boton.custom_minimum_size = Vector2(0, 100)
-	boton.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
-	boton.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
-	boton.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
-	boton.add_theme_stylebox_override("disabled", StyleBoxEmpty.new())
-	var foco := StyleBoxFlat.new()
-	foco.bg_color = Color(0, 0, 0, 0)
-	foco.border_color = Color("fff1c1")
-	foco.set_border_width_all(2)
-	foco.set_corner_radius_all(8)
-	boton.add_theme_stylebox_override("focus", foco)
-	boton.mouse_entered.connect(func(): boton.modulate = Color(1.08, 1.06, 0.96))
-	boton.mouse_exited.connect(func(): boton.modulate = Color.WHITE)
+	for estado in ["normal", "hover", "pressed", "disabled", "focus"]:
+		boton.add_theme_stylebox_override(estado, StyleBoxEmpty.new())
+	var fuente := SystemFont.new()
+	fuente.font_names = PackedStringArray(["Georgia", "Times New Roman", "serif"])
+	fuente.font_weight = 700
+	boton.add_theme_font_override("font", fuente)
+	boton.add_theme_font_size_override("font_size", 36)
+	for color in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		boton.add_theme_color_override(color, COLOR_LETRAS)
+	boton.add_theme_color_override("font_outline_color", COLOR_BORDE_LETRAS)
+	boton.add_theme_constant_override("outline_size", 10)
+	var actualizar := func() -> void:
+		var seleccionado := boton.has_focus()
+		boton.icon = imagen if seleccionado else null
+		boton.text = "" if seleccionado else texto
+	boton.focus_entered.connect(actualizar)
+	boton.focus_exited.connect(actualizar)
+	# Pasar el mouse por encima también lo selecciona.
+	boton.mouse_entered.connect(func() -> void:
+		if boton.focus_mode != Control.FOCUS_NONE:
+			boton.grab_focus())
+	actualizar.call()

@@ -1,41 +1,97 @@
-extends VBoxContainer
-## Barras de vida (roja) y stamina (verde) del hornero.
+extends Control
+## Barras de vida y stamina del hornero sobre el marco de madera de
+## `hud_asset.png`. Se dibuja por capas: fondo marrón, relleno de color y,
+## encima, el marco (que tiene el hueco de la barra transparente).
 
-@export var health_color := Color(0.85, 0.2, 0.18)
-@export var stamina_color := Color(0.3, 0.75, 0.25)
-@export var background_color := Color(0.1, 0.12, 0.11, 0.6)
-@export var bar_size := Vector2(260, 18)
+const FRAME := preload("res://assets/hud/hud_asset.png")
+## Recorte de cada barra dentro de `hud_asset.png`.
+const HEALTH_REGION := Rect2(20, 80, 1495, 280)
+const STAMINA_REGION := Rect2(20, 400, 1495, 280)
+## Hueco transparente de la barra, relativo al recorte.
+const HOLE := Rect2(323, 123, 1039, 73)
+## Cuánto se mete el relleno debajo del marco, para que no queden bordes.
+const HOLE_BLEED := 6.0
 
-@onready var _health: ProgressBar = $Vida
-@onready var _stamina: ProgressBar = $Stamina
+@export var health_color := Color("e0361a")
+@export var stamina_color := Color("dac126")
+## Marrón del interior de los íconos del marco.
+@export var background_color := Color("3f2711")
+## Ancho en pantalla de cada barra (el alto sale de la proporción del asset).
+@export var bar_width := 360.0
+@export var bar_separation := -18.0
+## Velocidad con la que el relleno alcanza el valor real.
+@export var fill_speed := 6.0
+
+var _health_ratio := 1.0
+var _stamina_ratio := 1.0
+var _shown_health := 1.0
+var _shown_stamina := 1.0
 
 
 func _ready() -> void:
-	_style(_health, health_color)
-	_style(_stamina, stamina_color)
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var bar_size := _bar_size()
+	custom_minimum_size = Vector2(bar_size.x, bar_size.y * 2.0 + bar_separation)
+	size = custom_minimum_size
 
 
 func track(vitals: HorneroVitals) -> void:
-	vitals.health_changed.connect(_update.bind(_health))
-	vitals.stamina_changed.connect(_update.bind(_stamina))
-	_update(vitals.health, vitals.max_health, _health)
-	_update(vitals.stamina, vitals.max_stamina, _stamina)
+	vitals.health_changed.connect(_on_health_changed)
+	vitals.stamina_changed.connect(_on_stamina_changed)
+	_on_health_changed(vitals.health, vitals.max_health)
+	_on_stamina_changed(vitals.stamina, vitals.max_stamina)
+	_shown_health = _health_ratio
+	_shown_stamina = _stamina_ratio
 
 
-func _update(current: float, maximum: float, bar: ProgressBar) -> void:
-	bar.max_value = maximum
-	bar.value = current
+func _on_health_changed(current: float, maximum: float) -> void:
+	_health_ratio = clampf(current / maximum, 0.0, 1.0) if maximum > 0.0 else 0.0
 
 
-func _style(bar: ProgressBar, fill_color: Color) -> void:
-	bar.custom_minimum_size = bar_size
-	bar.show_percentage = false
-	bar.add_theme_stylebox_override("background", _box(background_color))
-	bar.add_theme_stylebox_override("fill", _box(fill_color))
+func _on_stamina_changed(current: float, maximum: float) -> void:
+	_stamina_ratio = clampf(current / maximum, 0.0, 1.0) if maximum > 0.0 else 0.0
 
 
-func _box(color: Color) -> StyleBoxFlat:
+func _process(delta: float) -> void:
+	var weight := 1.0 - exp(-fill_speed * delta)
+	var health := lerpf(_shown_health, _health_ratio, weight)
+	var stamina := lerpf(_shown_stamina, _stamina_ratio, weight)
+	if not is_equal_approx(health, _shown_health) or not is_equal_approx(stamina, _shown_stamina):
+		_shown_health = health
+		_shown_stamina = stamina
+		queue_redraw()
+
+
+func _draw() -> void:
+	var bar_size := _bar_size()
+	_draw_bar(Vector2.ZERO, HEALTH_REGION, health_color, _shown_health)
+	_draw_bar(Vector2(0.0, bar_size.y + bar_separation), STAMINA_REGION,
+			stamina_color, _shown_stamina)
+
+
+func _draw_bar(origin: Vector2, region: Rect2, fill_color: Color, ratio: float) -> void:
+	var scale_factor := bar_width / region.size.x
+	var hole := Rect2(origin + HOLE.position * scale_factor, HOLE.size * scale_factor) \
+			.grow(HOLE_BLEED * scale_factor)
+	_draw_capsule(hole, background_color)
+	if ratio > 0.0:
+		var fill := hole
+		# El relleno nunca es más angosto que su alto, así la punta queda
+		# redonda; lo que sobra se esconde a la izquierda, bajo el marco.
+		# Así el borde derecho avanza lineal: hole.x + ratio * hole.ancho.
+		fill.size.x = lerpf(hole.size.y, hole.size.x, ratio)
+		fill.position.x -= (1.0 - ratio) * hole.size.y
+		_draw_capsule(fill, fill_color)
+	draw_texture_rect_region(FRAME, Rect2(origin, region.size * scale_factor), region)
+
+
+func _draw_capsule(rect: Rect2, color: Color) -> void:
 	var box := StyleBoxFlat.new()
 	box.bg_color = color
-	box.set_corner_radius_all(4)
-	return box
+	box.set_corner_radius_all(int(rect.size.y * 0.5))
+	box.anti_aliasing = true
+	draw_style_box(box, rect)
+
+
+func _bar_size() -> Vector2:
+	return HEALTH_REGION.size * (bar_width / HEALTH_REGION.size.x)
