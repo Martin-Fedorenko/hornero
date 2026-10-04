@@ -11,8 +11,8 @@ const BOTON_AYUDA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/B
 const BOTON_HISTORIA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón Historia estilo fileteado porteño-3.png")
 const BOTON_CREDITOS: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Créditos en madera con fileteado porteño-1.png")
 const BOTON_SALIR: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón SALIR con fileteado porteño-5.png")
-@export_range(10.0, 30.0, 1.0) var intervalo_canto_minimo := 10.0
-@export_range(10.0, 30.0, 1.0) var intervalo_canto_maximo := 30.0
+@export_range(10.0, 30.0, 1.0) var intervalo_canto_minimo := 0.0
+@export_range(10.0, 30.0, 1.0) var intervalo_canto_maximo := 10.0
 
 @onready var start: Button = $Contenido/Columna/Start
 @onready var ayuda: Button = $Contenido/Columna/ComoJugar

@@ -15,7 +15,7 @@ signal died
 @export_group("Stamina")
 @export var max_stamina := 100.0
 ## Stamina que cuesta cada aleteo (también el despegue).
-@export var flap_cost := 12.0
+@export var flap_cost := 1.0
 ## Recuperación por segundo mientras planea.
 @export var glide_regen := 4.0
 ## Recuperación por segundo mientras está en el suelo.
