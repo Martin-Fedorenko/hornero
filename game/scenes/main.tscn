@@ -18,7 +18,11 @@
 [ext_resource type="PackedScene" path="res://objetos_hornero/ramitas.tscn" id="10_ramitas"]
 [ext_resource type="Script" uid="uid://b4fuied2nfcsy" path="res://scripts/ui/vitals_hud.gd" id="11_vitals_hud"]
 [ext_resource type="PackedScene" uid="uid://4jpbvg34m0h6" path="res://scenes/gato_montes.tscn" id="11_ya4ey"]
+<<<<<<< HEAD
 [ext_resource type="Script" uid="uid://dd7q7ynvslfy" path="res://scripts/ui/death_screen.gd" id="12_death_screen"]
+=======
+[ext_resource type="Script" uid="uid://dd7q7ynvslfy" path="res://scripts/ui/game_menu.gd" id="12_game_menu"]
+>>>>>>> origin/main
 [ext_resource type="PackedScene" path="res://scenes/arbol.tscn" id="13_arbol"]
 [ext_resource type="Script" uid="uid://2816edmgmc6c" path="res://scripts/gatoMontez/gato_spawner.gd" id="20_gqmmt"]
 [ext_resource type="SpriteFrames" uid="uid://nwsbcs3312hy" path="res://assets/cotorra/Cotorra.tres" id="22_jscy8"]
@@ -165,17 +169,54 @@ tipo = 3
 
 [node name="Arbol5" parent="World/Arboles" unique_id=66274276 instance=ExtResource("13_arbol")]
 position = Vector2(5420, 1648)
+[node name="Arboles" type="Node2D" parent="World" unique_id=339296598]
+
+[node name="Arbol1" parent="World/Arboles" unique_id=1623985648 instance=ExtResource("13_arbol")]
+position = Vector2(518, 1648)
+tipo = 3
+
+[node name="Arbol2" parent="World/Arboles" unique_id=1403721663 instance=ExtResource("13_arbol")]
+position = Vector2(1493, 1648)
+tipo = 1
+flip = true
+
+[node name="Arbol3" parent="World/Arboles" unique_id=1610146855 instance=ExtResource("13_arbol")]
+position = Vector2(2855, 1648)
+
+[node name="Arbol4" parent="World/Arboles" unique_id=362903366 instance=ExtResource("13_arbol")]
+position = Vector2(4644, 1648)
+tipo = 2
+flip = true
+
+[node name="Arbol5" parent="World/Arboles" unique_id=922969770 instance=ExtResource("13_arbol")]
+position = Vector2(7272, 1648)
+tipo = 2
+
+[node name="Arbol6" parent="World/Arboles" unique_id=380908427 instance=ExtResource("13_arbol")]
+position = Vector2(9096, 1648)
+tipo = 1
+
+[node name="Arbol7" parent="World/Arboles" unique_id=1338589954 instance=ExtResource("13_arbol")]
+position = Vector2(10092, 1648)
+tipo = 3
+flip = true
+
+[node name="Arbol8" parent="World/Arboles" unique_id=374492154 instance=ExtResource("13_arbol")]
+position = Vector2(11446, 1648)
 flip = true
 
 [node name="NestTree" parent="World" unique_id=748560120 instance=ExtResource("6_nest_tree")]
-position = Vector2(3000, 1648)
+position = Vector2(6000, 1648)
 
 [node name="Nest" parent="World/NestTree" unique_id=319226660 instance=ExtResource("7_nest")]
-position = Vector2(13, -256)
+position = Vector2(-43, -260)
 
 [node name="Piso" type="Node2D" parent="World" unique_id=1742482040]
-position = Vector2(0, 1648)
+position = Vector2(-600, 1648)
 script = ExtResource("5_floor")
+width = 13200.0
+playable_margin = 600.0
+puddle_free_zones = Array[Vector2]([Vector2(378, 658), Vector2(1353, 1633), Vector2(2340, 2460), Vector2(2715, 2995), Vector2(3340, 3460), Vector2(4340, 4460), Vector2(4504, 4784), Vector2(5800, 6200), Vector2(7132, 7412), Vector2(7640, 7760), Vector2(8640, 8760), Vector2(8956, 9236), Vector2(9740, 9860), Vector2(9952, 10232), Vector2(11306, 11586)])
 
 [node name="ParedIzquierda" type="StaticBody2D" parent="World" unique_id=320975503]
 position = Vector2(-100, -400)
@@ -185,14 +226,14 @@ solid = true
 one_way = false
 
 [node name="ParedDerecha" type="StaticBody2D" parent="World" unique_id=100376015]
-position = Vector2(6000, -400)
+position = Vector2(12000, -400)
 script = ExtResource("3_platform")
 size = Vector2(100, 2200)
 solid = true
 one_way = false
 
 [node name="Hornero" parent="." unique_id=907819609 instance=ExtResource("2_hornero")]
-position = Vector2(500, 900)
+position = Vector2(5400, 1300)
 
 [node name="Camera2D" type="Camera2D" parent="Hornero" unique_id=1154209186]
 position_smoothing_enabled = true
@@ -206,30 +247,15 @@ drag_bottom_margin = 0.15
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=503126163]
 
-[node name="Vitales" type="VBoxContainer" parent="HUD" unique_id=698270253]
-offset_left = 24.0
-offset_top = 16.0
-offset_right = 284.0
-offset_bottom = 56.0
-theme_override_constants/separation = 6
+[node name="Vitales" type="Control" parent="HUD" unique_id=698270253]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 12.0
+offset_top = 8.0
+mouse_filter = 2
 script = ExtResource("11_vitals_hud")
 
-[node name="Vida" type="ProgressBar" parent="HUD/Vitales" unique_id=337983274]
-layout_mode = 2
-value = 100.0
-
-[node name="Stamina" type="ProgressBar" parent="HUD/Vitales" unique_id=791902759]
-layout_mode = 2
-value = 100.0
-
-[node name="Status" type="Label" parent="HUD" unique_id=1573267295]
-offset_left = 24.0
-offset_top = 64.0
-offset_right = 900.0
-offset_bottom = 90.0
-theme_override_colors/font_color = Color(0.2, 0.27, 0.25, 1)
-
-[node name="Muerte" type="Control" parent="HUD" unique_id=1519217544]
+[node name="MenuJuego" type="Control" parent="HUD" unique_id=1519217544]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -238,9 +264,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("12_death_screen")
+script = ExtResource("12_game_menu")
 
-[node name="Fondo" type="ColorRect" parent="HUD/Muerte" unique_id=394217686]
+[node name="Fondo" type="ColorRect" parent="HUD/MenuJuego" unique_id=394217686]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -250,7 +276,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.6)
 
-[node name="Textos" type="VBoxContainer" parent="HUD/Muerte" unique_id=110747720]
+[node name="Textos" type="VBoxContainer" parent="HUD/MenuJuego" unique_id=110747720]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -258,42 +284,48 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -400.0
-offset_top = -90.0
+offset_top = -220.0
 offset_right = 400.0
-offset_bottom = 90.0
+offset_bottom = 220.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 28
 alignment = 1
 
-[node name="Titulo" type="Label" parent="HUD/Muerte/Textos" unique_id=484722690]
+[node name="Titulo" type="Label" parent="HUD/MenuJuego/Textos" unique_id=484722690]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.2, 0.18, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 96
-text = "HAS MUERTO"
+text = "HAS FALLADO"
 horizontal_alignment = 1
 
-[node name="Subtitulo" type="Label" parent="HUD/Muerte/Textos" unique_id=1439298981]
+[node name="Opciones" type="VBoxContainer" parent="HUD/MenuJuego/Textos" unique_id=1439298981]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.93, 0.88, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 28
-text = "Esc para ir al menú  ·  Enter para jugar de nuevo"
-horizontal_alignment = 1
+theme_override_constants/separation = 6
+alignment = 1
 
 [node name="Piedra" parent="." unique_id=662864888 instance=ExtResource("8_piedra")]
-position = Vector2(650, 550)
+position = Vector2(4400, 1500)
+
+[node name="Piedra2" parent="." unique_id=1581640781 instance=ExtResource("8_piedra")]
+position = Vector2(8700, 1500)
 
 [node name="Paja" parent="." unique_id=1257325304 instance=ExtResource("9_paja")]
-position = Vector2(1030, 1280)
+position = Vector2(3400, 1500)
+
+[node name="Paja2" parent="." unique_id=270393600 instance=ExtResource("9_paja")]
+position = Vector2(9800, 1500)
 
 [node name="Ramitas" parent="." unique_id=1631829200 instance=ExtResource("10_ramitas")]
-position = Vector2(1270, 1280)
+position = Vector2(2400, 1500)
+
+[node name="Ramitas2" parent="." unique_id=685524650 instance=ExtResource("10_ramitas")]
+position = Vector2(7700, 1500)
 
 [node name="Chimango" type="CharacterBody2D" parent="." unique_id=1104130030]
+collision_layer = 16
 script = ExtResource("5_85g3d")
 empezar_ausente = true
 tiempo_ausente_max = 10.0
@@ -325,6 +357,9 @@ scale = Vector2(2, 2)
 script = ExtResource("20_gqmmt")
 escena_gato = ExtResource("11_ya4ey")
 jugador = NodePath("../Hornero")
+cantidad = 8
+x_fin = 12000.0
+<<<<<<< HEAD
 
 [node name="Cotorra" type="CharacterBody2D" parent="." unique_id=229894616 node_paths=PackedStringArray("nido", "hornero")]
 script = ExtResource("22_pm3ni")
@@ -341,3 +376,4 @@ sprite_mira_derecha = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Cotorra" unique_id=492410362]
 disabled = true
+

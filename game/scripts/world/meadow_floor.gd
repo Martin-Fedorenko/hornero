@@ -6,6 +6,9 @@ extends Node2D
 ## (reproducible con `random_seed`). Sólo el piso tiene collider; todo lo
 ## demás es decoración.
 ##
+## Los charcos se ubican primero y van solos: ninguna otra decoración se
+## superpone con ellos.
+##
 ## El origen es el borde izquierdo de la línea de suelo: ahí apoya el hornero
 ## y ahí se apoyan las decoraciones. Todo lo generado es interno: no se
 ## guarda en la escena.
@@ -32,6 +35,23 @@ extends Node2D
 @export var decor_per_1000 := 16.0:
 	set(value):
 		decor_per_1000 = value
+		_queue_rebuild()
+## Charcos cada 1000 px de la zona jugable.
+@export var puddles_per_1000 := 0.6:
+	set(value):
+		puddles_per_1000 = value
+		_queue_rebuild()
+## Píxeles de cada borde del piso que quedan fuera de la zona jugable (fuera
+## de cámara). Ahí no se ponen charcos.
+@export var playable_margin := 0.0:
+	set(value):
+		playable_margin = value
+		_queue_rebuild()
+## Tramos de x GLOBAL donde no puede ir un charco (troncos de árboles,
+## objetos sueltos, etc.). Cada Vector2 es (desde, hasta).
+@export var puddle_free_zones: Array[Vector2] = []:
+	set(value):
+		puddle_free_zones = value
 		_queue_rebuild()
 @export var soil_color := Color(0.48, 0.34, 0.25):
 	set(value):
@@ -121,11 +141,16 @@ const DECOR := {
 		Rect2(38, 945, 70, 35), Rect2(163, 940, 91, 45), Rect2(253, 947, 61, 44),
 		Rect2(316, 945, 75, 40),
 	], 1.2, "plano"],
-	"charco": [[
-		Rect2(33, 858, 212, 61), Rect2(782, 858, 224, 62), Rect2(1019, 861, 140, 56),
-		Rect2(1204, 860, 159, 51), Rect2(619, 865, 159, 50),
-	], 1.0, "plano"],
 }
+## Charcos: se reparten aparte (ver `puddles_per_1000`) y van solos.
+const PUDDLES := [
+	Rect2(33, 858, 212, 61), Rect2(782, 858, 224, 62), Rect2(1019, 861, 140, 56),
+	Rect2(1204, 860, 159, 51), Rect2(619, 865, 159, 50),
+]
+## Espacio libre a cada lado de un charco.
+const PUDDLE_PADDING := 50.0
+## Intentos de reubicar una decoración que cae encima de un charco.
+const PLACE_TRIES := 8
 ## Piedras grandes: decoración, sin collider.
 const ROCKS := [
 	Rect2(37, 404, 286, 128), Rect2(1135, 416, 233, 119), Rect2(491, 421, 210, 121),
@@ -142,6 +167,8 @@ const FLAT_CENTER := -4.0
 
 var _content: Node2D
 var _layers := {}
+## Tramos de x local ocupados por charcos (con su margen), como Vector2(desde, hasta).
+var _puddle_spans: Array[Vector2] = []
 var _rebuild_queued := false
 
 
@@ -185,8 +212,9 @@ func _rebuild() -> void:
 	rng.seed = random_seed
 	_add_ground_body()
 	var seams := _add_strips(rng)
+	_add_puddles(rng)
 	for seam in seams:
-		_add_decor(rng, SEAM_COVER, seam)
+		_add_decor(rng, SEAM_COVER, seam, false)
 	_add_rocks(rng)
 	var count := roundi(width / 1000.0 * decor_per_1000)
 	for i in count:
@@ -239,6 +267,86 @@ func _fade_material(region: Rect2, flip: bool) -> ShaderMaterial:
 	return fade
 
 
+## Un charco por tramo parejo de la zona jugable, lejos de las zonas
+## prohibidas. Los tramos que ocupa quedan reservados.
+func _add_puddles(rng: RandomNumberGenerator) -> void:
+	_puddle_spans.clear()
+	var from := playable_margin
+	var to := width - playable_margin
+	var count := roundi((to - from) / 1000.0 * puddles_per_1000)
+	if count <= 0:
+		return
+	var forbidden: Array[Vector2] = []
+	for zone in puddle_free_zones:
+		forbidden.append(zone - Vector2.ONE * position.x)
+	var slot := (to - from) / count
+	for i in count:
+		var region: Rect2 = PUDDLES[rng.randi_range(0, PUDDLES.size() - 1)]
+		var scale_factor := rng.randf_range(0.9, 1.1)
+		var size := region.size * Vector2(scale_factor, scale_factor * FLAT_SQUASH)
+		# Tramos donde puede empezar el charco sin pisar una zona prohibida.
+		var free: Array[Vector2] = [Vector2(from + slot * i + PUDDLE_PADDING,
+				from + slot * (i + 1) - PUDDLE_PADDING - size.x)]
+		for zone in forbidden:
+			free = _subtract(free, Vector2(zone.x - size.x - PUDDLE_PADDING, zone.y + PUDDLE_PADDING))
+		var x: Variant = _random_in(rng, free)
+		if x == null:
+			continue
+		var sprite := _sprite(region, rng.randf() < 0.5)
+		sprite.scale = size / region.size
+		sprite.position = Vector2(x, FLAT_CENTER - size.y * 0.5)
+		_layers["plano"].add_child(sprite)
+		var source := MUD_SOURCE_SCENE.instantiate()
+		source.call("configurar_charco", sprite, size)
+		source.set("textura_seca", DRY_PUDDLE_ATLAS)
+		source.set("posicion_bola", Vector2(0, -14))
+		source.position = sprite.position + size * 0.5
+		_layers["plano"].add_child(source)
+		_puddle_spans.append(Vector2(x - PUDDLE_PADDING, x + size.x + PUDDLE_PADDING))
+
+
+## Le quita a cada tramo la parte que se superpone con `cut`.
+func _subtract(spans: Array[Vector2], cut: Vector2) -> Array[Vector2]:
+	var result: Array[Vector2] = []
+	for span in spans:
+		if cut.y <= span.x or cut.x >= span.y:
+			result.append(span)
+			continue
+		if cut.x > span.x:
+			result.append(Vector2(span.x, cut.x))
+		if cut.y < span.y:
+			result.append(Vector2(cut.y, span.y))
+	return result
+
+
+## x al azar dentro de los tramos (pesando por largo). null si no hay lugar.
+func _random_in(rng: RandomNumberGenerator, spans: Array[Vector2]) -> Variant:
+	var total := 0.0
+	for span in spans:
+		total += maxf(span.y - span.x, 0.0)
+	if total <= 0.0:
+		return null
+	var roll := rng.randf() * total
+	for span in spans:
+		var length := maxf(span.y - span.x, 0.0)
+		if roll <= length:
+			return span.x + roll
+		roll -= length
+	return spans[-1].y
+
+
+func _overlaps_any(span: Vector2, spans: Array[Vector2]) -> bool:
+	for other in spans:
+		if span.x < other.y and other.x < span.y:
+			return true
+	return false
+
+
+## ¿El tramo [desde, hasta] (x local) pisa algún charco?
+func _on_puddle(from_x: float, to_x: float) -> bool:
+	return _overlaps_any(Vector2(from_x, to_x), _puddle_spans)
+
+
 ## Una piedra por tramo parejo, en una posición al azar dentro del tramo.
 func _add_rocks(rng: RandomNumberGenerator) -> void:
 	var count := roundi(width / 1000.0 * rocks_per_1000)
@@ -251,14 +359,22 @@ func _add_rocks(rng: RandomNumberGenerator) -> void:
 			_shuffle(rng, order)
 		var region: Rect2 = ROCKS[order[i % ROCKS.size()]]
 		var x := slot * i + rng.randf_range(0.0, maxf(slot - region.size.x, 0.0))
+		var tries := 0
+		while _on_puddle(x, x + region.size.x) and tries < PLACE_TRIES:
+			x = slot * i + rng.randf_range(0.0, maxf(slot - region.size.x, 0.0))
+			tries += 1
+		if _on_puddle(x, x + region.size.x):
+			continue
 		var sprite := _sprite(region, rng.randf() < 0.5)
 		sprite.position = Vector2(x, ROCK_BASE - region.size.y)
 		_layers["piedras"].add_child(sprite)
 
 
 ## Agrega una decoración del tipo dado, centrada en `center_x`, con la base
-## apoyada en el plano que le corresponde por tamaño.
-func _add_decor(rng: RandomNumberGenerator, kind: String, center_x: float) -> void:
+## apoyada en el plano que le corresponde por tamaño. Si cae sobre un charco
+## y `can_move` es true, prueba otras x al azar; si no, no la pone.
+func _add_decor(rng: RandomNumberGenerator, kind: String, center_x: float,
+		can_move := true) -> void:
 	var data: Array = DECOR[kind]
 	var regions: Array = data[0]
 	var region: Rect2 = regions[rng.randi_range(0, regions.size() - 1)]
@@ -271,6 +387,13 @@ func _add_decor(rng: RandomNumberGenerator, kind: String, center_x: float) -> vo
 		sprite.scale = Vector2.ONE * scale_factor
 	var size := region.size * sprite.scale
 	var x := clampf(center_x - size.x * 0.5, 0.0, width - size.x)
+	var tries := 0
+	while _on_puddle(x, x + size.x) and can_move and tries < PLACE_TRIES:
+		x = clampf(rng.randf_range(0.0, width) - size.x * 0.5, 0.0, width - size.x)
+		tries += 1
+	if _on_puddle(x, x + size.x):
+		sprite.free()
+		return
 	var layer := "plano"
 	var base_y := FLAT_CENTER + size.y * 0.5
 	if not flat:
@@ -280,13 +403,6 @@ func _add_decor(rng: RandomNumberGenerator, kind: String, center_x: float) -> vo
 		base_y = rng.randf_range(base_range.x, base_range.y)
 	sprite.position = Vector2(x, base_y - size.y)
 	_layers[layer].add_child(sprite)
-	if kind == "charco":
-		var source := MUD_SOURCE_SCENE.instantiate()
-		source.call("configurar_charco", sprite, size)
-		source.set("textura_seca", DRY_PUDDLE_ATLAS)
-		source.set("posicion_bola", Vector2(0, -14))
-		source.position = sprite.position + size * 0.5
-		_layers[layer].add_child(source)
 
 
 func _pick_kind(rng: RandomNumberGenerator) -> String:

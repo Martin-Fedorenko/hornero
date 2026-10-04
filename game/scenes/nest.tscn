@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://b3bamy0vnm4fg" path="res://assets/base/nest_asset.png" id="1_nest"]
 [ext_resource type="Script" path="res://scenes/nest.gd" id="2_script"]
+[ext_resource type="Script" path="res://objetos_hornero/destello_levantable.gd" id="3_destello"]
 
 [sub_resource type="AtlasTexture" id="Nest0"]
 atlas = ExtResource("1_nest")
@@ -50,8 +51,8 @@ animations = [{
 "speed": 1.0
 }]
 
-[sub_resource type="RectangleShape2D" id="DeliveryShape"]
-size = Vector2(280, 140)
+[sub_resource type="CircleShape2D" id="DeliveryShape"]
+radius = 214.3
 
 [node name="Nest" type="AnimatedSprite2D"]
 scale = Vector2(0.28, 0.28)
@@ -63,9 +64,15 @@ offset = Vector2(-175, -288)
 script = ExtResource("2_script")
 
 [node name="DeliveryArea" type="Area2D" parent="."]
-position = Vector2(0, -120)
+position = Vector2(0, -143)
 collision_layer = 0
-collision_mask = 2
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DeliveryArea"]
 shape = SubResource("DeliveryShape")
+
+[node name="DestelloLevantable" type="Node2D" parent="."]
+position = Vector2(0, -143)
+scale = Vector2(3.5714, 3.5714)
+script = ExtResource("3_destello")
+radio = 60.0

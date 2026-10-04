@@ -7,6 +7,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_l3ilh"]
 
 [node name="GatoMontes" type="CharacterBody2D" unique_id=840224556]
+collision_layer = 16
 script = ExtResource("1_7l07r")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=169201341]
