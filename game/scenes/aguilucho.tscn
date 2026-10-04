@@ -1,15 +1,16 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://b3nb50pjwo5r0"]
 
-[ext_resource type="PackedScene" path="res://scenes/chimango.tscn" id="1_base"]
-[ext_resource type="SpriteFrames" path="res://assets/Aguilucho/aguilucho_frames.tres" id="2_frames"]
-[ext_resource type="AudioStream" path="res://Musica/Sonidos/Aves/aguilucho.mp3" id="3_grito"]
+[ext_resource type="PackedScene" uid="uid://dpwt2d6pns33f" path="res://scenes/chimango.tscn" id="1_base"]
+[ext_resource type="SpriteFrames" uid="uid://cql73httx73vk" path="res://assets/Aguilucho/aguilucho_frames.tres" id="2_frames"]
+[ext_resource type="AudioStream" uid="uid://pxoyl8tmwd5t" path="res://Musica/Sonidos/Aves/aguilucho.mp3" id="3_grito"]
 
-[node name="Aguilucho" instance=ExtResource("1_base")]
+[node name="Aguilucho" unique_id=1400939000 instance=ExtResource("1_base")]
 
-[node name="Animador" parent="."]
+[node name="GritoAudio" parent="." index="0" unique_id=1059220505]
+stream = ExtResource("3_grito")
+volume_db = -8.41
+
+[node name="Animador" parent="." index="1" unique_id=1341884270]
 sprite_frames = ExtResource("2_frames")
 animation = &"vuelo"
 base_scale = 0.17
-
-[node name="GritoAudio" parent="."]
-stream = ExtResource("3_grito")

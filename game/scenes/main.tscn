@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" path="res://scenes/chimango.tscn" id="22_chimango"]
 [ext_resource type="PackedScene" path="res://scenes/aguilucho.tscn" id="23_aguilucho"]
 [ext_resource type="PackedScene" path="res://scenes/carancho.tscn" id="24_carancho"]
+[ext_resource type="AudioStream" path="res://Musica/Sonidos/Sonidos del campo Argentino, siesta.mp3" id="25_ambiente"]
 
 [node name="Laboratorio" type="Node2D" unique_id=1659740675]
 script = ExtResource("1_main")
@@ -174,6 +175,11 @@ position = Vector2(1030, 1280)
 
 [node name="Ramitas" parent="." unique_id=1631829200 instance=ExtResource("10_ramitas")]
 position = Vector2(1270, 1280)
+
+[node name="SonidoAmbiente" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("25_ambiente")
+volume_db = -6.0
+autoplay = true
 
 [node name="Rapaces" type="Node2D" parent="." node_paths=PackedStringArray("jugador")]
 script = ExtResource("21_rapaces")
