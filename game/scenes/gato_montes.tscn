@@ -8,19 +8,19 @@
 
 [node name="GatoMontes" type="CharacterBody2D" unique_id=840224556]
 script = ExtResource("1_7l07r")
-debug_print = true
-debug_draw = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=169201341]
+scale = Vector2(0.4, 0.4)
 sprite_frames = ExtResource("2_4vtc2")
 animation = &"gatoMontez_salto"
-offset = Vector2(0, -0.355)
+offset = Vector2(0, -157)
 script = ExtResource("3_l3ilh")
-base_scale = 0.3
-offset_caminar = Vector2(0, 300)
-offset_correr = Vector2(0, 300)
-offset_salto = Vector2(0, 300)
-offset_ataque = Vector2(0, 300)
+base_scale = 0.4
+offset_caminar = Vector2(0, 287)
+offset_correr = Vector2(0, 277.5)
+offset_salto = Vector2(0, 205)
+offset_ataque = Vector2(0, 285)
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1172860399]
 shape = SubResource("RectangleShape2D_l3ilh")

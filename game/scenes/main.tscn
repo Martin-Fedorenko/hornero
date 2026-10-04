@@ -16,14 +16,14 @@
 [ext_resource type="PackedScene" path="res://objetos_hornero/piedra.tscn" id="8_piedra"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/paja.tscn" id="9_paja"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/ramitas.tscn" id="10_ramitas"]
-[ext_resource type="Script" path="res://scripts/ui/vitals_hud.gd" id="11_vitals_hud"]
-[ext_resource type="Script" path="res://scripts/ui/death_screen.gd" id="12_death_screen"]
-
 [ext_resource type="Script" uid="uid://b4fuied2nfcsy" path="res://scripts/ui/vitals_hud.gd" id="11_vitals_hud"]
+[ext_resource type="PackedScene" uid="uid://4jpbvg34m0h6" path="res://scenes/gato_montes.tscn" id="11_ya4ey"]
 [ext_resource type="Script" uid="uid://dd7q7ynvslfy" path="res://scripts/ui/death_screen.gd" id="12_death_screen"]
 [ext_resource type="PackedScene" path="res://scenes/arbol.tscn" id="13_arbol"]
-[ext_resource type="PackedScene" uid="uid://4jpbvg34m0h6" path="res://scenes/gato_montes.tscn" id="11_ya4ey"]
 [ext_resource type="Script" uid="uid://2816edmgmc6c" path="res://scripts/gatoMontez/gato_spawner.gd" id="20_gqmmt"]
+[ext_resource type="SpriteFrames" uid="uid://nwsbcs3312hy" path="res://assets/cotorra/Cotorra.tres" id="22_jscy8"]
+[ext_resource type="Script" uid="uid://dyhfl3hj853x0" path="res://assets/cotorra/cotorra.gd" id="22_pm3ni"]
+[ext_resource type="Script" uid="uid://x4cgawbc11iu" path="res://assets/cotorra/cotorra_animator.gd" id="24_y6deb"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
 atlas = ExtResource("6_choun")
@@ -145,25 +145,25 @@ script = ExtResource("1_main")
 
 [node name="World" type="Node2D" parent="." unique_id=1661870613]
 
-[node name="Arboles" type="Node2D" parent="World"]
+[node name="Arboles" type="Node2D" parent="World" unique_id=972051785]
 
-[node name="Arbol1" parent="World/Arboles" instance=ExtResource("13_arbol")]
+[node name="Arbol1" parent="World/Arboles" unique_id=1461287556 instance=ExtResource("13_arbol")]
 position = Vector2(1050, 1648)
 
-[node name="Arbol2" parent="World/Arboles" instance=ExtResource("13_arbol")]
+[node name="Arbol2" parent="World/Arboles" unique_id=551565021 instance=ExtResource("13_arbol")]
 position = Vector2(1900, 1648)
 tipo = 1
 flip = true
 
-[node name="Arbol3" parent="World/Arboles" instance=ExtResource("13_arbol")]
+[node name="Arbol3" parent="World/Arboles" unique_id=1209696298 instance=ExtResource("13_arbol")]
 position = Vector2(3950, 1648)
 tipo = 2
 
-[node name="Arbol4" parent="World/Arboles" instance=ExtResource("13_arbol")]
+[node name="Arbol4" parent="World/Arboles" unique_id=1178431210 instance=ExtResource("13_arbol")]
 position = Vector2(5000, 1648)
 tipo = 3
 
-[node name="Arbol5" parent="World/Arboles" instance=ExtResource("13_arbol")]
+[node name="Arbol5" parent="World/Arboles" unique_id=66274276 instance=ExtResource("13_arbol")]
 position = Vector2(5420, 1648)
 flip = true
 
@@ -320,10 +320,24 @@ flap_impulse = 400.0
 turn_speed_keep = 0.7
 metadata/_custom_type_script = "uid://bm3x271kf07d4"
 
-[node name="GatoMontes" parent="." unique_id=840224556 instance=ExtResource("11_ya4ey")]
-
 [node name="Node2D" type="Node2D" parent="." unique_id=465029146 node_paths=PackedStringArray("jugador")]
 scale = Vector2(2, 2)
 script = ExtResource("20_gqmmt")
 escena_gato = ExtResource("11_ya4ey")
 jugador = NodePath("../Hornero")
+
+[node name="Cotorra" type="CharacterBody2D" parent="." unique_id=229894616 node_paths=PackedStringArray("nido", "hornero")]
+script = ExtResource("22_pm3ni")
+nido = NodePath("../World/NestTree/Nest")
+hornero = NodePath("../Hornero")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Cotorra" unique_id=19797143]
+sprite_frames = ExtResource("22_jscy8")
+animation = &"volar"
+script = ExtResource("24_y6deb")
+sprite_mira_derecha = true
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="Cotorra" unique_id=1213480180]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cotorra" unique_id=492410362]
+disabled = true

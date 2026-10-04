@@ -69,37 +69,33 @@ region = Rect2(1626, 0, 271, 724)
 atlas = ExtResource("1_smcjq")
 region = Rect2(1897, 0, 271, 724)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_kkk74"]
+atlas = ExtResource("3_bohu2")
+region = Rect2(0, 0, 310, 724)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_4nkbw"]
 atlas = ExtResource("3_bohu2")
-region = Rect2(0, 0, 271, 724)
+region = Rect2(310, 0, 310, 724)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6afat"]
 atlas = ExtResource("3_bohu2")
-region = Rect2(271, 0, 271, 724)
+region = Rect2(620, 0, 310, 724)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_t6wb2"]
 atlas = ExtResource("3_bohu2")
-region = Rect2(542, 0, 271, 724)
+region = Rect2(930, 0, 310, 724)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q7s6f"]
 atlas = ExtResource("3_bohu2")
-region = Rect2(813, 0, 271, 724)
+region = Rect2(1240, 0, 310, 724)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_slmqd"]
 atlas = ExtResource("3_bohu2")
-region = Rect2(1084, 0, 271, 724)
+region = Rect2(1550, 0, 310, 724)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_exvcd"]
 atlas = ExtResource("3_bohu2")
-region = Rect2(1355, 0, 271, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8vovp"]
-atlas = ExtResource("3_bohu2")
-region = Rect2(1626, 0, 271, 724)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jk6e6"]
-atlas = ExtResource("3_bohu2")
-region = Rect2(1897, 0, 271, 724)
+region = Rect2(1860, 0, 310, 724)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7mom2"]
 atlas = ExtResource("3_kkk74")
@@ -195,6 +191,9 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_kkk74")
+}, {
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_4nkbw")
 }, {
 "duration": 1.0,
@@ -211,12 +210,6 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_exvcd")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8vovp")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jk6e6")
 }],
 "loop": 1,
 "name": &"gatoMontez_correr",
