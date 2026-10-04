@@ -12,7 +12,7 @@ const COLOR_LETRAS := Color("f8dc9c")
 const COLOR_SELECCION := Color("fff4d0")
 const COLOR_BORDE_LETRAS := Color("5a2e12")
 
-## Segundos que el hornero queda tirado antes de mostrar "HAS MUERTO".
+## Segundos que el hornero queda tirado antes de mostrar "HAS FALLADO".
 @export var death_delay := 1.0
 ## Segundos dentro del nido terminado antes de mostrar "HAS GANADO".
 @export var victory_delay := 1.0
@@ -62,7 +62,7 @@ func _abrir(nuevo_tipo: Tipo) -> void:
 			_poner_titulo("PAUSA", COLOR_LETRAS)
 			_poner_opciones([["Continuar", _continuar]])
 		Tipo.MUERTE:
-			_poner_titulo("HAS MUERTO", Color(0.85, 0.2, 0.18))
+			_poner_titulo("HAS FALLADO", Color(0.85, 0.2, 0.18))
 			_poner_opciones([["Volver a jugar", _volver_a_jugar]])
 		Tipo.VICTORIA:
 			_poner_titulo("¡HAS GANADO!", Color("efb760"))
