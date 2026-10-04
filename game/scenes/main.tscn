@@ -19,6 +19,12 @@
 [ext_resource type="Script" path="res://scripts/ui/vitals_hud.gd" id="11_vitals_hud"]
 [ext_resource type="Script" path="res://scripts/ui/death_screen.gd" id="12_death_screen"]
 
+[ext_resource type="Script" uid="uid://b4fuied2nfcsy" path="res://scripts/ui/vitals_hud.gd" id="11_vitals_hud"]
+[ext_resource type="Script" uid="uid://dd7q7ynvslfy" path="res://scripts/ui/death_screen.gd" id="12_death_screen"]
+[ext_resource type="PackedScene" path="res://scenes/arbol.tscn" id="13_arbol"]
+[ext_resource type="PackedScene" uid="uid://4jpbvg34m0h6" path="res://scenes/gato_montes.tscn" id="11_ya4ey"]
+[ext_resource type="Script" uid="uid://2816edmgmc6c" path="res://scripts/gatoMontez/gato_spawner.gd" id="20_gqmmt"]
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
 atlas = ExtResource("6_choun")
 region = Rect2(0, 0, 692, 724)
