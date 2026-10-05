@@ -17,7 +17,9 @@ Al maestro Gustavo Santaolalla, por crear una obra maestra como "De Ushuaia a La
 
 A la Universidad Tecnológica Nacional, Facultad Regional Buenos Aires, por formarnos como profesionales.
 
-Y sin dudas, a nuestros padres y familia."""
+Y sin dudas, a nuestros padres y familia.
+
+No queremos dejar de agradecer al noble Hornero, nuestra fuente de inspiración."""
 
 # Texto con BBCode: los títulos usan el dorado del logo (COLOR_LETRAS).
 const AYUDA: String = """[b][color=#f8dc9c]OBJETIVO[/color][/b]
@@ -52,6 +54,45 @@ Con el nido techado quedás a salvo: ningún depredador te puede atacar.
 [b]Cotorra[/b]: pica tu nido y, si la dejás 15 segundos, le rompe una etapa y se va. Acercate para espantarla: si se va antes, no rompe nada.
 
 [b]Esc[/b]: pausa."""
+
+
+## "Cómo jugar" completo: el dibujo de las teclas arriba y, abajo, AYUDA.
+static func texto_ayuda() -> String:
+	var separador := "[cell]          [/cell]"
+	return "[center][table=7]" \
+			+ _hueco() + _tecla("W") + _hueco() + separador + _hueco() + _tecla("↑") + _hueco() \
+			+ _tecla("A") + _tecla("S") + _tecla("D") + separador + _tecla("←") + _tecla("↓") + _tecla("→") \
+			+ "[/table]\n[color=#f8dc9c][b]Dirección[/b][/color]\n\n[table=2]" \
+			+ _tecla("E") + _leyenda("Picotear") \
+			+ _tecla("G") + _leyenda("Entrar al nido") \
+			+ _tecla("Espacio") + _leyenda("Aletear para volar") \
+			+ "[/table][/center]\n\n" + AYUDA
+
+
+## Tecla dibujada como un botoncito con los colores del logo.
+static func _tecla(letra: String) -> String:
+	# El color va detrás del texto y no como fondo de la celda: el fondo de la
+	# celda tapa la separación y las teclas quedaban pegadas.
+	return "[cell][center][bgcolor=#f8dc9c][color=#24342d][b] %s [/b][/color][/bgcolor][/center][/cell]" % letra
+
+
+static func _leyenda(texto: String) -> String:
+	return "[cell][left]%s[/left][/cell]" % texto
+
+
+## Separación entre las teclas dibujadas en "Cómo jugar".
+static func separar_teclas(texto: RichTextLabel) -> void:
+	texto.add_theme_constant_override("table_h_separation", 20)
+	texto.add_theme_constant_override("table_v_separation", 12)
+	# Relleno del color detrás de cada letra: el tamaño de la tecla.
+	texto.add_theme_constant_override("text_highlight_h_padding", 6)
+	texto.add_theme_constant_override("text_highlight_v_padding", 4)
+
+
+static func _hueco() -> String:
+	return "[cell][/cell]"
+
+
 const HISTORIA: String = """[b][color=#f8dc9c]EL PRIMER INGENIERO ARGENTINO[/color][/b]
 
 Cuentan los libros que el primer ingeniero argentino fue Luis Huergo, el que se recibió allá por 1870 y soñó puertos, canales y vías de tren.
@@ -121,6 +162,7 @@ const FAUNA: Array[Dictionary] = [
 	},
 ]
 
+const TextoJuego := preload("res://scripts/ui/texto_juego.gd")
 const BOTON_JUGAR: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón Jugar de fileteado porteño-2.png")
 const BOTON_AYUDA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón fileteado porteño_ Cómo jugar-4.png")
 const BOTON_HISTORIA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón Historia estilo fileteado porteño-3.png")
@@ -135,6 +177,13 @@ const COLOR_BORDE_LETRAS: Color = Color("5a2e12")
 @export var velocidad_scroll_teclas := 600.0
 ## Píxeles por cada paso de la rueda del mouse.
 @export var paso_scroll_rueda := 60.0
+## Centro del hornero sobre el techo del nido, en píxeles de la imagen de fondo.
+@export var hornero_en_fondo := Vector2(1238, 295)
+## Escala del hornero por cada píxel de la imagen de fondo.
+@export var escala_hornero_en_fondo := 0.392
+## Píxeles de la imagen (desde arriba) que siempre se ven, para no cortarle la cabeza
+## al hornero en pantallas muy anchas.
+@export var margen_superior_fondo := 40.0
 
 @onready var start: Button = $Contenido/Columna/Start
 @onready var ayuda: Button = $Contenido/Columna/ComoJugar
@@ -148,6 +197,8 @@ const COLOR_BORDE_LETRAS: Color = Color("5a2e12")
 @onready var titulo_ventana: Label = $Ventana/Panel/Margen/Columna/Titulo
 @onready var texto_ventana: RichTextLabel = $Ventana/Panel/Margen/Columna/Texto
 @onready var cerrar: Button = $Ventana/Panel/Margen/Columna/Cerrar
+@onready var _fondo: TextureRect = $Fondo
+@onready var _hornero: AnimatedSprite2D = $HorneroMenu
 var foco_anterior: Control
 var _pestanas: HBoxContainer
 var _pestana_historia: Button
@@ -159,7 +210,7 @@ var _tiempo_fauna := 0.0
 
 func _ready() -> void:
 	start.pressed.connect(_iniciar)
-	ayuda.pressed.connect(func(): _mostrar("Cómo jugar", AYUDA))
+	ayuda.pressed.connect(func(): _mostrar("Cómo jugar", texto_ayuda()))
 	historia.pressed.connect(_mostrar_historia)
 	boton_creditos.pressed.connect(func(): _mostrar("Créditos", creditos))
 	salir.pressed.connect(_salir)
@@ -170,15 +221,37 @@ func _ready() -> void:
 	_estilizar_boton_con_imagen(historia, BOTON_HISTORIA, "HISTORIA")
 	_estilizar_boton_con_imagen(boton_creditos, BOTON_CREDITOS, "CRÉDITOS")
 	_estilizar_boton_con_imagen(salir, BOTON_SALIR, "SALIR")
+	# En el navegador el juego no puede cerrar la pestaña.
+	salir.visible = not OS.has_feature("web")
 	_estilizar_boton(cerrar, false)
 	texto_ventana.bbcode_enabled = true # Títulos en negrita y color en "Cómo jugar"
+	separar_teclas(texto_ventana)
 	$Ventana/Panel.add_theme_stylebox_override("panel", _caja(Color("243936"), Color("bca571"), 20))
 	_crear_pestanas_historia()
+	_fondo.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_fondo.stretch_mode = TextureRect.STRETCH_SCALE
+	resized.connect(_ajustar_fondo)
+	_ajustar_fondo()
 	ventana.hide()
 	start.grab_focus()
 	$HorneroMenu.play(&"viento")
 	musica_menu.play()
 	_iniciar_canto_ambiental()
+
+# El fondo cubre toda la pantalla sin deformarse (sobra imagen de los costados o de
+# arriba y abajo, según la pantalla) y el hornero se ubica sobre el nido de la imagen,
+# así queda encima del nido en cualquier proporción (notebook, 4:3, ultrawide).
+func _ajustar_fondo() -> void:
+	var imagen := _fondo.texture.get_size()
+	var escala := maxf(size.x / imagen.x, size.y / imagen.y)
+	var dibujado := imagen * escala
+	var origen := (size - dibujado) * 0.5
+	# Al recortar arriba y abajo, no subir tanto la imagen que se corte la cabeza del hornero.
+	origen.y = clampf(maxf(origen.y, -margen_superior_fondo * escala), size.y - dibujado.y, 0.0)
+	_fondo.position = origen
+	_fondo.size = dibujado
+	_hornero.position = origen + hornero_en_fondo * escala
+	_hornero.scale = Vector2.ONE * escala_hornero_en_fondo * escala
 
 func _reiniciar_musica() -> void:
 	musica_menu.play()
@@ -402,10 +475,7 @@ func _estilizar_boton_con_imagen(boton: Button, imagen: Texture2D, texto: String
 	boton.custom_minimum_size = Vector2(0, 100)
 	for estado in ["normal", "hover", "pressed", "disabled", "focus"]:
 		boton.add_theme_stylebox_override(estado, StyleBoxEmpty.new())
-	var fuente := SystemFont.new()
-	fuente.font_names = PackedStringArray(["Georgia", "Times New Roman", "serif"])
-	fuente.font_weight = 700
-	boton.add_theme_font_override("font", fuente)
+	boton.add_theme_font_override("font", TextoJuego.fuente())
 	boton.add_theme_font_size_override("font_size", 36)
 	for color in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
 		boton.add_theme_color_override(color, COLOR_LETRAS)

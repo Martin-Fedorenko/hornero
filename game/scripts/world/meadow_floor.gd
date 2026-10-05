@@ -64,7 +64,9 @@ extends Node2D
 
 const ATLAS := preload("res://assets/floor/floor_assets.png")
 const FADE_SHADER := preload("res://scripts/world/strip_fade.gdshader")
-const MUD_SOURCE_SCENE := preload("res://objetos_hornero/charco_barro.tscn")
+## Se carga al usarse y no con preload: la bola de barro usa MeadowFloor, y con
+## preload la carga daba la vuelta y fallaba ("Parse Error: Busy").
+const MUD_SOURCE_SCENE_PATH := "res://objetos_hornero/charco_barro.tscn"
 const DRY_PUDDLE_ATLAS := preload("res://assets/floor/Atlas de charcos secos y agrietados.png")
 
 ## Franjas de pasto: región en el atlas y fila (relativa a la región) donde
@@ -301,7 +303,7 @@ func _add_puddles(rng: RandomNumberGenerator) -> void:
 		# sin métodos. Tampoco hace falta, sólo da barro al jugar.
 		if Engine.is_editor_hint():
 			continue
-		var source := MUD_SOURCE_SCENE.instantiate()
+		var source := (load(MUD_SOURCE_SCENE_PATH) as PackedScene).instantiate()
 		source.call("configurar_charco", sprite, size)
 		source.set("textura_seca", DRY_PUDDLE_ATLAS)
 		source.set("posicion_bola", Vector2(0, -14))

@@ -15,6 +15,7 @@ const IMAGEN_DERROTA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_horner
 const IMAGEN_VICTORIA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Hornero dormido bajo la luna.png")
 ## Mismo texto de "Cómo jugar" que el menú principal.
 const MenuInicio := preload("res://Hornero_Menu_Inicio/menu_hornero/menu_inicio.gd")
+const TextoJuego := preload("res://scripts/ui/texto_juego.gd")
 
 ## Segundos que el hornero queda tirado antes de mostrar "HAS FALLADO".
 @export var death_delay := 1.0
@@ -137,13 +138,16 @@ func _poner_titulo(texto: String, color: Color) -> void:
 	_titulo.add_theme_color_override("font_color", color)
 
 
-## Las opciones propias del menú y, siempre, las dos de salir.
+## Las opciones propias del menú y, siempre, las de salir ("Salir al escritorio"
+## no va en el navegador, que no puede cerrar la pestaña).
 func _poner_opciones(propias: Array) -> void:
 	for hijo in _opciones.get_children():
 		hijo.queue_free()
 		_opciones.remove_child(hijo)
-	for opcion in propias + [["Salir al menú", _salir_al_menu],
-			["Salir al escritorio", _salir_al_escritorio]]:
+	var salidas := [["Salir al menú", _salir_al_menu]]
+	if not OS.has_feature("web"):
+		salidas.append(["Salir al escritorio", _salir_al_escritorio])
+	for opcion in propias + salidas:
 		_opciones.add_child(_boton(opcion[0], opcion[1]))
 
 
@@ -190,10 +194,13 @@ func _crear_ayuda() -> void:
 	_ayuda.add_child(sombra)
 
 	var panel := PanelContainer.new()
-	panel.anchor_left = 0.2
+	# Ancho fijo y centrado, para que en pantallas ultrawide no se estire.
+	panel.anchor_left = 0.5
 	panel.anchor_top = 0.1
-	panel.anchor_right = 0.8
+	panel.anchor_right = 0.5
 	panel.anchor_bottom = 0.9
+	panel.offset_left = -384.0
+	panel.offset_right = 384.0
 	panel.add_theme_stylebox_override("panel", _caja(Color("243936"), Color("bca571"), 20))
 	_ayuda.add_child(panel)
 
@@ -209,7 +216,8 @@ func _crear_ayuda() -> void:
 
 	var texto := RichTextLabel.new()
 	texto.bbcode_enabled = true
-	texto.text = MenuInicio.AYUDA
+	texto.text = MenuInicio.texto_ayuda()
+	MenuInicio.separar_teclas(texto)
 	texto.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	texto.add_theme_color_override("default_color", Color(0.95, 0.92, 0.83))
 	texto.add_theme_font_size_override("normal_font_size", 20)
@@ -299,8 +307,5 @@ func _salir_al_escritorio() -> void:
 	get_tree().quit()
 
 
-static func _fuente() -> SystemFont:
-	var fuente := SystemFont.new()
-	fuente.font_names = PackedStringArray(["Georgia", "Times New Roman", "serif"])
-	fuente.font_weight = 700
-	return fuente
+static func _fuente() -> Font:
+	return TextoJuego.fuente()

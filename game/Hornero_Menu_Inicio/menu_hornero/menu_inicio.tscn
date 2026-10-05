@@ -85,10 +85,10 @@ one_shot = true
 [node name="Contenido" type="MarginContainer" parent="." unique_id=1870174885]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.065
 anchor_top = 0.195
-anchor_right = 0.4
 anchor_bottom = 0.93
+offset_left = 83.0
+offset_right = 512.0
 
 [node name="Columna" type="VBoxContainer" parent="Contenido" unique_id=1025835954]
 layout_mode = 2
@@ -152,10 +152,13 @@ color = Color(0.02, 0.06, 0.05, 0.78)
 [node name="Panel" type="PanelContainer" parent="Ventana" unique_id=1313139034]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.2
+anchor_left = 0.5
 anchor_top = 0.1
-anchor_right = 0.8
+anchor_right = 0.5
 anchor_bottom = 0.9
+offset_left = -384.0
+offset_right = 384.0
+grow_horizontal = 2
 
 [node name="Margen" type="MarginContainer" parent="Ventana/Panel" unique_id=1501712651]
 layout_mode = 2
