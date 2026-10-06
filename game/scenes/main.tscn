@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/pampas_background.tscn" id="4_background"]
 [ext_resource type="Script" uid="uid://cmk8t0yvmtd8n" path="res://scripts/world/meadow_floor.gd" id="5_floor"]
 [ext_resource type="PackedScene" path="res://scenes/nest_tree.tscn" id="6_nest_tree"]
-[ext_resource type="PackedScene" path="res://scenes/nest.tscn" id="7_nest"]
+[ext_resource type="PackedScene" uid="uid://bh5ump12c34xo" path="res://scenes/nest.tscn" id="7_nest"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/piedra.tscn" id="8_piedra"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/paja.tscn" id="9_paja"]
 [ext_resource type="PackedScene" path="res://objetos_hornero/ramitas.tscn" id="10_ramitas"]
@@ -15,15 +15,15 @@
 [ext_resource type="Script" uid="uid://dd7q7ynvslfy" path="res://scripts/ui/game_menu.gd" id="12_game_menu"]
 [ext_resource type="PackedScene" path="res://scenes/arbol.tscn" id="13_arbol"]
 [ext_resource type="Script" uid="uid://2816edmgmc6c" path="res://scripts/gatoMontez/gato_spawner.gd" id="20_gqmmt"]
-[ext_resource type="Script" path="res://scripts/world/rapaces_spawner.gd" id="21_rapaces"]
-[ext_resource type="PackedScene" path="res://scenes/chimango.tscn" id="22_chimango"]
-[ext_resource type="PackedScene" path="res://scenes/aguilucho.tscn" id="23_aguilucho"]
-[ext_resource type="PackedScene" path="res://scenes/carancho.tscn" id="24_carancho"]
-[ext_resource type="AudioStream" path="res://Musica/Sonidos/Sonidos del campo Argentino, siesta.mp3" id="25_ambiente"]
+[ext_resource type="Script" uid="uid://b25m7i21v1at" path="res://scripts/world/rapaces_spawner.gd" id="21_rapaces"]
+[ext_resource type="PackedScene" uid="uid://dpwt2d6pns33f" path="res://scenes/chimango.tscn" id="22_chimango"]
 [ext_resource type="SpriteFrames" uid="uid://nwsbcs3312hy" path="res://assets/cotorra/Cotorra.tres" id="22_jscy8"]
 [ext_resource type="Script" uid="uid://dyhfl3hj853x0" path="res://assets/cotorra/cotorra.gd" id="22_pm3ni"]
+[ext_resource type="PackedScene" uid="uid://b3nb50pjwo5r0" path="res://scenes/aguilucho.tscn" id="23_aguilucho"]
+[ext_resource type="PackedScene" path="res://scenes/carancho.tscn" id="24_carancho"]
 [ext_resource type="Script" uid="uid://x4cgawbc11iu" path="res://assets/cotorra/cotorra_animator.gd" id="24_y6deb"]
-[ext_resource type="AudioStream" path="res://Musica/Sonidos/Aves/Cotorra argentina - vocalización.mp3" id="26_cotorra_voz"]
+[ext_resource type="AudioStream" uid="uid://cwb1n8xnw0eth" path="res://Musica/Sonidos/Sonidos del campo Argentino, siesta.mp3" id="25_ambiente"]
+[ext_resource type="AudioStream" uid="uid://c8su47jlh5881" path="res://Musica/Sonidos/Aves/Cotorra argentina - vocalización.mp3" id="26_cotorra_voz"]
 
 [node name="Laboratorio" type="Node2D" unique_id=1659740675]
 script = ExtResource("1_main")
@@ -45,6 +45,7 @@ flip = true
 [node name="Arbol3" parent="World/Arboles" unique_id=1209696298 instance=ExtResource("13_arbol")]
 position = Vector2(3950, 1648)
 tipo = 2
+ramitas = 1
 
 [node name="Arbol4" parent="World/Arboles" unique_id=1178431210 instance=ExtResource("13_arbol")]
 position = Vector2(5000, 1648)
@@ -52,6 +53,7 @@ tipo = 3
 
 [node name="Arbol5" parent="World/Arboles" unique_id=66274276 instance=ExtResource("13_arbol")]
 position = Vector2(5420, 1648)
+ramitas = 1
 
 [node name="Arbol6" parent="World/Arboles" unique_id=1623985648 instance=ExtResource("13_arbol")]
 position = Vector2(518, 1648)
@@ -64,6 +66,7 @@ flip = true
 
 [node name="Arbol8" parent="World/Arboles" unique_id=1610146855 instance=ExtResource("13_arbol")]
 position = Vector2(2855, 1648)
+ramitas = 1
 
 [node name="Arbol9" parent="World/Arboles" unique_id=362903366 instance=ExtResource("13_arbol")]
 position = Vector2(4644, 1648)
@@ -73,10 +76,12 @@ flip = true
 [node name="Arbol10" parent="World/Arboles" unique_id=922969770 instance=ExtResource("13_arbol")]
 position = Vector2(7272, 1648)
 tipo = 2
+ramitas = 1
 
 [node name="Arbol11" parent="World/Arboles" unique_id=380908427 instance=ExtResource("13_arbol")]
 position = Vector2(9096, 1648)
 tipo = 1
+ramitas = 1
 
 [node name="Arbol12" parent="World/Arboles" unique_id=1338589954 instance=ExtResource("13_arbol")]
 position = Vector2(10092, 1648)
@@ -101,6 +106,7 @@ script = ExtResource("5_floor")
 width = 13200.0
 playable_margin = 600.0
 puddle_free_zones = Array[Vector2]([Vector2(378, 658), Vector2(1353, 1633), Vector2(2340, 2460), Vector2(2715, 2995), Vector2(3340, 3460), Vector2(4340, 4460), Vector2(4504, 4784), Vector2(5800, 6200), Vector2(7132, 7412), Vector2(7640, 7760), Vector2(8640, 8760), Vector2(8956, 9236), Vector2(9740, 9860), Vector2(9952, 10232), Vector2(11306, 11586)])
+removed_puddles = Array[float]([6560.0])
 
 [node name="ParedIzquierda" type="StaticBody2D" parent="World" unique_id=320975503]
 position = Vector2(-100, -400)
@@ -208,17 +214,20 @@ position = Vector2(2400, 1500)
 [node name="Ramitas2" parent="." unique_id=685524650 instance=ExtResource("10_ramitas")]
 position = Vector2(7700, 1500)
 
-[node name="SonidoAmbiente" type="AudioStreamPlayer" parent="."]
+[node name="Piedra3" parent="." unique_id=518045937 instance=ExtResource("8_piedra")]
+position = Vector2(6560, 1500)
+
+[node name="SonidoAmbiente" type="AudioStreamPlayer" parent="." unique_id=86513704]
 stream = ExtResource("25_ambiente")
 volume_db = -6.0
 autoplay = true
 
-[node name="Rapaces" type="Node2D" parent="." node_paths=PackedStringArray("jugador")]
+[node name="Rapaces" type="Node2D" parent="." unique_id=973648350 node_paths=PackedStringArray("jugador")]
 script = ExtResource("21_rapaces")
 escenas = Array[PackedScene]([ExtResource("22_chimango"), ExtResource("23_aguilucho"), ExtResource("24_carancho")])
 jugador = NodePath("../Hornero")
 
-[node name="Node2D" type="Node2D" parent="." unique_id=465029146 node_paths=PackedStringArray("jugador")]
+[node name="Gatos" type="Node2D" parent="." unique_id=465029146 node_paths=PackedStringArray("jugador")]
 scale = Vector2(2, 2)
 script = ExtResource("20_gqmmt")
 escena_gato = ExtResource("11_ya4ey")
@@ -237,7 +246,7 @@ animation = &"volar"
 script = ExtResource("24_y6deb")
 sprite_mira_derecha = true
 
-[node name="Voz" type="AudioStreamPlayer" parent="Cotorra"]
+[node name="Voz" type="AudioStreamPlayer" parent="Cotorra" unique_id=268811241]
 stream = ExtResource("26_cotorra_voz")
 volume_db = -5.0
 

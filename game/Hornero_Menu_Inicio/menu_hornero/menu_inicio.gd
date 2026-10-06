@@ -11,7 +11,7 @@ Ingeniero Fedorenko Martin · Villadeza Eric · Brian Moulia
 Godot Engine
 
 [b][color=#f8dc9c]AGRADECIMIENTOS[/color][/b]
-A nuestras novias: la Magíster Cyntia V ♥, la Ingeniera Abril C ♥ y la Ingeniera Arabella B ♥.
+A nuestras novias: la Magíster Cyntia V, la Ingeniera Abril C y la Ingeniera Arabella B.
 
 Al maestro Gustavo Santaolalla, por crear una obra maestra como "De Ushuaia a La Quiaca". Y perdón por tomarnos el atrevimiento de sumarle el noble cantar del hornero a su pieza.
 
@@ -24,6 +24,11 @@ No queremos dejar de agradecer al noble Hornero, nuestra fuente de inspiración.
 # Texto con BBCode: los títulos usan el dorado del logo (COLOR_LETRAS).
 const AYUDA: String = """[b][color=#f8dc9c]OBJETIVO[/color][/b]
 Juntá paja, ramitas, piedras y barro y llevalos a tu nido: cada material le suma una etapa. Cuando esté terminado, entrá con [b]G[/b] para ganar. Si el nido queda fuera de pantalla, una flecha te marca dónde está.
+Arriba a la derecha corre el tiempo de la partida: al ganar te muestra cuánto tardaste.
+
+[b][color=#f8dc9c]DIFICULTAD[/color][/b] (se elige en Configuración)
+[b]Fácil[/b]: Perfecto para horneros principiantes.
+[b]Difícil[/b]: Solo para veteranos de la Pampa.
 
 [b][color=#f8dc9c]VUELO[/color][/b]
 [b]Espacio[/b]: aletear. Cada aletazo te empuja hacia donde apunta el pico (y un poco hacia arriba) y gasta stamina. Desde el piso, despega.
@@ -41,6 +46,7 @@ En el piso la stamina se recupera rápido; planeando, de a poco.
 [b][color=#f8dc9c]E — PICO[/color][/b]
 Cerca de un material, [b]E[/b] lo levanta con el pico. Con algo en el pico, [b]E[/b] lo suelta.
 Para entregarlo, soltalo sobre el nido o pasá volando por encima con él.
+Algunos árboles tienen ramitas apoyadas en las ramas: agarralas con [b]E[/b] al pasar volando.
 Cada tanto aparecen bichos en las hojas y los troncos de los árboles. Se comen pasando por encima: devuelven vida y stamina.
 
 [b][color=#f8dc9c]G — NIDO[/color][/b]
@@ -56,41 +62,16 @@ Con el nido techado quedás a salvo: ningún depredador te puede atacar.
 [b]Esc[/b]: pausa."""
 
 
-## "Cómo jugar" completo: el dibujo de las teclas arriba y, abajo, AYUDA.
+## Dibujo de los controles (teclas y qué hace cada una) arriba de "Cómo jugar".
+## Con preload queda como dependencia y entra en la exportación.
+const IMAGEN_AYUDA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/como_jugar.jpg")
+## Ancho del dibujo dentro de la ventana, en píxeles.
+const ANCHO_IMAGEN_AYUDA := 660
+
+
+## "Cómo jugar" completo: el dibujo de los controles arriba y, abajo, AYUDA.
 static func texto_ayuda() -> String:
-	var separador := "[cell]          [/cell]"
-	return "[center][table=7]" \
-			+ _hueco() + _tecla("W") + _hueco() + separador + _hueco() + _tecla("↑") + _hueco() \
-			+ _tecla("A") + _tecla("S") + _tecla("D") + separador + _tecla("←") + _tecla("↓") + _tecla("→") \
-			+ "[/table]\n[color=#f8dc9c][b]Dirección[/b][/color]\n\n[table=2]" \
-			+ _tecla("E") + _leyenda("Picotear") \
-			+ _tecla("G") + _leyenda("Entrar al nido") \
-			+ _tecla("Espacio") + _leyenda("Aletear para volar") \
-			+ "[/table][/center]\n\n" + AYUDA
-
-
-## Tecla dibujada como un botoncito con los colores del logo.
-static func _tecla(letra: String) -> String:
-	# El color va detrás del texto y no como fondo de la celda: el fondo de la
-	# celda tapa la separación y las teclas quedaban pegadas.
-	return "[cell][center][bgcolor=#f8dc9c][color=#24342d][b] %s [/b][/color][/bgcolor][/center][/cell]" % letra
-
-
-static func _leyenda(texto: String) -> String:
-	return "[cell][left]%s[/left][/cell]" % texto
-
-
-## Separación entre las teclas dibujadas en "Cómo jugar".
-static func separar_teclas(texto: RichTextLabel) -> void:
-	texto.add_theme_constant_override("table_h_separation", 20)
-	texto.add_theme_constant_override("table_v_separation", 12)
-	# Relleno del color detrás de cada letra: el tamaño de la tecla.
-	texto.add_theme_constant_override("text_highlight_h_padding", 6)
-	texto.add_theme_constant_override("text_highlight_v_padding", 4)
-
-
-static func _hueco() -> String:
-	return "[cell][/cell]"
+	return "[center][img width=%d]%s[/img][/center]\n\n" % [ANCHO_IMAGEN_AYUDA, IMAGEN_AYUDA.resource_path] + AYUDA
 
 
 const HISTORIA: String = """[b][color=#f8dc9c]EL PRIMER INGENIERO ARGENTINO[/color][/b]
@@ -108,6 +89,9 @@ Pero ser ingeniero en la pampa no es fácil. El chimango, el aguilucho y el cara
 Ahora te toca a vos ayudar a Huergo: juntá los materiales, esquivá a los que quieren arruinarle el día y terminá el nido antes de que sea tarde.
 
 [i]Moraleja: antes de que el hombre aprendiera a construir, el hornero ya era ingeniero. Y lo sigue siendo, en cada poste y en cada árbol de nuestra tierra.[/i]"""
+
+## Colores del puesto 1, 2 y 3 en los rankings.
+const COLORES_PODIO: Array[Color] = [Color("f2c94c"), Color("d9dde3"), Color("d79a5b")]
 
 const COLOR_PELIGRO: String = "#ff5a4a"
 # Pestaña "Fauna": hoja de sprites, columnas, inicio en Y de cada fila, alto del recorte y velocidad.
@@ -163,14 +147,22 @@ const FAUNA: Array[Dictionary] = [
 ]
 
 const TextoJuego := preload("res://scripts/ui/texto_juego.gd")
-const BOTON_JUGAR: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón Jugar de fileteado porteño-2.png")
-const BOTON_AYUDA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón fileteado porteño_ Cómo jugar-4.png")
-const BOTON_HISTORIA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón Historia estilo fileteado porteño-3.png")
-const BOTON_CREDITOS: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Créditos en madera con fileteado porteño-1.png")
-const BOTON_SALIR: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/Botón SALIR con fileteado porteño-5.png")
+const PopupNombre := preload("res://scripts/ui/popup_nombre.gd")
+const PopupConfirmacion := preload("res://scripts/ui/popup_confirmacion.gd")
+## Cartel de madera vacío que aparece detrás de la opción seleccionada.
+const CartelFileteado := preload("res://scripts/ui/cartel_fileteado.gd")
 # Colores de las letras del logo "HORNERO".
 const COLOR_LETRAS: Color = Color("f8dc9c")
 const COLOR_BORDE_LETRAS: Color = Color("5a2e12")
+## Letras de la opción seleccionada, sobre el cartel.
+const COLOR_SELECCION: Color = Color("fff4d0")
+const COLOR_TEXTO: Color = Color(0.95, 0.92, 0.83)
+## Alto de cada botón del menú: entran los siete en 720 px de alto.
+@export var alto_boton := 76.0
+## Alto del cartel de la opción seleccionada (un poco más que el botón).
+@export var alto_cartel := 94.0
+## Tamaño de la letra de las opciones: el mismo, seleccionadas o no.
+@export var tamano_opciones := 36
 @export_range(10.0, 30.0, 1.0) var intervalo_canto_minimo := 5.0
 @export_range(10.0, 30.0, 1.0) var intervalo_canto_maximo := 10.0
 ## Píxeles por segundo al desplazar el texto de la ventana con flechas o W/S.
@@ -188,6 +180,8 @@ const COLOR_BORDE_LETRAS: Color = Color("5a2e12")
 @onready var start: Button = $Contenido/Columna/Start
 @onready var ayuda: Button = $Contenido/Columna/ComoJugar
 @onready var historia: Button = $Contenido/Columna/Historia
+@onready var boton_estadisticas: Button = $Contenido/Columna/Estadisticas
+@onready var boton_configuracion: Button = $Contenido/Columna/Configuracion
 @onready var boton_creditos: Button = $Contenido/Columna/Creditos
 @onready var salir: Button = $Contenido/Columna/Salir
 @onready var musica_menu: AudioStreamPlayer = $MusicaMenu
@@ -207,27 +201,50 @@ var _fauna: ScrollContainer
 # Cada entrada: {"rect": TextureRect, "cuadros": Array[Texture2D], "fps": float}
 var _animales: Array[Dictionary] = []
 var _tiempo_fauna := 0.0
+# Ventana "Estadísticas": pestañas arriba y una página por pestaña.
+var _estadisticas: VBoxContainer
+var _scroll_estadisticas: ScrollContainer
+var _pestanas_estadisticas: Array[Button] = []
+var _paginas_estadisticas: Array[Control] = []
+var _contenedor_paginas: VBoxContainer
+var _pestana_estadisticas_actual := 0
+var _aviso_estadisticas: Label
+var _boton_borrar: Button
+## Se borraron los datos: al cerrar Estadísticas se vuelve a pedir el nombre.
+var _pedir_nombre_al_cerrar := false
+# Ventana "Configuración".
+var _configuracion: VBoxContainer
+var _boton_completa: Button
+var _boton_ventana: Button
+var _boton_facil: Button
+var _boton_dificil: Button
+var _detalle_dificultad: RichTextLabel
 
 func _ready() -> void:
 	start.pressed.connect(_iniciar)
 	ayuda.pressed.connect(func(): _mostrar("Cómo jugar", texto_ayuda()))
 	historia.pressed.connect(_mostrar_historia)
+	boton_estadisticas.pressed.connect(_mostrar_estadisticas)
+	boton_configuracion.pressed.connect(_mostrar_configuracion)
 	boton_creditos.pressed.connect(func(): _mostrar("Créditos", creditos))
 	salir.pressed.connect(_salir)
 	cerrar.pressed.connect(_cerrar)
 	musica_menu.finished.connect(_reiniciar_musica)
-	_estilizar_boton_con_imagen(start, BOTON_JUGAR, "JUGAR")
-	_estilizar_boton_con_imagen(ayuda, BOTON_AYUDA, "CÓMO JUGAR")
-	_estilizar_boton_con_imagen(historia, BOTON_HISTORIA, "HISTORIA")
-	_estilizar_boton_con_imagen(boton_creditos, BOTON_CREDITOS, "CRÉDITOS")
-	_estilizar_boton_con_imagen(salir, BOTON_SALIR, "SALIR")
+	_estilizar_opcion(start, "JUGAR")
+	_estilizar_opcion(ayuda, "CÓMO JUGAR")
+	_estilizar_opcion(historia, "HISTORIA")
+	_estilizar_opcion(boton_estadisticas, "ESTADÍSTICAS")
+	_estilizar_opcion(boton_configuracion, "CONFIGURACIÓN")
+	_estilizar_opcion(boton_creditos, "CRÉDITOS")
+	_estilizar_opcion(salir, "SALIR")
 	# En el navegador el juego no puede cerrar la pestaña.
 	salir.visible = not OS.has_feature("web")
 	_estilizar_boton(cerrar, false)
 	texto_ventana.bbcode_enabled = true # Títulos en negrita y color en "Cómo jugar"
-	separar_teclas(texto_ventana)
 	$Ventana/Panel.add_theme_stylebox_override("panel", _caja(Color("243936"), Color("bca571"), 20))
 	_crear_pestanas_historia()
+	_crear_estadisticas()
+	_crear_configuracion()
 	_fondo.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_fondo.stretch_mode = TextureRect.STRETCH_SCALE
 	resized.connect(_ajustar_fondo)
@@ -237,6 +254,14 @@ func _ready() -> void:
 	$HorneroMenu.play(&"viento")
 	musica_menu.play()
 	_iniciar_canto_ambiental()
+	# Los datos de Talo llegan de a poco: cada uno rellena su pestaña.
+	TaloManager.player_stats_loaded.connect(_on_estadisticas_personales)
+	TaloManager.global_stats_loaded.connect(_on_estadisticas_globales)
+	TaloManager.leaderboard_loaded.connect(_on_ranking)
+	# La primera vez, antes de poder jugar, se pide el nombre.
+	TaloManager.player_stats_reset.connect(_on_estadisticas_borradas)
+	if TaloManager.needs_identity_choice():
+		_pedir_nombre()
 
 # El fondo cubre toda la pantalla sin deformarse (sobra imagen de los costados o de
 # arriba y abajo, según la pantalla) y el hornero se ubica sobre el nido de la imagen,
@@ -270,12 +295,36 @@ func _reproducir_canto() -> void:
 	_programar_siguiente_canto()
 
 func _iniciar() -> void:
+	if TaloManager.needs_identity_choice():
+		_pedir_nombre()
+		return
 	start.disabled = true
 	var error := get_tree().change_scene_to_file(escena_juego)
 	if error != OK:
 		start.disabled = false
 		push_error("Revisá Escena Juego en MenuInicio: " + escena_juego)
 		_mostrar("No se pudo iniciar", "La escena de juego todavía no está disponible.")
+
+## Popup "Nombre de jugador": tapa el menú hasta que se acepta un nombre válido.
+func _pedir_nombre() -> void:
+	for boton in _botones_menu():
+		boton.focus_mode = Control.FOCUS_NONE
+	var popup := PopupNombre.new()
+	popup.aceptado.connect(_on_nombre_aceptado.unbind(1))
+	popup.rechazado.connect(_on_nombre_aceptado)
+	add_child(popup)
+
+func _on_nombre_aceptado() -> void:
+	_pedir_nombre_al_cerrar = false
+	# Pedido desde Estadísticas ("Crear nombre"): se queda en la ventana.
+	if ventana.visible and _estadisticas.visible:
+		_actualizar_boton_identidad()
+		_cargar_estadisticas()
+		_boton_borrar.grab_focus()
+		return
+	for boton in _botones_menu():
+		boton.focus_mode = Control.FOCUS_ALL
+	start.grab_focus()
 
 func _salir() -> void:
 	get_tree().quit()
@@ -287,9 +336,18 @@ func _mostrar(titulo: String, texto: String) -> void:
 	texto_ventana.scroll_to_line(0)
 	ventana.show()
 	# Evitar llegar a los botones detrás del cuadro usando Tab.
-	for boton in [start, ayuda, historia, boton_creditos, salir]:
+	for boton in _botones_menu():
 		boton.focus_mode = Control.FOCUS_NONE
 	cerrar.grab_focus()
+
+func _botones_menu() -> Array[Button]:
+	return [start, ayuda, historia, boton_estadisticas, boton_configuracion, boton_creditos, salir]
+
+## Ventana con un panel propio (estadísticas, configuración) en lugar del texto.
+func _mostrar_panel(titulo: String, panel: Control) -> void:
+	_mostrar(titulo, "")
+	texto_ventana.hide()
+	panel.show()
 
 func _mostrar_historia() -> void:
 	_mostrar("Historia", HISTORIA)
@@ -392,8 +450,15 @@ func _cerrar() -> void:
 	ventana.hide()
 	_pestanas.hide()
 	_fauna.hide()
+	_estadisticas.hide()
+	_boton_borrar.hide()
+	_configuracion.hide()
 	texto_ventana.show()
-	for boton in [start, ayuda, historia, boton_creditos, salir]:
+	if _pedir_nombre_al_cerrar:
+		_pedir_nombre_al_cerrar = false
+		_pedir_nombre()
+		return
+	for boton in _botones_menu():
 		boton.focus_mode = Control.FOCUS_ALL
 	if is_instance_valid(foco_anterior):
 		foco_anterior.grab_focus()
@@ -404,6 +469,8 @@ func _cerrar() -> void:
 func _barra_scroll() -> VScrollBar:
 	if _fauna.visible:
 		return _fauna.get_v_scroll_bar()
+	if _estadisticas.visible:
+		return _scroll_estadisticas.get_v_scroll_bar()
 	return texto_ventana.get_v_scroll_bar()
 
 func _desplazar(pixeles: float) -> void:
@@ -432,7 +499,9 @@ func _input(event: InputEvent) -> void:
 		var sentido := -1.0 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0
 		_desplazar(sentido * paso_scroll_rueda * maxf(event.factor, 1.0))
 		get_viewport().set_input_as_handled()
-	elif event is InputEventKey and event.physical_keycode in [KEY_UP, KEY_DOWN, KEY_W, KEY_S]:
+	# En Configuración no hay nada que desplazar: las flechas eligen la opción.
+	elif event is InputEventKey and event.physical_keycode in [KEY_UP, KEY_DOWN, KEY_W, KEY_S] \
+			and not _configuracion.visible:
 		get_viewport().set_input_as_handled()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -469,22 +538,33 @@ func _estilizar_boton(boton: Button, principal: bool) -> void:
 	boton.add_theme_stylebox_override("focus", foco)
 
 # Sólo el botón seleccionado muestra el cartel fileteado; el resto, la palabra.
-func _estilizar_boton_con_imagen(boton: Button, imagen: Texture2D, texto: String) -> void:
-	boton.expand_icon = true
-	boton.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	boton.custom_minimum_size = Vector2(0, 100)
+# La opción seleccionada muestra el cartel de madera fileteado detrás de la
+# palabra, que mantiene su tamaño. El cartel se estira según el largo de la
+# palabra, así todas las opciones (también las nuevas) lo tienen.
+func _estilizar_opcion(boton: Button, texto: String) -> void:
+	boton.text = texto
+	boton.custom_minimum_size = Vector2(0, alto_boton)
 	for estado in ["normal", "hover", "pressed", "disabled", "focus"]:
 		boton.add_theme_stylebox_override(estado, StyleBoxEmpty.new())
-	boton.add_theme_font_override("font", TextoJuego.fuente())
-	boton.add_theme_font_size_override("font_size", 36)
-	for color in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
-		boton.add_theme_color_override(color, COLOR_LETRAS)
+	var fuente := TextoJuego.fuente()
+	boton.add_theme_font_override("font", fuente)
+	boton.add_theme_font_size_override("font_size", tamano_opciones)
 	boton.add_theme_color_override("font_outline_color", COLOR_BORDE_LETRAS)
 	boton.add_theme_constant_override("outline_size", 10)
+	var cartel := CartelFileteado.new()
+	boton.add_child(cartel)
+	var acomodar := func() -> void:
+		var ancho_texto := fuente.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, tamano_opciones).x
+		var tamano := Vector2(CartelFileteado.ancho_para(ancho_texto + 30.0, alto_cartel), alto_cartel)
+		cartel.size = tamano
+		cartel.position = (boton.size - tamano) * 0.5
+	boton.resized.connect(acomodar)
+	acomodar.call()
 	var actualizar := func() -> void:
 		var seleccionado := boton.has_focus()
-		boton.icon = imagen if seleccionado else null
-		boton.text = "" if seleccionado else texto
+		cartel.visible = seleccionado
+		for color in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
+			boton.add_theme_color_override(color, COLOR_SELECCION if seleccionado else COLOR_LETRAS)
 	boton.focus_entered.connect(actualizar)
 	boton.focus_exited.connect(actualizar)
 	# Pasar el mouse por encima también lo selecciona.
@@ -492,3 +572,394 @@ func _estilizar_boton_con_imagen(boton: Button, imagen: Texture2D, texto: String
 		if boton.focus_mode != Control.FOCUS_NONE:
 			boton.grab_focus())
 	actualizar.call()
+
+
+# --- Estadísticas -----------------------------------------------------------
+
+func _mostrar_estadisticas() -> void:
+	_mostrar_panel("Estadísticas", _estadisticas)
+	# En incógnito no hay estadísticas propias que borrar.
+	_actualizar_boton_identidad()
+	_elegir_pestana_estadisticas(0)
+	_cargar_estadisticas()
+
+## Pide todo a Talo (sin esperar: cada respuesta llega por su señal) y mientras
+## tanto muestra "Cargando…".
+func _cargar_estadisticas() -> void:
+	if TaloManager.has_local_identity():
+		_aviso_estadisticas.text = "Jugando como %s" % TaloManager.get_player_name()
+	else:
+		_aviso_estadisticas.text = "Modo incógnito · tus partidas no se guardan"
+	for i in _paginas_estadisticas.size():
+		_poner_pagina(i, _pagina_mensaje(_titulo_estadisticas(i), "Cargando…"))
+	TaloManager.get_player_stats()
+	TaloManager.get_global_stats()
+	TaloManager.get_easy_leaderboard()
+	TaloManager.get_hard_leaderboard()
+
+func _titulo_estadisticas(indice: int) -> String:
+	return ["Tus partidas", "Todos los horneros", "Ranking Global · Fácil",
+			"Ranking Global · Difícil"][indice]
+
+func _on_estadisticas_personales(stats: Dictionary) -> void:
+	if stats.incognito:
+		_poner_pagina(0, _pagina_mensaje(_titulo_estadisticas(0),
+				"Estás jugando en modo incógnito: tus estadísticas no se guardan."))
+		return
+	if not stats.ok:
+		_poner_pagina(0, _pagina_sin_conexion(0))
+		return
+	_poner_pagina(0, _pagina_datos(_titulo_estadisticas(0), [
+		["Nidos construidos", str(stats.nests_built)],
+		["Muertes", str(stats.deaths)],
+		["Mejor tiempo fácil", TaloManager.format_time(stats.best_time_easy_ms)],
+		["Mejor tiempo difícil", TaloManager.format_time(stats.best_time_hard_ms)],
+	]))
+
+func _on_estadisticas_globales(stats: Dictionary) -> void:
+	if not stats.ok:
+		_poner_pagina(1, _pagina_sin_conexion(1))
+		return
+	_poner_pagina(1, _pagina_datos(_titulo_estadisticas(1), [
+		["Nidos construidos", str(stats.nests_built)],
+		["Muertes", str(stats.deaths)],
+	]))
+
+func _on_ranking(tabla: String, ranking: Dictionary) -> void:
+	var indice := 2 if tabla == TaloManager.LEADERBOARD_EASY else 3
+	if not ranking.ok:
+		_poner_pagina(indice, _pagina_sin_conexion(indice))
+	elif ranking.entries.is_empty():
+		_poner_pagina(indice, _pagina_mensaje(_titulo_estadisticas(indice),
+				"Todavía nadie terminó un nido en esta dificultad."))
+	else:
+		_poner_pagina(indice, _pagina_ranking(_titulo_estadisticas(indice), ranking.entries))
+
+## Cambia la página `indice` por `pagina`, en el mismo lugar y respetando la pestaña elegida.
+func _poner_pagina(indice: int, pagina: Control) -> void:
+	_contenedor_paginas.add_child(pagina)
+	if indice < _paginas_estadisticas.size():
+		var vieja := _paginas_estadisticas[indice]
+		_contenedor_paginas.move_child(pagina, vieja.get_index())
+		vieja.queue_free()
+		_paginas_estadisticas[indice] = pagina
+	else:
+		_paginas_estadisticas.append(pagina)
+	pagina.visible = indice == _pestana_estadisticas_actual
+
+func _pagina_sin_conexion(indice: int) -> Control:
+	return _pagina_mensaje(_titulo_estadisticas(indice),
+			"No se pudo conectar con el servidor. Probá de nuevo más tarde.")
+
+func _pagina_mensaje(titulo: String, mensaje: String) -> Control:
+	var ficha := _ficha()
+	var columna := VBoxContainer.new()
+	columna.add_theme_constant_override("separation", 12)
+	ficha.add_child(columna)
+	columna.add_child(_titulo_pagina(titulo))
+	var texto := _texto(20, COLOR_TEXTO)
+	texto.text = mensaje
+	texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	columna.add_child(texto)
+	return ficha
+
+## Pestañas Personal / Global / Ranking Global Fácil / Ranking Global Difícil,
+## con los datos de Talo.
+func _crear_estadisticas() -> void:
+	var columna := titulo_ventana.get_parent()
+	_estadisticas = VBoxContainer.new()
+	_estadisticas.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_estadisticas.add_theme_constant_override("separation", 14)
+
+	var pestanas := HBoxContainer.new()
+	pestanas.add_theme_constant_override("separation", 8)
+	_estadisticas.add_child(pestanas)
+	for nombre in ["Personal", "Global", "Ranking Fácil", "Ranking Difícil"]:
+		var pestana := Button.new()
+		pestana.text = nombre
+		pestana.custom_minimum_size = Vector2(0, 44)
+		pestana.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		pestana.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		pestana.pressed.connect(_elegir_pestana_estadisticas.bind(_pestanas_estadisticas.size()))
+		pestanas.add_child(pestana)
+		_pestanas_estadisticas.append(pestana)
+
+	_scroll_estadisticas = ScrollContainer.new()
+	_scroll_estadisticas.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_scroll_estadisticas.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_estadisticas.add_child(_scroll_estadisticas)
+	_contenedor_paginas = VBoxContainer.new()
+	_contenedor_paginas.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_scroll_estadisticas.add_child(_contenedor_paginas)
+	for i in 4:
+		_poner_pagina(i, _pagina_mensaje(_titulo_estadisticas(i), "Cargando…"))
+
+	_aviso_estadisticas = _texto(15, Color(COLOR_TEXTO, 0.6))
+	_aviso_estadisticas.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_estadisticas.add_child(_aviso_estadisticas)
+
+	# "Borrar estadísticas", a la derecha del título de la ventana.
+	# A la derecha del título de la ventana: "Borrar estadísticas" o, en
+	# incógnito, "Crear nombre".
+	_boton_borrar = Button.new()
+	_boton_borrar.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_estilizar_boton(_boton_borrar, false)
+	_boton_borrar.add_theme_font_size_override("font_size", 17)
+	_boton_borrar.pressed.connect(_on_boton_identidad)
+	titulo_ventana.add_child(_boton_borrar)
+	_boton_borrar.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	_boton_borrar.grow_vertical = Control.GROW_DIRECTION_BOTH
+	_boton_borrar.hide()
+
+	columna.add_child(_estadisticas)
+	columna.move_child(_estadisticas, texto_ventana.get_index() + 1)
+	_estadisticas.hide()
+
+## Con nombre: "Borrar estadísticas" (en rojo). En incógnito: "Crear nombre" (dorado).
+func _actualizar_boton_identidad() -> void:
+	var con_nombre := TaloManager.has_local_identity()
+	_boton_borrar.text = "Borrar estadísticas" if con_nombre else "Crear nombre"
+	for color in ["font_color", "font_focus_color"]:
+		_boton_borrar.add_theme_color_override(color, Color("ffb4a6") if con_nombre else COLOR_LETRAS)
+	_boton_borrar.disabled = false
+	_boton_borrar.show()
+	# Se reacomoda al ancho del texto nuevo, pegado a la derecha.
+	_boton_borrar.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT, Control.PRESET_MODE_MINSIZE)
+
+func _on_boton_identidad() -> void:
+	if TaloManager.has_local_identity():
+		_confirmar_borrado()
+	else:
+		_pedir_nombre()
+
+func _confirmar_borrado() -> void:
+	var popup := PopupConfirmacion.new()
+	popup.titulo = "Borrar estadísticas"
+	popup.mensaje = "Se borran tu nombre, tus nidos construidos, tus muertes y tus tiempos de los rankings. Las estadísticas globales no cambian. No se puede deshacer."
+	popup.respondido.connect(_on_confirmacion_borrado)
+	add_child(popup)
+
+func _on_confirmacion_borrado(aceptado: bool) -> void:
+	_boton_borrar.grab_focus()
+	if not aceptado:
+		return
+	_boton_borrar.disabled = true
+	_aviso_estadisticas.text = "Borrando tus estadísticas…"
+	TaloManager.reset_player_stats()
+
+func _on_estadisticas_borradas(ok: bool) -> void:
+	_boton_borrar.disabled = false
+	if not _estadisticas.visible or not ventana.visible:
+		# Ya cerró Estadísticas mientras se borraba: se pide el nombre ahora.
+		if ok:
+			_pedir_nombre()
+		return
+	if ok:
+		_pedir_nombre_al_cerrar = true
+		_actualizar_boton_identidad()
+		_cargar_estadisticas()
+		_aviso_estadisticas.text = "Tus datos se borraron. Ahora estás en modo incógnito."
+	else:
+		_aviso_estadisticas.text = "No fue posible borrar tus estadísticas. Revisá tu conexión a internet."
+
+func _elegir_pestana_estadisticas(indice: int) -> void:
+	_pestana_estadisticas_actual = indice
+	for i in _paginas_estadisticas.size():
+		_paginas_estadisticas[i].visible = i == indice
+		_estilizar_pestana(_pestanas_estadisticas[i], i == indice)
+	_scroll_estadisticas.scroll_vertical = 0
+
+## Como las pestañas de Historia, pero con menos relleno: entran las cuatro.
+func _estilizar_pestana(pestana: Button, activa: bool) -> void:
+	_estilizar_boton(pestana, activa)
+	pestana.add_theme_font_size_override("font_size", 19)
+	for estado in ["normal", "hover", "pressed", "focus"]:
+		var estilo := pestana.get_theme_stylebox(estado) as StyleBoxFlat
+		estilo.content_margin_left = 8.0
+		estilo.content_margin_right = 8.0
+
+## Tabla de dos columnas (dato y valor) dentro de una ficha como las de Fauna.
+func _pagina_datos(titulo: String, datos: Array) -> Control:
+	var ficha := _ficha()
+	var columna := VBoxContainer.new()
+	columna.add_theme_constant_override("separation", 12)
+	ficha.add_child(columna)
+	columna.add_child(_titulo_pagina(titulo))
+	var tabla := GridContainer.new()
+	tabla.columns = 2
+	tabla.add_theme_constant_override("h_separation", 24)
+	tabla.add_theme_constant_override("v_separation", 10)
+	columna.add_child(tabla)
+	for dato in datos:
+		var nombre := _texto(20, COLOR_TEXTO)
+		nombre.text = dato[0]
+		nombre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tabla.add_child(nombre)
+		var valor := _texto(20, COLOR_LETRAS)
+		valor.text = dato[1]
+		valor.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		tabla.add_child(valor)
+	return ficha
+
+## Ranking: puesto, nombre y tiempo; filas alternadas, el podio en color y la
+## fila del jugador resaltada. `filas`: entradas de TaloManager.get_leaderboard().
+func _pagina_ranking(titulo: String, filas: Array) -> Control:
+	var ficha := _ficha()
+	var columna := VBoxContainer.new()
+	columna.add_theme_constant_override("separation", 4)
+	ficha.add_child(columna)
+	columna.add_child(_titulo_pagina(titulo))
+	columna.add_child(_fila_ranking("#", "Nombre", "Tiempo", COLOR_LETRAS, Color(0, 0, 0, 0)))
+	for i in filas.size():
+		var color := COLORES_PODIO[i] if i < COLORES_PODIO.size() else COLOR_TEXTO
+		var fondo := Color(1, 1, 1, 0.06) if i % 2 == 0 else Color(0, 0, 0, 0)
+		var fila: Dictionary = filas[i]
+		var nombre: String = fila.name
+		if fila.is_player:
+			fondo = Color(COLOR_LETRAS, 0.18)
+			nombre += " (vos)"
+		columna.add_child(_fila_ranking(str(fila.position), nombre,
+				TaloManager.format_time(fila.time_ms), color, fondo))
+	return ficha
+
+func _fila_ranking(puesto: String, nombre: String, tiempo: String, color: Color, fondo: Color) -> Control:
+	var fila := PanelContainer.new()
+	var estilo := StyleBoxFlat.new()
+	estilo.bg_color = fondo
+	estilo.set_corner_radius_all(6)
+	estilo.content_margin_left = 12.0
+	estilo.content_margin_right = 12.0
+	estilo.content_margin_top = 5.0
+	estilo.content_margin_bottom = 5.0
+	fila.add_theme_stylebox_override("panel", estilo)
+	var celdas := HBoxContainer.new()
+	celdas.add_theme_constant_override("separation", 16)
+	fila.add_child(celdas)
+	var columna_puesto := _texto(20, color)
+	columna_puesto.text = puesto
+	columna_puesto.custom_minimum_size = Vector2(44, 0)
+	celdas.add_child(columna_puesto)
+	var columna_nombre := _texto(20, color)
+	columna_nombre.text = nombre
+	columna_nombre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	columna_nombre.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	celdas.add_child(columna_nombre)
+	var columna_tiempo := _texto(20, color)
+	columna_tiempo.text = tiempo
+	columna_tiempo.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	celdas.add_child(columna_tiempo)
+	return fila
+
+func _ficha() -> PanelContainer:
+	var ficha := PanelContainer.new()
+	ficha.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	ficha.add_theme_stylebox_override("panel", _caja(Color(0.08, 0.17, 0.15, 0.9), Color("6f6a4a"), 12))
+	return ficha
+
+## Título dorado con la letra del juego, como las palabras del menú.
+func _titulo_pagina(texto: String) -> Label:
+	var titulo := _texto(26, COLOR_LETRAS)
+	titulo.text = texto
+	titulo.add_theme_font_override("font", TextoJuego.fuente())
+	titulo.add_theme_color_override("font_outline_color", COLOR_BORDE_LETRAS)
+	titulo.add_theme_constant_override("outline_size", 6)
+	return titulo
+
+func _texto(tamano: int, color: Color) -> Label:
+	var etiqueta := Label.new()
+	etiqueta.add_theme_font_size_override("font_size", tamano)
+	etiqueta.add_theme_color_override("font_color", color)
+	return etiqueta
+
+# --- Configuración ----------------------------------------------------------
+
+func _mostrar_configuracion() -> void:
+	_mostrar_panel("Configuración", _configuracion)
+	# Refleja la ventana real: en el navegador se puede salir con Esc.
+	var modo := DisplayServer.window_get_mode()
+	var completa := modo == DisplayServer.WINDOW_MODE_FULLSCREEN 			or modo == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
+	_actualizar_pantalla(completa)
+	_actualizar_dificultad()
+	(_boton_completa if completa else _boton_ventana).grab_focus()
+
+## Pantalla (Completa / Ventana) y dificultad (Fácil / Difícil). Se guardan en Ajustes.
+func _crear_configuracion() -> void:
+	var columna := titulo_ventana.get_parent()
+	_configuracion = VBoxContainer.new()
+	_configuracion.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_configuracion.add_theme_constant_override("separation", 14)
+
+	var ficha_pantalla := _ficha()
+	_configuracion.add_child(ficha_pantalla)
+	var pantalla := VBoxContainer.new()
+	pantalla.add_theme_constant_override("separation", 12)
+	ficha_pantalla.add_child(pantalla)
+	pantalla.add_child(_titulo_pagina("Pantalla"))
+	var opciones_pantalla := HBoxContainer.new()
+	opciones_pantalla.add_theme_constant_override("separation", 10)
+	pantalla.add_child(opciones_pantalla)
+	_boton_completa = Button.new()
+	_boton_completa.text = "Completa"
+	_boton_ventana = Button.new()
+	_boton_ventana.text = "Ventana"
+	for boton in [_boton_completa, _boton_ventana]:
+		boton.custom_minimum_size = Vector2(0, 48)
+		boton.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		boton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		opciones_pantalla.add_child(boton)
+	_boton_completa.pressed.connect(_elegir_pantalla.bind(true))
+	_boton_ventana.pressed.connect(_elegir_pantalla.bind(false))
+
+	var ficha_dificultad := _ficha()
+	_configuracion.add_child(ficha_dificultad)
+	var dificultad := VBoxContainer.new()
+	dificultad.add_theme_constant_override("separation", 12)
+	ficha_dificultad.add_child(dificultad)
+	dificultad.add_child(_titulo_pagina("Dificultad"))
+	var opciones := HBoxContainer.new()
+	opciones.add_theme_constant_override("separation", 10)
+	dificultad.add_child(opciones)
+	_boton_facil = Button.new()
+	_boton_facil.text = "Fácil"
+	_boton_dificil = Button.new()
+	_boton_dificil.text = "Difícil"
+	for boton in [_boton_facil, _boton_dificil]:
+		boton.custom_minimum_size = Vector2(0, 48)
+		boton.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		boton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		opciones.add_child(boton)
+	_boton_facil.pressed.connect(_elegir_dificultad.bind(Ajustes.Dificultad.FACIL))
+	_boton_dificil.pressed.connect(_elegir_dificultad.bind(Ajustes.Dificultad.DIFICIL))
+	_detalle_dificultad = RichTextLabel.new()
+	_detalle_dificultad.bbcode_enabled = true
+	_detalle_dificultad.fit_content = true
+	_detalle_dificultad.scroll_active = false
+	_detalle_dificultad.add_theme_color_override("default_color", COLOR_TEXTO)
+	_detalle_dificultad.add_theme_font_size_override("normal_font_size", 18)
+	_detalle_dificultad.add_theme_font_size_override("bold_font_size", 18)
+	dificultad.add_child(_detalle_dificultad)
+
+	columna.add_child(_configuracion)
+	columna.move_child(_configuracion, texto_ventana.get_index() + 1)
+	_configuracion.hide()
+
+func _elegir_pantalla(completa: bool) -> void:
+	Ajustes.cambiar_pantalla_completa(completa)
+	_actualizar_pantalla(completa)
+
+func _actualizar_pantalla(completa: bool) -> void:
+	_estilizar_boton(_boton_completa, completa)
+	_estilizar_boton(_boton_ventana, not completa)
+
+func _elegir_dificultad(nueva: int) -> void:
+	Ajustes.cambiar_dificultad(nueva)
+	_actualizar_dificultad()
+
+func _actualizar_dificultad() -> void:
+	var dificil := Ajustes.es_dificil()
+	_estilizar_boton(_boton_facil, not dificil)
+	_estilizar_boton(_boton_dificil, dificil)
+	if dificil:
+		_detalle_dificultad.text = "[b][color=#f8dc9c]Difícil:[/color][/b] Solo para veteranos de la Pampa."
+	else:
+		_detalle_dificultad.text = "[b][color=#f8dc9c]Fácil:[/color][/b] Perfecto para horneros principiantes."

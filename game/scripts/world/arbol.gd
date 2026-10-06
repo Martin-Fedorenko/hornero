@@ -49,7 +49,18 @@ const SINK := 6.0
 ## Distancia mínima entre bichos del mismo árbol (px en pantalla).
 @export var bug_spacing := 70.0
 
+@export_group("Ramitas")
+## Ramitas apoyadas en las ramas, para agarrarlas volando. Cada partida van
+## en un lugar distinto.
+@export_range(0, 3) var ramitas := 0
+## Fracción del alto del árbol, desde la copa, donde pueden ir: así quedan
+## arriba, en las ramas, y no en la base del tronco.
+@export_range(0.1, 1.0) var ramitas_altura := 0.6
+
+const RAMITAS_SCENE := preload("res://objetos_hornero/ramitas.tscn")
+
 var _sprite: Sprite2D
+var _bugs: BugSpawner
 
 
 func _ready() -> void:
@@ -67,6 +78,27 @@ func _ready() -> void:
 	bugs.trunk_chance = trunk_chance
 	bugs.bug_spacing = bug_spacing
 	add_child(bugs, false, Node.INTERNAL_MODE_BACK)
+	_bugs = bugs
+	# Como los bichos: espera a que el sprite tenga su transform final.
+	_poner_ramitas.call_deferred()
+
+
+## Cada ramita va sobre una rama (o, si no hay lugar, entre las hojas). Se
+## agregan a la escena, junto a los demás levantables, para que se dibujen
+## delante del árbol.
+func _poner_ramitas() -> void:
+	var escena := get_tree().current_scene
+	var destino: Node = escena if escena != null else get_parent()
+	for i in ramitas:
+		var spot: Variant = _bugs.random_spot_on_top(true, ramitas_altura)
+		if spot == null:
+			spot = _bugs.random_spot_on_top(false, ramitas_altura)
+		if spot == null:
+			continue
+		var ramita := RAMITAS_SCENE.instantiate() as RigidBody2D
+		ramita.set("en_arbol", true)
+		destino.add_child(ramita)
+		ramita.global_position = _bugs.to_global(spot)
 
 
 func _update_sprite() -> void:

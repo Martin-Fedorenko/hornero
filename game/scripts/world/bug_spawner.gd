@@ -80,9 +80,16 @@ func _on_bug_eaten(bug: Bicho) -> void:
 	_bugs.erase(bug)
 
 
+## Punto local al azar sobre las ramas (o las hojas) dentro de la parte de
+## arriba del árbol: `top_fraction` es qué fracción del alto, desde la copa,
+## se puede usar. Lo usa el árbol para apoyar ramitas. null si no hay lugar.
+func random_spot_on_top(on_trunk: bool, top_fraction: float) -> Variant:
+	return _random_spot(on_trunk, top_fraction)
+
+
 ## Punto local al azar sobre hojas (o sobre el tronco), lejos de los otros
 ## bichos. null si no encuentra lugar.
-func _random_spot(on_trunk: bool) -> Variant:
+func _random_spot(on_trunk: bool, top_fraction := 1.0) -> Variant:
 	if not is_instance_valid(sprite) or sprite.texture == null:
 		return null
 	var image := _image(sprite.texture)
@@ -92,6 +99,7 @@ func _random_spot(on_trunk: bool) -> Variant:
 	if sprite.region_enabled:
 		area = area.intersection(Rect2i(sprite.region_rect))
 	area = area.grow(-LEAF_MARGIN)
+	area.size.y = roundi(area.size.y * top_fraction)
 	if area.size.x <= 0 or area.size.y <= 0:
 		return null
 	for i in MAX_TRIES:

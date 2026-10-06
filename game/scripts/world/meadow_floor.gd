@@ -53,6 +53,13 @@ extends Node2D
 	set(value):
 		puddle_free_zones = value
 		_queue_rebuild()
+## x GLOBAL de charcos que no se ponen porque en su lugar va otra cosa (la
+## piedra al lado del árbol del nido). Se saca el charco cuyo centro quede
+## más cerca que su ancho. El resto del piso queda igual.
+@export var removed_puddles: Array[float] = []:
+	set(value):
+		removed_puddles = value
+		_queue_rebuild()
 @export var soil_color := Color(0.48, 0.34, 0.25):
 	set(value):
 		soil_color = value
@@ -294,7 +301,12 @@ func _add_puddles(rng: RandomNumberGenerator) -> void:
 		var x: Variant = _random_in(rng, free)
 		if x == null:
 			continue
-		var sprite := _sprite(region, rng.randf() < 0.5)
+		var flip := rng.randf() < 0.5
+		if _is_removed_puddle(x + size.x * 0.5, size.x):
+			# El lugar queda libre de decoraciones, como si estuviera el charco.
+			_puddle_spans.append(Vector2(x - PUDDLE_PADDING, x + size.x + PUDDLE_PADDING))
+			continue
+		var sprite := _sprite(region, flip)
 		sprite.scale = size / region.size
 		sprite.position = Vector2(x, FLAT_CENTER - size.y * 0.5)
 		_layers["plano"].add_child(sprite)
@@ -309,6 +321,13 @@ func _add_puddles(rng: RandomNumberGenerator) -> void:
 		source.set("posicion_bola", Vector2(0, -14))
 		source.position = sprite.position + size * 0.5
 		_layers["plano"].add_child(source)
+
+
+func _is_removed_puddle(center_x: float, puddle_width: float) -> bool:
+	for removed in removed_puddles:
+		if absf(position.x + center_x - removed) < puddle_width:
+			return true
+	return false
 
 
 ## Le quita a cada tramo la parte que se superpone con `cut`.

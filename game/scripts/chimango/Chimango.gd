@@ -52,6 +52,9 @@ enum Modo { PERSECUCION, AVISO, PICADA, AGARRE, HUIDA, AUSENTE }
 ## Si es falso, aparece una sola vez: cuando se va no vuelve (lo reemplaza
 ## RapacesSpawner por otra rapaz al azar).
 @export var reaparecer := true
+## Por dónde entra a la pantalla: -1 izquierda, 1 derecha, 0 cualquier lado
+## (izquierda, derecha o arriba). Con dos rapaces, cada una usa un lado.
+@export_range(-1, 1) var lado_entrada := 0
 
 @export_group("Sonido")
 ## Segundos del grito que se reproducen al aparecer (0 = el audio entero).
@@ -355,7 +358,10 @@ func _fuera_de_pantalla() -> bool:
 func _punto_de_entrada() -> Vector2:
 	var r := _area_pantalla()
 	var alto_medio := r.get_center().y
-	match randi() % 3:
+	var lado := randi() % 3
+	if lado_entrada != 0:
+		lado = 0 if lado_entrada < 0 else 1
+	match lado:
 		0: # izquierda, mitad superior
 			return Vector2(r.position.x - margen_pantalla, randf_range(r.position.y, alto_medio))
 		1: # derecha, mitad superior

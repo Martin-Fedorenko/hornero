@@ -32,9 +32,16 @@ const TextoJuego := preload("res://scripts/ui/texto_juego.gd")
 @export var end_menu_area := Vector2(0.03, 0.42)
 ## Tamaño del título al perder o ganar, para que entre en esa franja.
 @export var end_title_size := 64
+## Tamaño del "Tu tiempo" debajo de "¡HAS GANADO!".
+@export var time_font_size := 40
 
 var tipo := Tipo.PAUSA
 var _imagen_final: TextureRect
+## Al ganar, el tiempo que tardó (con la letra del juego).
+var _tiempo: Label
+## Al perder o ganar, si no se pudo subir el resultado a Talo.
+var _aviso_subida: Label
+var _subida_fallida := false
 var _anclas_textos: Array[float]
 var _offsets_textos: Array[float]
 var _tamano_titulo: int
@@ -65,6 +72,24 @@ func _ready() -> void:
 	_anclas_textos = [_textos.anchor_left, _textos.anchor_right]
 	_offsets_textos = [_textos.offset_left, _textos.offset_right]
 	_tamano_titulo = _titulo.get_theme_font_size(&"font_size")
+	_tiempo = TextoJuego.crear(time_font_size)
+	_tiempo.custom_minimum_size = Vector2(0.0, _tiempo.size.y)
+	_tiempo.visible = false
+	_textos.add_child(_tiempo)
+	_textos.move_child(_tiempo, _titulo.get_index() + 1)
+	_aviso_subida = Label.new()
+	_aviso_subida.text = "No fue posible subir tus estadísticas.
+Revisá tu conexión a internet."
+	_aviso_subida.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_aviso_subida.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_aviso_subida.add_theme_font_size_override("font_size", 20)
+	_aviso_subida.add_theme_color_override("font_color", Color("ffb4a6"))
+	_aviso_subida.add_theme_color_override("font_outline_color", COLOR_BORDE_LETRAS)
+	_aviso_subida.add_theme_constant_override("outline_size", 6)
+	_aviso_subida.visible = false
+	_textos.add_child(_aviso_subida)
+	# El envío puede terminar antes o después de que se abra el menú del final.
+	TaloManager.result_upload_finished.connect(_on_resultado_subido)
 	_crear_ayuda()
 
 
@@ -81,15 +106,19 @@ func abrir_muerte() -> void:
 	_abrir(Tipo.MUERTE)
 
 
-func abrir_victoria() -> void:
+## `tiempo_ms`: lo que tardó en ganar, para mostrarlo debajo del título.
+func abrir_victoria(tiempo_ms := -1) -> void:
 	await get_tree().create_timer(victory_delay, false).timeout
+	_tiempo.text = "Tu tiempo: " + TaloManager.format_time(tiempo_ms)
 	_abrir(Tipo.VICTORIA)
+	_tiempo.visible = tiempo_ms >= 0 and tipo == Tipo.VICTORIA
 
 
 func _abrir(nuevo_tipo: Tipo) -> void:
 	if visible:
 		return
 	tipo = nuevo_tipo
+	_tiempo.visible = false
 	match tipo:
 		Tipo.PAUSA:
 			_poner_titulo("PAUSA", COLOR_LETRAS)
@@ -108,12 +137,22 @@ func _abrir(nuevo_tipo: Tipo) -> void:
 	get_tree().paused = true
 	modulate.a = 0.0
 	visible = true
+	_actualizar_aviso_subida()
 	create_tween().tween_property(self, ^"modulate:a", 1.0, fade_time)
 	(_opciones.get_child(0) as Button).grab_focus()
 
 
 ## Al perder o ganar: la imagen va apareciendo de a poco y el menú se corre a la izquierda.
 ## Sin imagen (pausa), el menú vuelve al centro.
+func _on_resultado_subido(ok: bool) -> void:
+	_subida_fallida = not ok
+	_actualizar_aviso_subida()
+
+
+func _actualizar_aviso_subida() -> void:
+	_aviso_subida.visible = _subida_fallida and visible and tipo != Tipo.PAUSA
+
+
 func _preparar_imagen_final(imagen: Texture2D) -> void:
 	_imagen_final.texture = imagen
 	_imagen_final.visible = imagen != null
@@ -217,7 +256,6 @@ func _crear_ayuda() -> void:
 	var texto := RichTextLabel.new()
 	texto.bbcode_enabled = true
 	texto.text = MenuInicio.texto_ayuda()
-	MenuInicio.separar_teclas(texto)
 	texto.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	texto.add_theme_color_override("default_color", Color(0.95, 0.92, 0.83))
 	texto.add_theme_font_size_override("normal_font_size", 20)

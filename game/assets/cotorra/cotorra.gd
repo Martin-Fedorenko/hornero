@@ -115,7 +115,7 @@ func _yendo(delta: float) -> void:
 	if dist < radio_llegada:
 		modo = Modo.PICANDO
 		velocity = Vector2.ZERO
-		_frame_al_llegar = nido.frame
+		_frame_al_llegar = nido.construcciones()
 		empezo_a_picar.emit(nido)
 		return
 
@@ -135,7 +135,7 @@ func _picando(delta: float) -> void:
 		nido.recibir_danio(delta)
 
 	# Ya rompió su etapa en esta visita: se va.
-	if nido.frame < _frame_al_llegar:
+	if nido.construcciones() < _frame_al_llegar:
 		_huir()
 
 func _huyendo(delta: float) -> void:
@@ -197,7 +197,7 @@ func _espantada() -> bool:
 func _debe_irse() -> bool:
 	return _espantada() or not _nido_tiene_construcciones()
 
-## Cada frame de la animación "crecer" del nido es una construcción:
-## en el frame 0 (fase inicial) no tiene ninguna.
+## Cada material entregado al nido es una construcción (en Difícil hacen
+## falta dos para que avance el dibujo); al principio no tiene ninguna.
 func _nido_tiene_construcciones() -> bool:
-	return nido.frame > 0
+	return nido.construcciones() > 0

@@ -3,6 +3,7 @@ extends Node2D
 ## El fondo es la escena PampasBackground (parallax).
 
 const NestArrow := preload("res://scripts/ui/nest_arrow.gd")
+const Cronometro := preload("res://scripts/ui/cronometro.gd")
 
 ## Área jugable. La cámara no muestra nada fuera de este rectángulo.
 @export var world_rect := Rect2(0, -400, 12000, 2065)
@@ -18,6 +19,21 @@ const NestArrow := preload("res://scripts/ui/nest_arrow.gd")
 ## Ya salió / entró al nido con G alguna vez: el aviso de esa acción no vuelve.
 var _exited_nest_once := false
 var _entered_nest_once := false
+var _cronometro: Cronometro
+## Ya se ganó o se perdió: única fuente de verdad del resultado de la partida.
+var _partida_terminada := false
+
+
+## Antes de que arranquen el nido y los spawners (sus _ready van después):
+## la dificultad elegida en Configuración decide cuántos enemigos hay y
+## cuántos materiales pide el nido.
+func _enter_tree() -> void:
+	$Rapaces.cantidad = Ajustes.cantidad_rapaces()
+	$Rapaces.ausencia = Ajustes.ausencia_rapaz()
+	$Gatos.cantidad = Ajustes.cantidad_gatos()
+	$Gatos.cantidad_cerca = Ajustes.cantidad_gatos_cerca_nido()
+	$Gatos.cerca_de = $World/NestTree
+	$World/NestTree/Nest.materiales_por_etapa = Ajustes.materiales_por_etapa()
 
 
 func _ready() -> void:
@@ -26,8 +42,9 @@ func _ready() -> void:
 	_camera.limit_right = int(world_rect.end.x)
 	_camera.limit_bottom = int(world_rect.end.y)
 	_create_nest_arrow()
+	_create_cronometro()
 	_vitals_hud.track(_hornero.vitals)
-	_hornero.died.connect(_menu.abrir_muerte)
+	_hornero.died.connect(_on_hornero_died)
 	_hornero.state_changed.connect(_on_hornero_state_changed)
 	# Si el nido crece o pierde una etapa con el hornero adentro, se reacomoda.
 	_nest.material_delivered.connect(_on_nest_changed.unbind(1))
@@ -35,6 +52,8 @@ func _ready() -> void:
 	# La partida arranca con el hornero en su nido: sale con G.
 	_perch_in_nest()
 	_camera.reset_smoothing()
+	# El cronómetro arranca de cero con la escena; la partida empieza acá.
+	TaloManager.start_match()
 
 
 func _create_nest_arrow() -> void:
@@ -44,6 +63,31 @@ func _create_nest_arrow() -> void:
 	$HUD.add_child(arrow)
 	# Debajo del menú de pausa / muerte / victoria.
 	$HUD.move_child(arrow, _menu.get_index())
+
+
+func _create_cronometro() -> void:
+	_cronometro = Cronometro.new()
+	_cronometro.name = "Cronometro"
+	$HUD.add_child(_cronometro)
+	$HUD.move_child(_cronometro, _menu.get_index())
+
+
+func _on_hornero_died() -> void:
+	if _partida_terminada:
+		return
+	_partida_terminada = true
+	_cronometro.detener()
+	TaloManager.register_death()
+	_menu.abrir_muerte()
+
+
+func _ganar() -> void:
+	if _partida_terminada:
+		return
+	_partida_terminada = true
+	var tiempo_ms := _cronometro.detener()
+	TaloManager.register_win(tiempo_ms, Ajustes.dificultad)
+	_menu.abrir_victoria(tiempo_ms)
 
 
 func _process(_delta: float) -> void:
@@ -70,6 +114,9 @@ func _can_enter_nest() -> bool:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	# Ganada o perdida, sólo queda esperar el menú del final.
+	if _partida_terminada:
+		return
 	if event.is_action_pressed(&"ui_cancel"):
 		get_viewport().set_input_as_handled()
 		if not _menu.esta_abierto() and not _hornero.is_dead():
@@ -94,7 +141,7 @@ func _toggle_nest_pose() -> void:
 	_entered_nest_once = true
 	# Entrar al nido terminado gana la partida.
 	if _nest.esta_completo():
-		_menu.abrir_victoria()
+		_ganar()
 
 
 ## Acomoda al hornero en el nido según lo construido: en la taza abierta se

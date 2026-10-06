@@ -33,6 +33,12 @@ const TextoJuego := preload("res://scripts/ui/texto_juego.gd")
 ## dibujado para que no asome nada sobre el borde).
 @export var hole_radius := 48.0
 
+@export_group("Etapas")
+## Materiales que hay que llevar para que el dibujo avance una etapa. En
+## Difícil son 2: el nido pide el doble de materiales y el contador los cuenta
+## todos. Lo configura main.gd según la dificultad.
+@export_range(1, 4) var materiales_por_etapa := 1
+
 @export_group("Resistencia")
 ## Segundos que tarda una cotorra picando sin parar en romper una construcción.
 ## Si pican dos a la vez, tardan la mitad. Si dejan de picar antes, la
@@ -103,7 +109,17 @@ func _ready() -> void:
 
 ## ¿Ya recibió todos los materiales (última etapa del nido)?
 func esta_completo() -> bool:
-	return frame >= sprite_frames.get_frame_count(&"crecer") - 1
+	return _materiales_recibidos >= total_construcciones()
+
+
+## Materiales que pide el nido completo.
+func total_construcciones() -> int:
+	return (sprite_frames.get_frame_count(&"crecer") - 1) * materiales_por_etapa
+
+
+## Materiales que tiene ahora (lo que muestra el contador).
+func construcciones() -> int:
+	return _materiales_recibidos
 
 
 ## ¿El punto (global) está dentro del aura del nido?
@@ -120,7 +136,7 @@ func esta_siendo_atacado() -> bool:
 ## La llama la Cotorra en cada frame que pica, con los segundos que pasaron.
 func recibir_danio(segundos: float) -> void:
 	_tiempo_sin_danio = 0.0
-	if frame == 0:
+	if _materiales_recibidos == 0:
 		return  # Sin construcciones no hay nada que romper
 	resistencia -= segundos / segundos_por_construccion
 	if resistencia <= 0.0:
@@ -183,8 +199,7 @@ func mostrar_aviso(texto: String) -> void:
 
 
 func _actualizar_contador() -> void:
-	var total := sprite_frames.get_frame_count(&"crecer") - 1
-	_contador.text = "%d/%d" % [frame, total]
+	_contador.text = "%d/%d" % [_materiales_recibidos, total_construcciones()]
 
 
 ## Las primeras etapas son una taza abierta; las últimas, el horno con entrada.
@@ -250,20 +265,25 @@ func _entregar(body: Node2D) -> void:
 	body.set("entregado", true)
 	body.set_deferred("collision_layer", 0)
 	body.set_deferred("collision_mask", 0)
-	_materiales_recibidos += 1
-	var ultima_etapa := sprite_frames.get_frame_count(&"crecer") - 1
-	frame = mini(_materiales_recibidos, ultima_etapa)
+	_materiales_recibidos = mini(_materiales_recibidos + 1, total_construcciones())
+	_mostrar_etapa()
 	resistencia = 1.0  # La construcción nueva arranca intacta
 	material_delivered.emit(material)
 	body.queue_free()
 
 
 func _perder_construccion() -> void:
-	frame -= 1
-	# Se iguala al frame por si hubo entregas de más con el nido completo
-	_materiales_recibidos = frame
+	_materiales_recibidos -= 1
+	_mostrar_etapa()
 	resistencia = 1.0  # La de abajo arranca llena
 	construccion_perdida.emit()
+
+
+## El dibujo avanza una etapa cada `materiales_por_etapa` materiales.
+func _mostrar_etapa() -> void:
+	frame = floori(float(_materiales_recibidos) / materiales_por_etapa)
+	# El contador cambia aunque el dibujo no.
+	_actualizar_contador()
 
 
 ## Las etapas no quedan a medio romper: si nadie está picando, la

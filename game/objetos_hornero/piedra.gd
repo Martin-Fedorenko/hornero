@@ -3,10 +3,15 @@ extends RigidBody2D
 var recogida: bool = false
 var entregado: bool = false
 @export var tipo_recurso: StringName = &"piedra"
+## Apoyado en la rama de un árbol: queda quieto en el aire hasta que el
+## hornero lo agarra. Si después lo suelta, cae como cualquier otro.
+@export var en_arbol: bool = false
 
 func _ready() -> void:
 	# Nunca queda tapado por el pasto y las matas del plano de adelante.
 	z_index = MeadowFloor.FRONT_Z + 1
+	if en_arbol:
+		freeze = true
 
 func recoger() -> void:
 	recogida = true
