@@ -110,12 +110,12 @@ custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 
-[node name="Estadisticas" type="Button" parent="Contenido/Columna"]
+[node name="Estadisticas" type="Button" parent="Contenido/Columna" unique_id=1531211427]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 
-[node name="Configuracion" type="Button" parent="Contenido/Columna"]
+[node name="Configuracion" type="Button" parent="Contenido/Columna" unique_id=1630243759]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
