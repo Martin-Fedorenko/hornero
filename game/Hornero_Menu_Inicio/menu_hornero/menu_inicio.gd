@@ -144,47 +144,97 @@ const FAUNA: Array[Dictionary] = [
 		"caza": "Sí: la declararon plaga agrícola y se la caza y se le destruyen los nidos. También la capturan para venderla como mascota.",
 		"come": "Semillas, granos, frutos, brotes, flores y algún insecto.",
 	},
-	# --- Próximamente: todavía no están en el juego. Falta escribir hábitat,
-	# peligro de extinción, caza y qué come de cada uno (ver mensaje del chat).
+	# --- Próximamente: todavía no están en el juego, pero ya tienen una ficha breve.
+	# Los nombres comunes que pueden abarcar varias especies se describen de forma general.
 	# Las 16 láminas son de assets/Hornero_Fauna_14_Animales/, 1536x1024,
 	# 6 poses en 2 filas de 3 (cada celda de 512x512).
 	{"nombre": "Halcón", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/halcon.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Ave rapaz diurna, veloz y de vista extraordinaria, que caza desde el aire.",
+			"habitat": "Según la especie, vive en campos abiertos, sierras, acantilados y también en ciudades de la Argentina.",
+			"peligro": "El nombre abarca varias especies: muchas no están amenazadas, aunque algunas poblaciones son escasas."},
 	{"nombre": "Gavilán", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/gavilan.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Rapaz ágil que sorprende a aves, roedores y otros animales pequeños.",
+			"habitat": "Habita bosques, montes, bordes de caminos y zonas rurales o urbanas, según la especie.",
+			"peligro": "El nombre se usa para varias especies; su estado de conservación depende de cuál sea."},
 	{"nombre": "Lechuza", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/lechuza.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Cazadora principalmente nocturna, de vuelo silencioso y oído muy sensible.",
+			"habitat": "Se refugia en huecos, construcciones y árboles de campos, pastizales y poblados.",
+			"peligro": "Las especies más comunes no están en peligro, pero sufren atropellamientos y pérdida de refugios."},
 	{"nombre": "Búho", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/buho.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Ave rapaz nocturna que controla poblaciones de roedores y otros animales pequeños.",
+			"habitat": "Según la especie, ocupa bosques, montes, pastizales, sierras y áreas rurales.",
+			"peligro": "El nombre abarca varias especies; muchas no están amenazadas, pero algunas son vulnerables localmente."},
 	{"nombre": "Tordo renegrido", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/tordo_renegrido.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Ave sociable de plumaje oscuro; pone sus huevos en nidos de otras aves.",
+			"habitat": "Es común en campos, pastizales, zonas agrícolas, parques y ciudades de gran parte de Sudamérica.",
+			"peligro": "No se encuentra en peligro de extinción (Preocupación menor)."},
 	{"nombre": "Golondrina", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/golondrina.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Ave pequeña y acrobática que captura insectos mientras vuela; muchas especies son migratorias.",
+			"habitat": "Vive cerca de campos abiertos, humedales, costas y poblados, donde encuentra insectos y sitios para anidar.",
+			"peligro": "El nombre reúne varias especies; las más comunes no están amenazadas, aunque su situación varía."},
 	{"nombre": "Benteveo", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/benteveo.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Ave inquieta y fácil de reconocer por su llamado; come insectos, frutos y pequeños animales.",
+			"habitat": "Frecuenta montes abiertos, orillas de ríos, campos, plazas y jardines de gran parte de la Argentina.",
+			"peligro": "No se encuentra en peligro de extinción (Preocupación menor)."},
 	{"nombre": "Cóndor andino", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/Vuelo del cóndor andino en sprites-1.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Enorme ave carroñera que planea largas distancias y ayuda a mantener limpios los ecosistemas.",
+			"habitat": "Vive en montañas, quebradas y estepas a lo largo de los Andes y en sierras del centro argentino.",
+			"peligro": "Está categorizado como Amenazado en la Argentina; los cebos tóxicos son una de sus mayores amenazas."},
 	{"nombre": "Comadreja", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/comadreja.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Marsupial nocturno y trepador que come frutos, insectos, huevos y pequeños vertebrados.",
+			"habitat": "Habita montes, bosques, humedales, áreas rurales y jardines; suele refugiarse en huecos y techos.",
+			"peligro": "Las especies más comunes no están en peligro de extinción, aunque son víctimas frecuentes de atropellamientos."},
 	{"nombre": "Gato cimarrón", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/gato_cimarron.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Es un gato doméstico que volvió a vivir en estado silvestre y puede cazar fauna nativa.",
+			"habitat": "Se adapta a campos, montes, islas y zonas cercanas a poblados donde consigue alimento y refugio.",
+			"peligro": "No está en peligro de extinción: es una especie doméstica asilvestrada y puede volverse invasora."},
 	{"nombre": "Zorro gris", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/zorro.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Cánido adaptable y mayormente nocturno que se alimenta de animales pequeños, frutos y carroña.",
+			"habitat": "Vive en pastizales, matorrales, montes y estepas de distintas regiones de la Argentina.",
+			"peligro": "No se considera en peligro de extinción, pero la caza y los atropellamientos afectan sus poblaciones."},
 	{"nombre": "Ratón de campo", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/roedor.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Pequeño roedor, por lo general nocturno, que dispersa semillas y sirve de alimento a muchos depredadores.",
+			"habitat": "Las distintas especies ocupan pastizales, cultivos, montes, bosques y estepas de todo el país.",
+			"peligro": "El nombre agrupa muchas especies: la mayoría no está amenazada, pero algunas tienen distribución reducida."},
 	{"nombre": "Puma", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/Puma en carrera, seis poses.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Gran felino solitario y sigiloso, fundamental para regular las poblaciones de sus presas.",
+			"habitat": "Ocupa montañas, bosques, montes, pastizales y estepas desde el norte argentino hasta la Patagonia.",
+			"peligro": "No está amenazado a escala global, pero en varias regiones disminuyó por persecución y pérdida de hábitat."},
 	{"nombre": "Yarará", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/yarara.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Víbora venenosa que evita el contacto con las personas y ayuda a controlar roedores.",
+			"habitat": "Según la especie, vive en pastizales, humedales, montes y bosques de buena parte de la Argentina.",
+			"peligro": "El nombre abarca varias especies; las más conocidas no están en peligro, pero no deben ser perseguidas."},
 	{"nombre": "Culebra arborícola", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/culebra.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Serpiente ágil que se desplaza entre ramas y se alimenta de pequeños animales.",
+			"habitat": "Habita árboles y arbustos de bosques, selvas y montes cálidos, principalmente del norte argentino.",
+			"peligro": "El nombre puede referirse a distintas especies; su estado de conservación varía y no conviene generalizar."},
 	{"nombre": "Lagarto overo", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/lagarto_overo.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+			"descripcion": "Lagarto grande y terrestre, buen nadador, que consume frutos, huevos, insectos y pequeños animales.",
+			"habitat": "Vive en selvas, montes, pastizales y humedales del norte y centro de la Argentina.",
+			"peligro": "No se encuentra en peligro de extinción, aunque fue muy cazado por su cuero."},
 ]
 
 const TextoJuego := preload("res://scripts/ui/texto_juego.gd")
+const FaunaFrames := preload("res://scripts/ui/fauna_frames.gd")
 const PopupNombre := preload("res://scripts/ui/popup_nombre.gd")
 const PopupConfirmacion := preload("res://scripts/ui/popup_confirmacion.gd")
+const PopupAnimal := preload("res://scripts/ui/popup_animal.gd")
 ## Cartel de madera vacío que aparece detrás de la opción seleccionada.
 const CartelFileteado := preload("res://scripts/ui/cartel_fileteado.gd")
 # Colores de las letras del logo "HORNERO".
@@ -237,6 +287,11 @@ var _fauna: ScrollContainer
 # Cada entrada: {"rect": TextureRect, "cuadros": Array[Texture2D], "fps": float}
 var _animales: Array[Dictionary] = []
 var _tiempo_fauna := 0.0
+## Ventana de detalle de un animal, mientras está abierta (ver _abrir_detalle_animal).
+var _popup_animal: Control
+## Todas las fichas de Fauna, para sacarles el foco mientras hay una ventana
+## de detalle abierta (si no, Tab podría llegar a una ficha tapada).
+var _fichas_fauna: Array[Control] = []
 # Ventana "Estadísticas": pestañas arriba y una página por pestaña.
 var _estadisticas: VBoxContainer
 var _scroll_estadisticas: ScrollContainer
@@ -433,11 +488,13 @@ func _crear_pestanas_historia() -> void:
 func _crear_ficha(animal: Dictionary) -> Control:
 	var ficha := PanelContainer.new()
 	ficha.add_theme_stylebox_override("panel", _caja(Color(0.08, 0.17, 0.15, 0.9), Color("6f6a4a"), 12))
+	_hacer_clickeable(ficha, _abrir_detalle_animal.bind(animal))
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 18)
 	ficha.add_child(fila)
 
-	var cuadros := _cortar_hoja(animal["hoja"], animal["columnas"], animal["filas_y"], animal["alto"])
+	var cuadros := FaunaFrames.cortar(animal["hoja"], animal["columnas"], animal["filas_y"],
+			animal["alto"], animal.get("margen_x", 10.0))
 	var dibujo := TextureRect.new()
 	dibujo.custom_minimum_size = Vector2(190, 150)
 	dibujo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -452,8 +509,8 @@ func _crear_ficha(animal: Dictionary) -> Control:
 	columna_texto.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila.add_child(columna_texto)
 
-	# Todavía no está en el juego: insignia arriba y, en vez de la ficha
-	# completa, un aviso. Falta escribir hábitat/peligro/caza/come.
+	# Los animales que todavía no aparecen durante la partida conservan la insignia,
+	# pero ya muestran su ficha informativa breve.
 	if animal.get("proximamente", false):
 		columna_texto.add_child(_insignia_proximamente())
 
@@ -465,12 +522,14 @@ func _crear_ficha(animal: Dictionary) -> Control:
 	texto.add_theme_color_override("default_color", Color(0.95, 0.92, 0.83))
 	texto.add_theme_font_size_override("normal_font_size", 17)
 	texto.add_theme_font_size_override("bold_font_size", 17)
-	if animal.get("proximamente", false):
-		texto.text = "[b][color=#f8dc9c]%s[/color][/b]\n[i]Todavía no aparece en el juego. Pronto vas a poder encontrarlo en la Pampa.[/i]" % animal["nombre"]
+	if animal.has("descripcion"):
+		texto.text = "[b][color=#f8dc9c]%s[/color][/b]\n%s\n[b]Dónde vive:[/b] %s\n[color=%s][b]¿Peligro de extinción?[/b] %s[/color]" % [
+			animal["nombre"], animal["descripcion"], animal["habitat"], COLOR_PELIGRO, animal["peligro"]]
 	else:
 		texto.text = "[b][color=#f8dc9c]%s[/color][/b]\n[b]Dónde vive:[/b] %s\n[color=%s][b]¿Peligro de extinción?[/b] %s[/color]\n[b]¿Lo cazan?[/b] %s\n[b]Qué come:[/b] %s" % [
 			animal["nombre"], animal["habitat"], COLOR_PELIGRO, animal["peligro"], animal["caza"], animal["come"]]
 	columna_texto.add_child(texto)
+	_fichas_fauna.append(ficha)
 	return ficha
 
 ## Cartelito "PRÓXIMAMENTE" para los animales que todavía no están en el juego.
@@ -492,18 +551,44 @@ func _insignia_proximamente() -> Control:
 	insignia.add_child(etiqueta)
 	return insignia
 
-# Recorta una franja de alto fijo por fila para que el animal no salte entre cuadros.
-func _cortar_hoja(hoja: Texture2D, columnas: int, filas_y: Array, alto: float) -> Array[Texture2D]:
-	var ancho := float(hoja.get_width()) / columnas
-	var cuadros: Array[Texture2D] = []
-	for y in filas_y:
-		for columna in columnas:
-			var cuadro := AtlasTexture.new()
-			cuadro.atlas = hoja
-			# Se descartan unos píxeles por lado: el pico o la cola del cuadro vecino a veces invade la celda.
-			cuadro.region = Rect2(columna * ancho + 10.0, y, floorf(ancho) - 20.0, alto)
-			cuadros.append(cuadro)
-	return cuadros
+## Abre la ventana de detalle del animal. Si ya hay una abierta, no apila otra.
+func _abrir_detalle_animal(animal: Dictionary) -> void:
+	if is_instance_valid(_popup_animal):
+		return
+	# Para que Tab no llegue a una ficha tapada por la ventana de detalle.
+	for ficha in _fichas_fauna:
+		ficha.focus_mode = Control.FOCUS_NONE
+	var popup := PopupAnimal.new()
+	popup.animal = animal
+	popup.tree_exited.connect(func() -> void:
+		_popup_animal = null
+		for ficha in _fichas_fauna:
+			ficha.focus_mode = Control.FOCUS_ALL)
+	_popup_animal = popup
+	add_child(popup)
+
+## Hace que una ficha (de Fauna) reaccione al clic o a Enter, con el borde
+## resaltado al pasar el mouse o tener el foco, como los botones del menú.
+func _hacer_clickeable(control: Control, accion: Callable) -> void:
+	control.focus_mode = Control.FOCUS_ALL
+	control.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var normal := control.get_theme_stylebox("panel") as StyleBoxFlat
+	var resaltado := normal.duplicate() as StyleBoxFlat
+	resaltado.border_color = Color("fff1c1")
+	resaltado.set_border_width_all(2)
+	var refrescar := func() -> void:
+		var activo := control.has_focus() \
+				or control.get_global_rect().has_point(control.get_global_mouse_position())
+		control.add_theme_stylebox_override("panel", resaltado if activo else normal)
+	control.focus_entered.connect(refrescar)
+	control.focus_exited.connect(refrescar)
+	control.mouse_entered.connect(refrescar)
+	control.mouse_exited.connect(refrescar)
+	control.gui_input.connect(func(event: InputEvent) -> void:
+		if (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT) \
+				or event.is_action_pressed(&"ui_accept"):
+			get_viewport().set_input_as_handled()
+			accion.call())
 
 func _process(delta: float) -> void:
 	_scroll_con_teclas(delta)
@@ -546,8 +631,9 @@ func _desplazar(pixeles: float) -> void:
 	barra.value = clampf(barra.value + pixeles, barra.min_value, barra.max_value - barra.page)
 
 # Mientras se mantiene apretada la tecla, el texto se desliza de corrido.
+# Con la ventana de detalle de un animal abierta, no: ese scroll es aparte.
 func _scroll_con_teclas(delta: float) -> void:
-	if not ventana.visible:
+	if not ventana.visible or is_instance_valid(_popup_animal):
 		return
 	var direccion := 0.0
 	if Input.is_physical_key_pressed(KEY_DOWN) or Input.is_physical_key_pressed(KEY_S):
@@ -558,9 +644,11 @@ func _scroll_con_teclas(delta: float) -> void:
 		_desplazar(direccion * velocidad_scroll_teclas * delta)
 
 # Con la ventana abierta, la rueda desplaza el texto esté donde esté el mouse,
-# y arriba/abajo no mueven el foco entre los botones de la ventana.
+# y arriba/abajo no mueven el foco entre los botones de la ventana. Con la
+# ventana de detalle de un animal abierta, no: ahí el scroll es el suyo, el
+# de siempre (RichTextLabel con scrollbar propia).
 func _input(event: InputEvent) -> void:
-	if not ventana.visible:
+	if not ventana.visible or is_instance_valid(_popup_animal):
 		return
 	if event is InputEventMouseButton and event.pressed \
 		and (event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_DOWN):
