@@ -18,6 +18,7 @@ const MATERIALES_POR_ETAPA := { Dificultad.FACIL: 1, Dificultad.DIFICIL: 2 }
 
 var dificultad := Dificultad.FACIL
 var pantalla_completa := true
+var musica_silenciada := false
 
 
 func _ready() -> void:
@@ -26,6 +27,7 @@ func _ready() -> void:
 		dificultad = clampi(int(archivo.get_value("juego", "dificultad", dificultad)),
 				Dificultad.FACIL, Dificultad.DIFICIL) as Dificultad
 		pantalla_completa = bool(archivo.get_value("pantalla", "completa", pantalla_completa))
+		musica_silenciada = bool(archivo.get_value("sonido", "silenciada", musica_silenciada))
 	# En el navegador la pantalla completa sólo se puede pedir con un clic.
 	if not OS.has_feature("web"):
 		_aplicar_pantalla()
@@ -66,6 +68,11 @@ func cambiar_pantalla_completa(completa: bool) -> void:
 	_guardar()
 
 
+func cambiar_musica_silenciada(silenciada: bool) -> void:
+	musica_silenciada = silenciada
+	_guardar()
+
+
 func _aplicar_pantalla() -> void:
 	var modo := DisplayServer.WINDOW_MODE_FULLSCREEN if pantalla_completa \
 			else DisplayServer.WINDOW_MODE_WINDOWED
@@ -77,4 +84,5 @@ func _guardar() -> void:
 	var archivo := ConfigFile.new()
 	archivo.set_value("juego", "dificultad", dificultad)
 	archivo.set_value("pantalla", "completa", pantalla_completa)
+	archivo.set_value("sonido", "silenciada", musica_silenciada)
 	archivo.save(RUTA)

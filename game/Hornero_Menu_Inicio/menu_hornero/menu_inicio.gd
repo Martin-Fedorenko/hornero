@@ -235,6 +235,7 @@ const FaunaFrames := preload("res://scripts/ui/fauna_frames.gd")
 const PopupNombre := preload("res://scripts/ui/popup_nombre.gd")
 const PopupConfirmacion := preload("res://scripts/ui/popup_confirmacion.gd")
 const PopupAnimal := preload("res://scripts/ui/popup_animal.gd")
+const BotonSilenciar := preload("res://scripts/ui/boton_silenciar.gd")
 ## Cartel de madera vacío que aparece detrás de la opción seleccionada.
 const CartelFileteado := preload("res://scripts/ui/cartel_fileteado.gd")
 # Colores de las letras del logo "HORNERO".
@@ -289,6 +290,10 @@ var _animales: Array[Dictionary] = []
 var _tiempo_fauna := 0.0
 ## Ventana de detalle de un animal, mientras está abierta (ver _abrir_detalle_animal).
 var _popup_animal: Control
+## Volumen real (lineal) de la música y del canto, para volver a ponerlo al
+## desactivar el silencio; _ready los guarda antes de aplicar nada.
+var _volumen_musica := 1.0
+var _volumen_canto := 1.0
 ## Todas las fichas de Fauna, para sacarles el foco mientras hay una ventana
 ## de detalle abierta (si no, Tab podría llegar a una ficha tapada).
 var _fichas_fauna: Array[Control] = []
@@ -336,6 +341,9 @@ func _ready() -> void:
 	_crear_pestanas_historia()
 	_crear_estadisticas()
 	_crear_configuracion()
+	_volumen_musica = musica_menu.volume_linear
+	_volumen_canto = _canto_hornero.volume_linear
+	_crear_boton_silenciar()
 	_fondo.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_fondo.stretch_mode = TextureRect.STRETCH_SCALE
 	resized.connect(_ajustar_fondo)
@@ -368,6 +376,32 @@ func _ajustar_fondo() -> void:
 	_fondo.size = dibujado
 	_hornero.position = origen + hornero_en_fondo * escala
 	_hornero.scale = Vector2.ONE * escala_hornero_en_fondo * escala
+
+## Arriba a la derecha, lejos de los botones y del hornero. Arranca con el
+## silencio que haya quedado guardado de la vez anterior.
+func _crear_boton_silenciar() -> void:
+	var boton := BotonSilenciar.new()
+	boton.anchor_left = 1.0
+	boton.anchor_right = 1.0
+	boton.offset_left = -60.0
+	boton.offset_right = -16.0
+	boton.offset_top = 16.0
+	boton.offset_bottom = 60.0
+	boton.silenciado = Ajustes.musica_silenciada
+	_aplicar_silencio(boton.silenciado)
+	boton.alternado.connect(_on_alternar_silencio)
+	add_child(boton)
+
+func _on_alternar_silencio(silenciado: bool) -> void:
+	Ajustes.cambiar_musica_silenciada(silenciado)
+	_aplicar_silencio(silenciado)
+
+## Silencia sin pausar: la música y el canto del hornero siguen sonando (o
+## programados) de fondo, sólo que en volumen cero. Al desactivarlo vuelven
+## a sonar en el momento exacto en que estén, sin reiniciarse.
+func _aplicar_silencio(silenciado: bool) -> void:
+	musica_menu.volume_linear = 0.0 if silenciado else _volumen_musica
+	_canto_hornero.volume_linear = 0.0 if silenciado else _volumen_canto
 
 func _reiniciar_musica() -> void:
 	musica_menu.play()
