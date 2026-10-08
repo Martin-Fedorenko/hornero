@@ -1,0 +1,13 @@
+HORNERO - Paquete de fauna
+
+14 láminas PNG RGBA con transparencia, 1536 x 1024 píxeles.
+Cada lámina incluye seis poses en dos filas de tres, orientadas a la derecha.
+
+Aves en vuelo: halcón, gavilán, lechuza, búho, tordo renegrido, golondrina y benteveo.
+Terrestres: comadreja (zarigüeya), gato doméstico/cimarrón, zorro gris y ratón de campo.
+Reptiles: yarará, culebra arborícola y lagarto overo.
+
+El chimango no se incluye porque ya se había creado.
+Las dos serpientes tienen láminas separadas.
+
+Las láminas son arte generado con seis poses. Para animarlas en Godot, revisar los recortes y alinear el punto de apoyo o pivote de cada pose; la distribución visual no garantiza un recorte automático perfecto de 512 x 512. Ajustar también la duración de cada cuadro según el movimiento buscado.

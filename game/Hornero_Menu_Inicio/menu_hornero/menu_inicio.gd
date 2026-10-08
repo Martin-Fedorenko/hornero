@@ -144,6 +144,42 @@ const FAUNA: Array[Dictionary] = [
 		"caza": "Sí: la declararon plaga agrícola y se la caza y se le destruyen los nidos. También la capturan para venderla como mascota.",
 		"come": "Semillas, granos, frutos, brotes, flores y algún insecto.",
 	},
+	# --- Próximamente: todavía no están en el juego. Falta escribir hábitat,
+	# peligro de extinción, caza y qué come de cada uno (ver mensaje del chat).
+	# Las 16 láminas son de assets/Hornero_Fauna_14_Animales/, 1536x1024,
+	# 6 poses en 2 filas de 3 (cada celda de 512x512).
+	{"nombre": "Halcón", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/halcon.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Gavilán", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/gavilan.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Lechuza", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/lechuza.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Búho", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/buho.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Tordo renegrido", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/tordo_renegrido.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Golondrina", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/golondrina.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Benteveo", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/benteveo.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Cóndor andino", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/Vuelo del cóndor andino en sprites-1.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Comadreja", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/comadreja.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Gato cimarrón", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/gato_cimarron.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Zorro gris", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/zorro.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Ratón de campo", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/roedor.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Puma", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/Puma en carrera, seis poses.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Yarará", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/yarara.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Culebra arborícola", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/culebra.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
+	{"nombre": "Lagarto overo", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/lagarto_overo.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true},
 ]
 
 const TextoJuego := preload("res://scripts/ui/texto_juego.gd")
@@ -411,6 +447,16 @@ func _crear_ficha(animal: Dictionary) -> Control:
 	fila.add_child(dibujo)
 	_animales.append({"rect": dibujo, "cuadros": cuadros, "fps": animal["fps"]})
 
+	var columna_texto := VBoxContainer.new()
+	columna_texto.add_theme_constant_override("separation", 6)
+	columna_texto.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fila.add_child(columna_texto)
+
+	# Todavía no está en el juego: insignia arriba y, en vez de la ficha
+	# completa, un aviso. Falta escribir hábitat/peligro/caza/come.
+	if animal.get("proximamente", false):
+		columna_texto.add_child(_insignia_proximamente())
+
 	var texto := RichTextLabel.new()
 	texto.bbcode_enabled = true
 	texto.fit_content = true
@@ -419,10 +465,32 @@ func _crear_ficha(animal: Dictionary) -> Control:
 	texto.add_theme_color_override("default_color", Color(0.95, 0.92, 0.83))
 	texto.add_theme_font_size_override("normal_font_size", 17)
 	texto.add_theme_font_size_override("bold_font_size", 17)
-	texto.text = "[b][color=#f8dc9c]%s[/color][/b]\n[b]Dónde vive:[/b] %s\n[color=%s][b]¿Peligro de extinción?[/b] %s[/color]\n[b]¿Lo cazan?[/b] %s\n[b]Qué come:[/b] %s" % [
-		animal["nombre"], animal["habitat"], COLOR_PELIGRO, animal["peligro"], animal["caza"], animal["come"]]
-	fila.add_child(texto)
+	if animal.get("proximamente", false):
+		texto.text = "[b][color=#f8dc9c]%s[/color][/b]\n[i]Todavía no aparece en el juego. Pronto vas a poder encontrarlo en la Pampa.[/i]" % animal["nombre"]
+	else:
+		texto.text = "[b][color=#f8dc9c]%s[/color][/b]\n[b]Dónde vive:[/b] %s\n[color=%s][b]¿Peligro de extinción?[/b] %s[/color]\n[b]¿Lo cazan?[/b] %s\n[b]Qué come:[/b] %s" % [
+			animal["nombre"], animal["habitat"], COLOR_PELIGRO, animal["peligro"], animal["caza"], animal["come"]]
+	columna_texto.add_child(texto)
 	return ficha
+
+## Cartelito "PRÓXIMAMENTE" para los animales que todavía no están en el juego.
+func _insignia_proximamente() -> Control:
+	var insignia := PanelContainer.new()
+	insignia.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	var estilo := StyleBoxFlat.new()
+	estilo.bg_color = Color("c97a2b")
+	estilo.border_color = Color("f8dc9c")
+	estilo.set_border_width_all(1)
+	estilo.set_corner_radius_all(5)
+	estilo.content_margin_left = 10.0
+	estilo.content_margin_right = 10.0
+	estilo.content_margin_top = 3.0
+	estilo.content_margin_bottom = 3.0
+	insignia.add_theme_stylebox_override("panel", estilo)
+	var etiqueta := _texto(13, Color("2a1606"))
+	etiqueta.text = "PRÓXIMAMENTE"
+	insignia.add_child(etiqueta)
+	return insignia
 
 # Recorta una franja de alto fijo por fila para que el animal no salte entre cuadros.
 func _cortar_hoja(hoja: Texture2D, columnas: int, filas_y: Array, alto: float) -> Array[Texture2D]:
