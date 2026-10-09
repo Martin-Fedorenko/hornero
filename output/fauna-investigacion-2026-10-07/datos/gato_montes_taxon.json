@@ -1,0 +1,23 @@
+{
+  "usageKey": 2434942,
+  "scientificName": "Leopardus geoffroyi (d'Orbigny & Gervais, 1844)",
+  "canonicalName": "Leopardus geoffroyi",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Carnivora",
+  "family": "Felidae",
+  "genus": "Leopardus",
+  "species": "Leopardus geoffroyi",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 359,
+  "orderKey": 732,
+  "familyKey": 9703,
+  "genusKey": 2434918,
+  "speciesKey": 2434942,
+  "class": "Mammalia"
+}

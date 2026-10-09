@@ -1,0 +1,23 @@
+{
+  "usageKey": 2480598,
+  "scientificName": "Accipiter erythronemius (Kaup, 1850)",
+  "canonicalName": "Accipiter erythronemius",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Accipitriformes",
+  "family": "Accipitridae",
+  "genus": "Accipiter",
+  "species": "Accipiter erythronemius",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 7191147,
+  "familyKey": 2877,
+  "genusKey": 9405810,
+  "speciesKey": 2480598,
+  "class": "Aves"
+}

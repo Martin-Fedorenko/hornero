@@ -72,14 +72,14 @@ stretch_mode = 6
 
 [node name="MusicaMenu" type="AudioStreamPlayer" parent="." unique_id=539469288]
 stream = ExtResource("10_musica")
-volume_db = 0.951
+volume_db = -0.874
 
 [node name="CantoHornero" type="AudioStreamPlayer" parent="." unique_id=151156535]
 stream = ExtResource("11_canto")
 volume_db = -30.0
 
 [node name="TemporizadorCantoHornero" type="Timer" parent="." unique_id=674221885]
-wait_time = 10.0
+wait_time = 23.0
 one_shot = true
 
 [node name="Contenido" type="MarginContainer" parent="." unique_id=1870174885]

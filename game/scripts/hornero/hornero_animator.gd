@@ -50,6 +50,9 @@ extends AnimatedSprite2D
 @export var nest_feet := 415.0
 
 const NEST_CLIP_SHADER := preload("res://scripts/hornero/nest_clip.gdshader")
+const MODELO_FAUNA_14 := preload("res://assets/Hornero_Fauna_14_Animales/hornero_v2_modelo_jugador_reducido.png")
+const ESTADOS_FAUNA_14 := preload("res://assets/Hornero_Fauna_14_Animales/hornero_v2_estados_reposo_caida_recuperacion.png")
+const GIRO_FAUNA_14 := preload("res://assets/Hornero_Fauna_14_Animales/hornero_v2_giro.png")
 
 @export_group("Daño")
 ## Color del parpadeo al recibir daño.
@@ -68,6 +71,10 @@ var _clip_material := ShaderMaterial.new()
 
 
 func _ready() -> void:
+	if Ajustes.hornero_modelo_alternativo:
+		sprite_frames = _crear_frames_fauna_14()
+		dead_animation = &"muerto"
+		dead_frame = 0
 	_clip_material.shader = NEST_CLIP_SHADER
 	material = _clip_material
 	_body.flapped.connect(_on_flapped)
@@ -75,6 +82,35 @@ func _ready() -> void:
 	animation_finished.connect(_on_animation_finished)
 	# Vitals todavía no está listo (es hermano posterior), pero ya se puede conectar.
 	(_body.get_node(^"Vitals") as HorneroVitals).damaged.connect(_on_damaged)
+
+
+func _crear_frames_fauna_14() -> SpriteFrames:
+	var marcos := SpriteFrames.new()
+	if marcos.has_animation(&"default"):
+		marcos.remove_animation(&"default")
+	var animaciones: Array[Dictionary] = [
+		{"nombre": &"caminar", "hoja": MODELO_FAUNA_14, "cuadros": [0, 1, 2, 1], "velocidad": 10.0, "bucle": true},
+		{"nombre": &"reposo", "hoja": ESTADOS_FAUNA_14, "cuadros": [0], "velocidad": 1.0, "bucle": true},
+		{"nombre": &"vuelo", "hoja": MODELO_FAUNA_14, "cuadros": [3, 4, 5, 4], "velocidad": 12.0, "bucle": true},
+		{"nombre": &"planeo", "hoja": MODELO_FAUNA_14, "cuadros": [4], "velocidad": 1.0, "bucle": true},
+		{"nombre": &"caida", "hoja": ESTADOS_FAUNA_14, "cuadros": [1], "velocidad": 1.0, "bucle": true},
+		{"nombre": &"recuperarse", "hoja": ESTADOS_FAUNA_14, "cuadros": [2, 3, 4, 5], "velocidad": 12.0, "bucle": false},
+		{"nombre": &"rotacion_vertical", "hoja": GIRO_FAUNA_14, "cuadros": [0, 1, 2, 3, 4, 5], "velocidad": 20.0, "bucle": false},
+		{"nombre": &"muerto", "hoja": ESTADOS_FAUNA_14, "cuadros": [2], "velocidad": 1.0, "bucle": true},
+	]
+	for datos in animaciones:
+		var nombre := StringName(datos["nombre"])
+		var hoja := datos["hoja"] as Texture2D
+		marcos.add_animation(nombre)
+		marcos.set_animation_speed(nombre, float(datos["velocidad"]))
+		marcos.set_animation_loop(nombre, bool(datos["bucle"]))
+		for indice in datos["cuadros"]:
+			var cuadro := AtlasTexture.new()
+			cuadro.atlas = hoja
+			cuadro.region = Rect2((indice % 3) * 512, floori(float(indice) / 3.0) * 512, 512, 512)
+			cuadro.filter_clip = true
+			marcos.add_frame(nombre, cuadro)
+	return marcos
 
 
 func _process(_delta: float) -> void:

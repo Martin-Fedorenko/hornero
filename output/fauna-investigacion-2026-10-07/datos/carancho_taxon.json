@@ -1,0 +1,23 @@
+{
+  "usageKey": 2480989,
+  "scientificName": "Caracara plancus (J.F.Miller, 1777)",
+  "canonicalName": "Caracara plancus",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Falconiformes",
+  "family": "Falconidae",
+  "genus": "Caracara",
+  "species": "Caracara plancus",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 7191407,
+  "familyKey": 5240,
+  "genusKey": 2480984,
+  "speciesKey": 2480989,
+  "class": "Aves"
+}

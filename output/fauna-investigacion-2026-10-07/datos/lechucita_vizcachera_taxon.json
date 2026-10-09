@@ -1,0 +1,23 @@
+{
+  "usageKey": 2497240,
+  "scientificName": "Athene cunicularia (Molina, 1782)",
+  "canonicalName": "Athene cunicularia",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Strigiformes",
+  "family": "Strigidae",
+  "genus": "Athene",
+  "species": "Athene cunicularia",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 1450,
+  "familyKey": 9348,
+  "genusKey": 2497239,
+  "speciesKey": 2497240,
+  "class": "Aves"
+}

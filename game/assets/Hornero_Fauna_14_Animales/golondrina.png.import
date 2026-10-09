@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/golondrina.png-6d2fc89cc6fb49d1e69d6f5f1d5c3c
 
 [params]
 
-compress/mode=0
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

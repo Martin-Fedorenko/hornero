@@ -1,0 +1,23 @@
+{
+  "usageKey": 2481047,
+  "scientificName": "Falco peregrinus Tunstall, 1771",
+  "canonicalName": "Falco peregrinus",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Falconiformes",
+  "family": "Falconidae",
+  "genus": "Falco",
+  "species": "Falco peregrinus",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 7191407,
+  "familyKey": 5240,
+  "genusKey": 2480996,
+  "speciesKey": 2481047,
+  "class": "Aves"
+}

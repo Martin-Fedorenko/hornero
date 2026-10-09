@@ -1,0 +1,23 @@
+{
+  "usageKey": 5844398,
+  "scientificName": "Rupornis magnirostris (Gmelin, 1788)",
+  "canonicalName": "Rupornis magnirostris",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Accipitriformes",
+  "family": "Accipitridae",
+  "genus": "Rupornis",
+  "species": "Rupornis magnirostris",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 7191147,
+  "familyKey": 2877,
+  "genusKey": 4850093,
+  "speciesKey": 5844398,
+  "class": "Aves"
+}

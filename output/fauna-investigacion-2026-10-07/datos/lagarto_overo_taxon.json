@@ -1,0 +1,21 @@
+{
+  "usageKey": 5227370,
+  "scientificName": "Salvator merianae Duméril & Bibron, 1839",
+  "canonicalName": "Salvator merianae",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "family": "Teiidae",
+  "genus": "Salvator",
+  "species": "Salvator merianae",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 11592253,
+  "familyKey": 5019,
+  "genusKey": 5227569,
+  "speciesKey": 5227370,
+  "class": "Squamata"
+}

@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/hud_asset.png-6fb0fcc5aa4eb0e7e852a236f57f200
 
 [params]
 
-compress/mode=0
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

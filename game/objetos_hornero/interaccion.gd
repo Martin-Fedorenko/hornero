@@ -16,6 +16,7 @@ extends Node
 @export var aviso_altura: float = 40.0
 
 const CUADROS: SpriteFrames = preload("res://objetos_hornero/picoteo_frames.tres")
+const PICOTEO_VARIANTE := preload("res://assets/Hornero_Fauna_14_Animales/hornero_v2_picoteo.png")
 const DEBUG_PICO = preload("res://objetos_hornero/debug_pico.gd")
 const TextoJuego := preload("res://scripts/ui/texto_juego.gd")
 # Puntas del pico en coordenadas locales de cada nuevo cuadro (640x640).
@@ -51,8 +52,16 @@ func _ready() -> void:
 	sprite.sprite_frames.add_animation(&"picotear")
 	sprite.sprite_frames.set_animation_loop(&"picotear", false)
 	sprite.sprite_frames.set_animation_speed(&"picotear", 11.0)
-	for i in range(CUADROS.get_frame_count(&"picotear")):
-		sprite.sprite_frames.add_frame(&"picotear", CUADROS.get_frame_texture(&"picotear", i))
+	if Ajustes.hornero_modelo_alternativo:
+		for i in range(6):
+			var cuadro := AtlasTexture.new()
+			cuadro.atlas = PICOTEO_VARIANTE
+			cuadro.region = Rect2((i % 3) * 512, floori(float(i) / 3.0) * 512, 512, 512)
+			cuadro.filter_clip = true
+			sprite.sprite_frames.add_frame(&"picotear", cuadro)
+	else:
+		for i in range(CUADROS.get_frame_count(&"picotear")):
+			sprite.sprite_frames.add_frame(&"picotear", CUADROS.get_frame_texture(&"picotear", i))
 	_debug = Node2D.new()
 	_debug.set_script(DEBUG_PICO)
 	_debug.name = "DiagnosticoPico"
@@ -136,6 +145,12 @@ func _transformar_punto(punto_local: Vector2) -> Vector2:
 
 func _posicion_pico() -> Vector2:
 	if sprite.animation == &"picotear":
+		if Ajustes.hornero_modelo_alternativo:
+			var textura := sprite.sprite_frames.get_frame_texture(&"picotear", sprite.frame)
+			var punta := _punta_textura(textura)
+			if sprite.centered:
+				punta -= textura.get_size() * 0.5
+			return _transformar_punto(punta + sprite.offset)
 		return _transformar_punto(PICOS[clampi(sprite.frame, 0, 5)] + sprite.offset)
 	if usar_pico_automatico:
 		var textura := sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
@@ -295,7 +310,7 @@ func interactuar() -> void:
 ## Desplazamiento del dibujo del picoteo para que las patas queden a la misma
 ## altura que parado; centrado y sin desplazar, el gesto se hunde en el piso.
 func _offset_picoteo() -> Vector2:
-	var cuadro := CUADROS.get_frame_texture(&"picotear", 0) as AtlasTexture
+	var cuadro := sprite.sprite_frames.get_frame_texture(&"picotear", 0) as AtlasTexture
 	# Las patas son el borde de abajo del dibujo dentro del cuadro.
 	var patas := cuadro.margin.position.y + cuadro.region.size.y - cuadro.get_size().y * 0.5
 	var animador := sprite as HorneroAnimator

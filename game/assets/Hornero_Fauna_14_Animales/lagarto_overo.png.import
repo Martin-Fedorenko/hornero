@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/lagarto_overo.png-e45ae0c97057e741dfc6f675f79
 
 [params]
 
-compress/mode=0
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

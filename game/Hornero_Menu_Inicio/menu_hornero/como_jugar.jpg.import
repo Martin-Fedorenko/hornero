@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/como_jugar.jpg-d7cea5e736f7037f078d95ffe06d3e
 
 [params]
 
-compress/mode=0
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

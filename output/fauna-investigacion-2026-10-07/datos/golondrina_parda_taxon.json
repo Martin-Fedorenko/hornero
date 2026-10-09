@@ -1,0 +1,23 @@
+{
+  "usageKey": 2489136,
+  "scientificName": "Progne tapera (Linnaeus, 1766)",
+  "canonicalName": "Progne tapera",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Passeriformes",
+  "family": "Hirundinidae",
+  "genus": "Progne",
+  "species": "Progne tapera",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 729,
+  "familyKey": 5248,
+  "genusKey": 2489127,
+  "speciesKey": 2489136,
+  "class": "Aves"
+}

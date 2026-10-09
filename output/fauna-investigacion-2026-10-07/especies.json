@@ -1,0 +1,332 @@
+[
+  {
+    "id": "halcon_aplomado",
+    "nombre": "Halcón aplomado",
+    "cientifico": "Falco femoralis",
+    "grupo": "Halcón",
+    "evidencia": "documentada",
+    "relacion": "Depreda horneros; registrado en dieta en Córdoba.",
+    "modelo": true,
+    "appearance": "Slate-gray back and crown, long narrow pointed wings, long barred tail, buff eyebrow, black cheek stripe and chest band, rusty cinnamon lower belly and thighs."
+  },
+  {
+    "id": "halconcito_gris",
+    "nombre": "Halconcito gris",
+    "cientifico": "Spiziapteryx circumcincta",
+    "grupo": "Halcón",
+    "evidencia": "documentada",
+    "relacion": "Hornero citado entre sus presas.",
+    "modelo": true,
+    "appearance": "Small stocky gray-brown falcon, conspicuous white eyebrow and rump, white-spotted wings, pale streaked underside, yellow eye ring and feet."
+  },
+  {
+    "id": "halcon_peregrino",
+    "nombre": "Halcón peregrino",
+    "cientifico": "Falco peregrinus",
+    "grupo": "Halcón",
+    "evidencia": "potencial",
+    "relacion": "Cazador de aves; falta aquí registro específico comprobado sobre hornero.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "esparvero_comun",
+    "nombre": "Esparvero común",
+    "cientifico": "Accipiter erythronemius",
+    "grupo": "Gavilán",
+    "evidencia": "observación probable",
+    "relacion": "Registro de campo publicado como Accipiter striatus: el observador infiere que la presa era un pichón de hornero.",
+    "modelo": true,
+    "appearance": "Small slim accipiter hawk, short rounded wings, long square-ended banded tail, slate gray back, fine rufous bars on white breast, rufous thighs, red eyes, yellow thin legs."
+  },
+  {
+    "id": "taguato",
+    "nombre": "Taguató común",
+    "cientifico": "Rupornis magnirostris",
+    "grupo": "Gavilán",
+    "evidencia": "potencial",
+    "relacion": "Rapaz que puede capturar aves pequeñas; no se confirmó un registro específico de hornero.",
+    "modelo": true,
+    "appearance": "Compact roadside hawk, gray head and upper breast, yellow eyes and cere, rusty and white barred belly, broad rounded wings with rufous primaries, banded tail."
+  },
+  {
+    "id": "lechuza_campanario",
+    "nombre": "Lechuza de campanario",
+    "cientifico": "Tyto furcata",
+    "grupo": "Lechuza",
+    "evidencia": "potencial débil",
+    "relacion": "Principalmente roedores; no presentarla como cazadora habitual de horneros.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "lechucita_vizcachera",
+    "nombre": "Lechucita vizcachera",
+    "cientifico": "Athene cunicularia",
+    "grupo": "Lechuza",
+    "evidencia": "potencial débil",
+    "relacion": "Consume sobre todo invertebrados y pequeños vertebrados; sin evidencia específica reunida.",
+    "modelo": true,
+    "appearance": "Small burrowing owl, very long bare pale legs, round head with no ear tufts, bright yellow eyes, bold white eyebrows, brown back spotted white, cream barred breast."
+  },
+  {
+    "id": "nacurutu",
+    "nombre": "Ñacurutú",
+    "cientifico": "Bubo virginianus",
+    "grupo": "Búho",
+    "evidencia": "documentada",
+    "relacion": "Hornero registrado en dieta en el sur de Brasil; mapa a nivel de especie amplia, no solo subespecie nacurutu.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "lechuzon_orejudo",
+    "nombre": "Lechuzón orejudo",
+    "cientifico": "Asio clamator",
+    "grupo": "Búho",
+    "evidencia": "documentada",
+    "relacion": "Hornero registrado en dieta en Santa Fe.",
+    "modelo": true,
+    "appearance": "Striped owl, long upright ear tufts, orange eyes, prominent pale facial disks with dark rim, cinnamon buff body with bold black vertical streaks, broad barred wings."
+  },
+  {
+    "id": "cabure_chico",
+    "nombre": "Caburé chico",
+    "cientifico": "Glaucidium brasilianum",
+    "grupo": "Búho",
+    "evidencia": "documentada",
+    "relacion": "Hornero registrado en dieta en el centro argentino.",
+    "modelo": true,
+    "appearance": "Very small ferruginous pygmy owl, round head without ear tufts, yellow eyes, rufous-brown crown finely streaked cream, white belly with vertical brown streaks, long barred tail."
+  },
+  {
+    "id": "tordo_renegrido",
+    "nombre": "Tordo renegrido",
+    "cientifico": "Molothrus bonariensis",
+    "grupo": "Tordo renegrido",
+    "evidencia": "documentada",
+    "relacion": "Parasitismo de cría; puede dañar huevos. No caza al adulto.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "golondrina_parda",
+    "nombre": "Golondrina parda",
+    "cientifico": "Progne tapera",
+    "grupo": "Golondrina",
+    "evidencia": "documentada",
+    "relacion": "Ocupación y usurpación de nidos del hornero; no depredación.",
+    "modelo": true,
+    "appearance": "Brown-chested martin, brown upperparts and crown, white throat and belly, broad brown breast band, long pointed wings, moderately forked tail, small black bill."
+  },
+  {
+    "id": "golondrina_ceja_blanca",
+    "nombre": "Golondrina ceja blanca",
+    "cientifico": "Tachycineta leucorrhoa",
+    "grupo": "Golondrina",
+    "evidencia": "documentada sin daño necesario",
+    "relacion": "Reutiliza nidos abandonados de hornero; eso no implica expulsión de una pareja activa.",
+    "modelo": true,
+    "appearance": "White-rumped swallow, glossy blue-green back, pure white rump and underparts, short distinct white eyebrow in front of and above eye, long pointed wings, slightly forked dark tail."
+  },
+  {
+    "id": "benteveo",
+    "nombre": "Benteveo común",
+    "cientifico": "Pitangus sulphuratus",
+    "grupo": "Benteveo",
+    "evidencia": "documentada",
+    "relacion": "Robo de alimento al hornero; también reutiliza nidos abandonados.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "comadreja_overa",
+    "nombre": "Comadreja overa",
+    "cientifico": "Didelphis albiventris",
+    "grupo": "Comadreja",
+    "evidencia": "potencial",
+    "relacion": "Omnívora trepadora: riesgo plausible para huevos y pichones; sin caso específico confirmado aquí.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "comadreja_oreja_negra",
+    "nombre": "Comadreja de orejas negras",
+    "cientifico": "Didelphis aurita",
+    "grupo": "Comadreja",
+    "evidencia": "potencial",
+    "relacion": "Variante del Bosque Atlántico; riesgo plausible en nidos accesibles, sin prueba específica aquí.",
+    "modelo": true,
+    "appearance": "Black-eared opossum, coarse dark gray fur, black bare rounded ears, pale pointed face with dark eye markings, pink nose, blackish legs, long naked tail dark at base pale distally."
+  },
+  {
+    "id": "gato_cimarron",
+    "nombre": "Gato doméstico asilvestrado",
+    "cientifico": "Felis catus",
+    "grupo": "Gato cimarrón",
+    "evidencia": "potencial fuerte",
+    "relacion": "Caza aves en el suelo; cimarrón describe su condición, no una especie distinta. Registros GBIF pueden incluir domésticos.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "zorro_pampeano",
+    "nombre": "Zorro gris pampeano",
+    "cientifico": "Lycalopex gymnocercus",
+    "grupo": "Zorro gris",
+    "evidencia": "potencial",
+    "relacion": "Posible captura oportunista de aves o volantones en el suelo; no confirmado específicamente aquí.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "zorro_gris_chico",
+    "nombre": "Zorro gris chico",
+    "cientifico": "Lycalopex griseus",
+    "grupo": "Zorro gris",
+    "evidencia": "potencial",
+    "relacion": "Candidato occidental y patagónico; posible captura oportunista, no prueba específica de hornero.",
+    "modelo": true,
+    "appearance": "South American gray fox, small slender fox, grizzled silvery-gray back, pale cream underside, rusty ears and lower legs, narrow muzzle, black chin patch, bushy tail with black tip."
+  },
+  {
+    "id": "raton_campo",
+    "nombre": "Ratón de campo de Azara",
+    "cientifico": "Akodon azarae",
+    "grupo": "Ratón de campo",
+    "evidencia": "sin evidencia específica",
+    "relacion": "Ejemplo pampeano para resolver el nombre. No justificar ataque al hornero; no confundir con Rattus.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "yarara_grande",
+    "nombre": "Yarará grande",
+    "cientifico": "Bothrops alternatus",
+    "grupo": "Yarará",
+    "evidencia": "sin evidencia específica",
+    "relacion": "Su dieta es principalmente de mamíferos; no atribuirle depredación de horneros sin evidencia.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "yarara_chica",
+    "nombre": "Yarará chica",
+    "cientifico": "Bothrops diporus",
+    "grupo": "Yarará",
+    "evidencia": "sin evidencia específica",
+    "relacion": "Otra yarará regional; peligroso encuentro posible no equivale a depredador documentado del hornero.",
+    "modelo": true,
+    "appearance": "Argentine Bothrops diporus pit viper, stout tan gray body with alternating dark brown triangular trapezoid lateral saddles edged pale, broad triangular head with dark postocular stripe, keeled scales, no rattle."
+  },
+  {
+    "id": "culebra_verde",
+    "nombre": "Culebra verde",
+    "cientifico": "Philodryas olfersii",
+    "grupo": "Culebra arborícola",
+    "evidencia": "potencial",
+    "relacion": "Trepadora y consumidora de aves; no se verificó aquí un caso específico sobre hornero.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "culebra_pastizal",
+    "nombre": "Culebra de pastizal",
+    "cientifico": "Philodryas patagoniensis",
+    "grupo": "Culebra arborícola",
+    "evidencia": "documentada",
+    "relacion": "Pichón depredado dentro del nido registrado en Santa Fe; es principalmente terrestre aunque trepa.",
+    "modelo": true,
+    "appearance": "Patagonian green racer snake, long slender olive brown body, finely reticulated dark-edged scales, pale yellow cream underside, elongated narrow head with round pupil, subtle dark eye stripe, no exaggerated triangular viper head."
+  },
+  {
+    "id": "lagarto_overo",
+    "nombre": "Lagarto overo",
+    "cientifico": "Salvator merianae",
+    "grupo": "Lagarto overo",
+    "evidencia": "potencial",
+    "relacion": "Omnívoro que consume huevos; oportunidad depende de que alcance el nido. Sin caso específico reunido.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "puma",
+    "nombre": "Puma",
+    "cientifico": "Puma concolor",
+    "grupo": "Puma",
+    "evidencia": "sin evidencia específica",
+    "relacion": "No hay base aquí para presentarlo como amenaza habitual del hornero.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "condor",
+    "nombre": "Cóndor andino",
+    "cientifico": "Vultur gryphus",
+    "grupo": "Cóndor andino",
+    "evidencia": "sin evidencia específica",
+    "relacion": "Principalmente carroñero; no justificar persecución aérea del hornero.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "chimango",
+    "nombre": "Chimango",
+    "cientifico": "Milvago chimango",
+    "grupo": "Chimango",
+    "evidencia": "potencial",
+    "relacion": "Depredador oportunista de nidos; no se confirmó aquí un caso específico de hornero.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "aguilucho",
+    "nombre": "Aguilucho común",
+    "cientifico": "Geranoaetus polyosoma",
+    "grupo": "Aguilucho común",
+    "evidencia": "potencial",
+    "relacion": "Consume aves y pequeños vertebrados; sin prueba específica reunida sobre hornero.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "carancho",
+    "nombre": "Carancho",
+    "cientifico": "Caracara plancus",
+    "grupo": "Carancho",
+    "evidencia": "documentada",
+    "relacion": "Rompe nido y consume pichón; registro publicado en 2026, tras lluvia.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "gato_montes",
+    "nombre": "Gato montés",
+    "cientifico": "Leopardus geoffroyi",
+    "grupo": "Gato montés",
+    "evidencia": "potencial",
+    "relacion": "Caza aves y puede trepar; no se reunió evidencia específica de hornero.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "cotorra",
+    "nombre": "Cotorra",
+    "cientifico": "Myiopsitta monachus",
+    "grupo": "Cotorra",
+    "evidencia": "sin evidencia específica",
+    "relacion": "No se encontró respaldo para destruir nidos de hornero; la conducta del juego es ficción.",
+    "modelo": false,
+    "appearance": ""
+  },
+  {
+    "id": "hornero",
+    "nombre": "Hornero común",
+    "cientifico": "Furnarius rufus",
+    "grupo": "Hornero",
+    "evidencia": "referencia",
+    "relacion": "Mapa de referencia para comparar coincidencia geográfica; no demuestra interacción.",
+    "modelo": false,
+    "appearance": ""
+  }
+]

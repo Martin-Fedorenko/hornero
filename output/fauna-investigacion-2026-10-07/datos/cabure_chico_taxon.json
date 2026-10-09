@@ -1,0 +1,23 @@
+{
+  "usageKey": 5232118,
+  "scientificName": "Glaucidium brasilianum (J.F.Gmelin, 1788)",
+  "canonicalName": "Glaucidium brasilianum",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Strigiformes",
+  "family": "Strigidae",
+  "genus": "Glaucidium",
+  "species": "Glaucidium brasilianum",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 1450,
+  "familyKey": 9348,
+  "genusKey": 2497151,
+  "speciesKey": 5232118,
+  "class": "Aves"
+}

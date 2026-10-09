@@ -10,6 +10,7 @@ extends Control
 
 const TextoJuego := preload("res://scripts/ui/texto_juego.gd")
 const FaunaFrames := preload("res://scripts/ui/fauna_frames.gd")
+const MapaHabitat := preload("res://scripts/ui/mapa_habitat.gd")
 const COLOR_LETRAS := Color("f8dc9c")
 const COLOR_BORDE_LETRAS := Color("5a2e12")
 const COLOR_TEXTO := Color(0.95, 0.92, 0.83)
@@ -20,6 +21,8 @@ var animal: Dictionary
 
 var _cuadros: Array[Texture2D]
 var _dibujo: TextureRect
+var _modelos: Array[Dictionary] = []
+var _modelo_actual := 0
 var _fps := 6.0
 var _tiempo := 0.0
 
@@ -33,13 +36,12 @@ func _ready() -> void:
 	sombra.color = Color(0.02, 0.06, 0.05, 0.85)
 	add_child(sombra)
 
-	# Mismo tamaño y posición que la ventana "Cómo jugar" / "Fauna": ancho fijo
-	# y centrado (no se estira en pantallas ultrawide), alto según el viewport.
+	# Ancho fijo y centrado; el cuerpo interior tiene scroll para pantallas bajas.
 	var panel := PanelContainer.new()
 	panel.anchor_left = 0.5
 	panel.anchor_right = 0.5
-	panel.anchor_top = 0.1
-	panel.anchor_bottom = 0.9
+	panel.anchor_top = 0.04
+	panel.anchor_bottom = 0.96
 	panel.offset_left = -384.0
 	panel.offset_right = 384.0
 	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
@@ -65,29 +67,80 @@ func _ready() -> void:
 	titulo.add_theme_color_override("font_outline_color", COLOR_BORDE_LETRAS)
 	titulo.add_theme_constant_override("outline_size", 6)
 	columna.add_child(titulo)
+	var cientifico := Label.new()
+	cientifico.text = animal.get("cientifico", "")
+	cientifico.add_theme_font_size_override("font_size", 18)
+	cientifico.add_theme_color_override("font_color", COLOR_TEXTO)
+	columna.add_child(cientifico)
 
 	if animal.get("proximamente", false):
 		columna.add_child(_insignia_proximamente())
 
+	var cuerpo := ScrollContainer.new()
+	cuerpo.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	cuerpo.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	columna.add_child(cuerpo)
+	var contenido := VBoxContainer.new()
+	contenido.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	contenido.add_theme_constant_override("separation", 12)
+	cuerpo.add_child(contenido)
+
 	_cuadros = FaunaFrames.cortar(animal["hoja"], animal["columnas"], animal["filas_y"],
 			animal["alto"], animal.get("margen_x", 10.0))
 	_fps = animal.get("fps", 6.0)
+	_modelos.append(animal)
+	for modelo in animal.get("modelos_extra", []):
+		_modelos.append(modelo)
+	var visuales := HBoxContainer.new()
+	visuales.add_theme_constant_override("separation", 12)
+	visuales.custom_minimum_size.y = 220
+	contenido.add_child(visuales)
+	var columna_dibujo := VBoxContainer.new()
+	columna_dibujo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	columna_dibujo.add_theme_constant_override("separation", 5)
+	visuales.add_child(columna_dibujo)
 	_dibujo = TextureRect.new()
-	_dibujo.custom_minimum_size = Vector2(0, 260)
+	_dibujo.custom_minimum_size = Vector2(250, 210)
+	_dibujo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_dibujo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_dibujo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_dibujo.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_dibujo.texture = _cuadros[0]
-	columna.add_child(_dibujo)
+	columna_dibujo.add_child(_dibujo)
+	if _modelos.size() > 1:
+		_agregar_selector_modelos(columna_dibujo)
+	var mapa_columna := VBoxContainer.new()
+	mapa_columna.custom_minimum_size = Vector2(230, 0)
+	mapa_columna.add_theme_constant_override("separation", 3)
+	visuales.add_child(mapa_columna)
+	var titulo_mapa := Label.new()
+	titulo_mapa.text = "Distribución en Sudamérica"
+	titulo_mapa.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	titulo_mapa.add_theme_font_size_override("font_size", 16)
+	titulo_mapa.add_theme_color_override("font_color", COLOR_LETRAS)
+	mapa_columna.add_child(titulo_mapa)
+	var mapa := MapaHabitat.new()
+	mapa.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	mapa.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	mapa.set_region(animal.get("mapa", "sudamerica"))
+	mapa_columna.add_child(mapa)
+	var nota_mapa := Label.new()
+	nota_mapa.text = "Rojo: distribución aproximada. Esquema, no avistamientos puntuales."
+	nota_mapa.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	nota_mapa.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	nota_mapa.add_theme_font_size_override("font_size", 12)
+	nota_mapa.add_theme_color_override("font_color", Color(COLOR_TEXTO, 0.75))
+	mapa_columna.add_child(nota_mapa)
 
 	var texto := RichTextLabel.new()
 	texto.bbcode_enabled = true
-	texto.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	texto.fit_content = true
+	texto.scroll_active = false
+	texto.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	texto.add_theme_color_override("default_color", COLOR_TEXTO)
 	texto.add_theme_font_size_override("normal_font_size", 19)
 	texto.add_theme_font_size_override("bold_font_size", 19)
 	texto.text = _texto_detalle()
-	columna.add_child(texto)
+	contenido.add_child(texto)
 
 	var cerrar := Button.new()
 	cerrar.text = "Cerrar"
@@ -97,6 +150,39 @@ func _ready() -> void:
 	cerrar.pressed.connect(func() -> void: queue_free())
 	columna.add_child(cerrar)
 	cerrar.grab_focus.call_deferred()
+
+
+func _agregar_selector_modelos(contenedor: Control) -> void:
+	var selector := HBoxContainer.new()
+	selector.alignment = BoxContainer.ALIGNMENT_CENTER
+	selector.add_theme_constant_override("separation", 8)
+	var anterior := Button.new()
+	anterior.text = "‹"
+	anterior.custom_minimum_size = Vector2(38, 34)
+	var siguiente := Button.new()
+	siguiente.text = "›"
+	siguiente.custom_minimum_size = Vector2(38, 34)
+	selector.add_child(anterior)
+	selector.add_child(siguiente)
+	contenedor.add_child(selector)
+	anterior.pressed.connect(func() -> void: _seleccionar_modelo(posmod(_modelo_actual - 1, _modelos.size()), true))
+	siguiente.pressed.connect(func() -> void: _seleccionar_modelo((_modelo_actual + 1) % _modelos.size(), true))
+	if animal.get("modelo_jugador", false) and Ajustes.hornero_modelo_alternativo:
+		_modelo_actual = 1
+	_seleccionar_modelo(_modelo_actual)
+
+
+func _seleccionar_modelo(indice: int, guardar_eleccion: bool = false) -> void:
+	_modelo_actual = indice
+	var modelo := _modelos[indice]
+	_cuadros = FaunaFrames.cortar(modelo["hoja"], modelo["columnas"], modelo["filas_y"],
+			modelo["alto"], modelo.get("margen_x", animal.get("margen_x", 10.0)))
+	_fps = modelo.get("fps", animal.get("fps", 6.0))
+	_tiempo = 0.0
+	if not _cuadros.is_empty():
+		_dibujo.texture = _cuadros[0]
+	if guardar_eleccion and animal.get("modelo_jugador", false):
+		Ajustes.cambiar_modelo_hornero(indice > 0)
 
 
 ## Arma el texto con los campos que el animal tenga cargados: "detalle" (un
@@ -115,9 +201,11 @@ func _texto_detalle() -> String:
 	if animal.has("peligro"):
 		partes.append("[color=%s][b]¿Peligro de extinción?[/b] %s[/color]" % [COLOR_PELIGRO, animal["peligro"]])
 	if animal.has("caza"):
-		partes.append("[b]¿Lo cazan?[/b] %s" % animal["caza"])
+		partes.append("[b]Presiones humanas:[/b] %s" % animal["caza"])
 	if animal.has("come"):
 		partes.append("[b]Qué come:[/b] %s" % animal["come"])
+	if animal.has("relacion_hornero"):
+		partes.append("[b]Relación con el hornero:[/b] %s" % animal["relacion_hornero"])
 	if partes.is_empty():
 		return "[i]Todavía no aparece en el juego. Pronto vas a poder encontrarlo en la Pampa.[/i]"
 	return "\n\n".join(partes)

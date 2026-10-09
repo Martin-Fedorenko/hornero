@@ -1,0 +1,23 @@
+{
+  "usageKey": 2485821,
+  "scientificName": "Furnarius rufus (Gmelin, 1788)",
+  "canonicalName": "Furnarius rufus",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Passeriformes",
+  "family": "Furnariidae",
+  "genus": "Furnarius",
+  "species": "Furnarius rufus",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 729,
+  "familyKey": 5243,
+  "genusKey": 2485812,
+  "speciesKey": 2485821,
+  "class": "Aves"
+}

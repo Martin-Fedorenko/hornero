@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/yarara.png-1d1495e25b06c691d46ac98d235c980a.c
 
 [params]
 
-compress/mode=0
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

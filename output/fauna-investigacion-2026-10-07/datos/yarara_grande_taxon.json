@@ -1,0 +1,21 @@
+{
+  "usageKey": 5220772,
+  "scientificName": "Bothrops alternatus Duméril, Bibron & Duméril, 1854",
+  "canonicalName": "Bothrops alternatus",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "family": "Viperidae",
+  "genus": "Bothrops",
+  "species": "Bothrops alternatus",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 11592253,
+  "familyKey": 5024,
+  "genusKey": 9064312,
+  "speciesKey": 5220772,
+  "class": "Squamata"
+}

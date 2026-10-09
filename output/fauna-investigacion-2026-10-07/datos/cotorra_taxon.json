@@ -1,0 +1,23 @@
+{
+  "usageKey": 2479407,
+  "scientificName": "Myiopsitta monachus (Boddaert, 1783)",
+  "canonicalName": "Myiopsitta monachus",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Psittaciformes",
+  "family": "Psittacidae",
+  "genus": "Myiopsitta",
+  "species": "Myiopsitta monachus",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 1445,
+  "familyKey": 9340,
+  "genusKey": 2479406,
+  "speciesKey": 2479407,
+  "class": "Aves"
+}

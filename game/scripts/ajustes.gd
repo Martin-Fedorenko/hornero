@@ -19,6 +19,8 @@ const MATERIALES_POR_ETAPA := { Dificultad.FACIL: 1, Dificultad.DIFICIL: 2 }
 var dificultad := Dificultad.FACIL
 var pantalla_completa := true
 var musica_silenciada := false
+## La variante visual del protagonista, elegida desde la ficha de Fauna.
+var hornero_modelo_alternativo := false
 
 
 func _ready() -> void:
@@ -28,6 +30,7 @@ func _ready() -> void:
 				Dificultad.FACIL, Dificultad.DIFICIL) as Dificultad
 		pantalla_completa = bool(archivo.get_value("pantalla", "completa", pantalla_completa))
 		musica_silenciada = bool(archivo.get_value("sonido", "silenciada", musica_silenciada))
+		hornero_modelo_alternativo = bool(archivo.get_value("juego", "hornero_modelo_alternativo", hornero_modelo_alternativo))
 	# En el navegador la pantalla completa sólo se puede pedir con un clic.
 	if not OS.has_feature("web"):
 		_aplicar_pantalla()
@@ -73,6 +76,11 @@ func cambiar_musica_silenciada(silenciada: bool) -> void:
 	_guardar()
 
 
+func cambiar_modelo_hornero(alternativo: bool) -> void:
+	hornero_modelo_alternativo = alternativo
+	_guardar()
+
+
 func _aplicar_pantalla() -> void:
 	var modo := DisplayServer.WINDOW_MODE_FULLSCREEN if pantalla_completa \
 			else DisplayServer.WINDOW_MODE_WINDOWED
@@ -85,4 +93,5 @@ func _guardar() -> void:
 	archivo.set_value("juego", "dificultad", dificultad)
 	archivo.set_value("pantalla", "completa", pantalla_completa)
 	archivo.set_value("sonido", "silenciada", musica_silenciada)
+	archivo.set_value("juego", "hornero_modelo_alternativo", hornero_modelo_alternativo)
 	archivo.save(RUTA)

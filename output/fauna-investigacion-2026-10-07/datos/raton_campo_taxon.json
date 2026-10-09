@@ -1,0 +1,23 @@
+{
+  "usageKey": 2437878,
+  "scientificName": "Akodon azarae (Fischer, 1829)",
+  "canonicalName": "Akodon azarae",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Rodentia",
+  "family": "Cricetidae",
+  "genus": "Akodon",
+  "species": "Akodon azarae",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 359,
+  "orderKey": 1459,
+  "familyKey": 3240723,
+  "genusKey": 7791043,
+  "speciesKey": 2437878,
+  "class": "Mammalia"
+}

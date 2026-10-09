@@ -1,0 +1,21 @@
+{
+  "usageKey": 2453506,
+  "scientificName": "Philodryas patagoniensis (Girard, 1858)",
+  "canonicalName": "Philodryas patagoniensis",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "family": "Colubridae",
+  "genus": "Philodryas",
+  "species": "Philodryas patagoniensis",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 11592253,
+  "familyKey": 6172,
+  "genusKey": 2453465,
+  "speciesKey": 2453506,
+  "class": "Squamata"
+}

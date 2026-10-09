@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/arbol_hd_2.png-f6257c1c631f45b25e37dde4a85302
 
 [params]
 
-compress/mode=0
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

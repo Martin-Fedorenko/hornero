@@ -1,0 +1,22 @@
+HORNERO - AVES: SECUENCIAS DE ATAQUE
+
+7 láminas PNG RGBA transparentes, 1536 x 1024 píxeles.
+Cada lámina contiene seis poses, distribuidas en dos filas de tres.
+
+AVES
+Halcón, gavilán, lechuza, búho, tordo renegrido, golondrina y benteveo.
+
+ORDEN PROPUESTO
+Leer de izquierda a derecha: primero la fila superior, después la inferior.
+1. Preparación.
+2. Inicio de picada o acercamiento.
+3. Descenso o avance.
+4. Ataque: garras en rapaces; pico en aves pequeñas.
+5. Salida y recuperación.
+6. Regreso al vuelo.
+
+USO
+Las láminas mantienen los diseños de las secuencias de vuelo anteriores.
+Son poses ilustradas: revisar el recorte de cada ave y alinear pivotes antes de montar la animación. La distribución no garantiza seis regiones automáticas idénticas de 512 x 512 sin ajustes.
+Ajustar la duración de las poses a la velocidad de ataque del juego.
+Estas imágenes no incluyen código ni colisiones.

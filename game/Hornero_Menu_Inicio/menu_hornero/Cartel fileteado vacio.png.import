@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/Cartel fileteado vacio.png-216bf8d911fb0f1f88
 
 [params]
 
-compress/mode=0
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -1,0 +1,23 @@
+{
+  "usageKey": 2481065,
+  "scientificName": "Milvago chimango (Vieillot, 1816)",
+  "canonicalName": "Milvago chimango",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Falconiformes",
+  "family": "Falconidae",
+  "genus": "Milvago",
+  "species": "Milvago chimango",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 7191407,
+  "familyKey": 5240,
+  "genusKey": 2481064,
+  "speciesKey": 2481065,
+  "class": "Aves"
+}

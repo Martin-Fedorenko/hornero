@@ -1,0 +1,23 @@
+{
+  "usageKey": 9568884,
+  "scientificName": "Tyto furcata (Temminck, 1827)",
+  "canonicalName": "Tyto furcata",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Strigiformes",
+  "family": "Tytonidae",
+  "genus": "Tyto",
+  "species": "Tyto furcata",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 1450,
+  "familyKey": 5292,
+  "genusKey": 2497905,
+  "speciesKey": 9568884,
+  "class": "Aves"
+}

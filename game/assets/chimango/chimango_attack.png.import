@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/chimango_attack.png-9ee55fbdd9aeb81da1cd16eea
 
 [params]
 
-compress/mode=0
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

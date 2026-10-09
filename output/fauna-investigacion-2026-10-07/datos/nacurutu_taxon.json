@@ -1,0 +1,23 @@
+{
+  "usageKey": 5959118,
+  "scientificName": "Bubo virginianus (J.F.Gmelin, 1788)",
+  "canonicalName": "Bubo virginianus",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Strigiformes",
+  "family": "Strigidae",
+  "genus": "Bubo",
+  "species": "Bubo virginianus",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 1450,
+  "familyKey": 9348,
+  "genusKey": 5959091,
+  "speciesKey": 5959118,
+  "class": "Aves"
+}

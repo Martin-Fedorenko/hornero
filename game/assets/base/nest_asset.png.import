@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/nest_asset.png-195b8abe8e30ae983b603ec4ae6671
 
 [params]
 
-compress/mode=0
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

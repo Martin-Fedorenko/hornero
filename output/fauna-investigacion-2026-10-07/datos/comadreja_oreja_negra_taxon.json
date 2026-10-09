@@ -1,0 +1,23 @@
+{
+  "usageKey": 2439928,
+  "scientificName": "Didelphis aurita (Wied-Neuwied, 1826)",
+  "canonicalName": "Didelphis aurita",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Didelphimorphia",
+  "family": "Didelphidae",
+  "genus": "Didelphis",
+  "species": "Didelphis aurita",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 359,
+  "orderKey": 783,
+  "familyKey": 5455,
+  "genusKey": 7932087,
+  "speciesKey": 2439928,
+  "class": "Mammalia"
+}

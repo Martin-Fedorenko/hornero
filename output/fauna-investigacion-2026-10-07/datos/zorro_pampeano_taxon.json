@@ -1,0 +1,23 @@
+{
+  "usageKey": 2434333,
+  "scientificName": "Lycalopex gymnocercus (G.Fischer, 1814)",
+  "canonicalName": "Lycalopex gymnocercus",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Carnivora",
+  "family": "Canidae",
+  "genus": "Lycalopex",
+  "species": "Lycalopex gymnocercus",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 359,
+  "orderKey": 732,
+  "familyKey": 9701,
+  "genusKey": 2434325,
+  "speciesKey": 2434333,
+  "class": "Mammalia"
+}

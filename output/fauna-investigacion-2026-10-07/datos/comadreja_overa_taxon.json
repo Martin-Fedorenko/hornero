@@ -1,0 +1,23 @@
+{
+  "usageKey": 2439930,
+  "scientificName": "Didelphis albiventris Lund, 1840",
+  "canonicalName": "Didelphis albiventris",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Didelphimorphia",
+  "family": "Didelphidae",
+  "genus": "Didelphis",
+  "species": "Didelphis albiventris",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 359,
+  "orderKey": 783,
+  "familyKey": 5455,
+  "genusKey": 7932087,
+  "speciesKey": 2439930,
+  "class": "Mammalia"
+}

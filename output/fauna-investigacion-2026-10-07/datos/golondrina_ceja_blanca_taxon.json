@@ -1,0 +1,23 @@
+{
+  "usageKey": 5230761,
+  "scientificName": "Tachycineta leucorrhoa (Vieillot, 1817)",
+  "canonicalName": "Tachycineta leucorrhoa",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Passeriformes",
+  "family": "Hirundinidae",
+  "genus": "Tachycineta",
+  "species": "Tachycineta leucorrhoa",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 729,
+  "familyKey": 5248,
+  "genusKey": 2489178,
+  "speciesKey": 5230761,
+  "class": "Aves"
+}

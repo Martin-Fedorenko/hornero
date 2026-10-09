@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/fondo_menu.png-e34863d1e967912d3f24f2fdf74bf9
 
 [params]
 
-compress/mode=0
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

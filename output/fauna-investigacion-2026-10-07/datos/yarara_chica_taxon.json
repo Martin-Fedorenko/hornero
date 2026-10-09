@@ -1,0 +1,21 @@
+{
+  "usageKey": 5220847,
+  "scientificName": "Bothrops diporus Cope, 1862",
+  "canonicalName": "Bothrops diporus",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "family": "Viperidae",
+  "genus": "Bothrops",
+  "species": "Bothrops diporus",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 11592253,
+  "familyKey": 5024,
+  "genusKey": 9064312,
+  "speciesKey": 5220847,
+  "class": "Squamata"
+}

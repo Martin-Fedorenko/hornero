@@ -1,0 +1,23 @@
+{
+  "usageKey": 2481006,
+  "scientificName": "Falco femoralis Temminck, 1822",
+  "canonicalName": "Falco femoralis",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Falconiformes",
+  "family": "Falconidae",
+  "genus": "Falco",
+  "species": "Falco femoralis",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 7191407,
+  "familyKey": 5240,
+  "genusKey": 2480996,
+  "speciesKey": 2481006,
+  "class": "Aves"
+}

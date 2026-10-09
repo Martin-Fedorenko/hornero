@@ -1,0 +1,23 @@
+{
+  "usageKey": 2481068,
+  "scientificName": "Spiziapteryx circumcincta (Kaup, 1852)",
+  "canonicalName": "Spiziapteryx circumcincta",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Falconiformes",
+  "family": "Falconidae",
+  "genus": "Spiziapteryx",
+  "species": "Spiziapteryx circumcincta",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 7191407,
+  "familyKey": 5240,
+  "genusKey": 2481067,
+  "speciesKey": 2481068,
+  "class": "Aves"
+}

@@ -1,5 +1,8 @@
 extends Control
 
+const FaunaFrames := preload("res://scripts/ui/fauna_frames.gd")
+const Presentacion := preload("res://splash_screen.gd")
+
 @export_file("*.tscn") var escena_juego: String = "res://scenes/main.tscn"
 # Texto con BBCode, igual que "Cómo jugar". En cada categoría van los tres
 # autores, en distinto orden.
@@ -93,151 +96,232 @@ Ahora te toca a vos ayudar a Huergo: juntá los materiales, esquivá a los que q
 ## Colores del puesto 1, 2 y 3 en los rankings.
 const COLORES_PODIO: Array[Color] = [Color("f2c94c"), Color("d9dde3"), Color("d79a5b")]
 
-const COLOR_PELIGRO: String = "#ff5a4a"
 # Pestaña "Fauna": hoja de sprites, columnas, inicio en Y de cada fila, alto del recorte y velocidad.
 const FAUNA: Array[Dictionary] = [
 	{
-		"nombre": "Hornero (Furnarius rufus)",
+		"nombre": "Hornero", "cientifico": "Furnarius rufus", "mapa": "rio_plata",
 		"hoja": preload("res://assets/hornero/hornero_walk.png"), "columnas": 3, "filas_y": [160, 590], "alto": 300, "fps": 8.0,
+		"modelo_jugador": true,
+		"modelos_extra": [{"hoja": preload("res://assets/Hornero_Fauna_14_Animales/hornero_v2_modelo_jugador_reducido.png"), "columnas": 3, "filas_y": [0, 512], "alto": 512, "margen_x": 0.0, "fps": 6.0}],
 		"habitat": "Centro y norte de Argentina, Uruguay, Paraguay, Bolivia y sur de Brasil. Vive en campos, pastizales, plazas y ciudades. Es el Ave Nacional de la Argentina.",
+		"descripcion": "Ave caminadora que construye un nido cerrado de barro con una cámara para los huevos.",
 		"peligro": "No está en peligro de extinción (Preocupación menor).",
 		"caza": "Casi no se lo caza: es querido en todo el país. Como toda la fauna silvestre, capturarlo es ilegal.",
 		"come": "Insectos, larvas, arañas y lombrices que busca caminando por el suelo.",
+		"relacion_hornero": "Es el protagonista: construye y defiende su nido; puede sufrir depredación de huevos o pichones.",
 	},
 	{
-		"nombre": "Chimango (Milvago chimango)",
+		"nombre": "Chimango", "cientifico": "Milvago chimango", "mapa": "cono_sur",
 		"hoja": preload("res://assets/chimango/chimangwo_walk.png"), "columnas": 6, "filas_y": [200], "alto": 320, "fps": 8.0,
+		"modelos_extra": [{"nombre": "Centinela nocturno", "hoja": preload("res://assets/chimango/chimango_variante_secreta.png"), "columnas": 3, "filas_y": [0, 512], "alto": 512, "margen_x": 0.0, "fps": 6.0}],
 		"habitat": "Sur de Sudamérica: casi toda la Argentina, Chile, Uruguay y sur de Brasil. Campos abiertos, costas y hasta ciudades.",
+		"descripcion": "Rapaz oportunista que suele buscar alimento en el suelo y aprovecha recursos naturales y humanos.",
 		"peligro": "No está en peligro de extinción (Preocupación menor).",
 		"caza": "Sí, injustamente: algunos lo tratan como plaga y lo matan, aunque ayuda a limpiar el campo de carroña e insectos.",
 		"come": "De todo: carroña, insectos, larvas, lombrices, pequeños animales y huevos. Suele seguir a los arados.",
+		"relacion_hornero": "En el juego es un depredador aéreo. Puede consumir huevos o pichones de aves, pero no se halló aquí un registro directo específico sobre horneros.",
 	},
 	{
-		"nombre": "Aguilucho común (Geranoaetus polyosoma)",
+		"nombre": "Aguilucho común", "cientifico": "Geranoaetus polyosoma", "mapa": "andino",
 		"hoja": preload("res://assets/Aguilucho/Aguilucho en reposo, seis cuadros.png"), "columnas": 3, "filas_y": [100, 560], "alto": 420, "fps": 4.0,
 		"habitat": "Andes y Patagonia, desde Colombia hasta Tierra del Fuego. Estepas, laderas y zonas abiertas.",
+		"descripcion": "Rapaz de espacios abiertos que planea buscando roedores, reptiles y otras presas pequeñas.",
 		"peligro": "No está en peligro de extinción (Preocupación menor).",
 		"caza": "Sí, injustamente: le disparan creyendo que ataca al ganado. También muere electrocutado en tendidos eléctricos.",
 		"come": "Roedores, liebres jóvenes, reptiles, aves e insectos grandes. Controla plagas de roedores.",
+		"relacion_hornero": "Puede representar un riesgo oportunista para aves pequeñas, pero no se halló un registro directo específico de depredación de horneros.",
 	},
 	{
-		"nombre": "Carancho (Caracara plancus)",
+		"nombre": "Carancho", "cientifico": "Caracara plancus", "mapa": "sudamerica",
 		"hoja": preload("res://assets/Carancho/Hoja de sprites del carancho argentino.png"), "columnas": 3, "filas_y": [10, 515], "alto": 490, "fps": 4.0,
 		"habitat": "Casi toda Sudamérica y toda la Argentina. Campos abiertos, bordes de rutas y montes.",
+		"descripcion": "Rapaz grande y adaptable; combina la búsqueda de carroña con la captura de presas pequeñas.",
 		"peligro": "No está en peligro de extinción (Preocupación menor).",
 		"caza": "Sí, injustamente: lo envenenan o le disparan acusándolo de atacar corderos, aunque sobre todo come animales ya muertos.",
 		"come": "Carroña, insectos, roedores, reptiles, huevos y pichones.",
+		"relacion_hornero": "Hay un registro publicado en Uruguay (2026) de un carancho que abrió un nido de hornero y depredó un pichón.",
 	},
 	{
-		"nombre": "Gato montés (Leopardus geoffroyi)",
+		"nombre": "Gato montés", "cientifico": "Leopardus geoffroyi", "mapa": "cono_sur",
 		"hoja": preload("res://assets/gato_montez/gato_caminando.png"), "columnas": 8, "filas_y": [280], "alto": 180, "fps": 9.0,
 		"habitat": "Centro y sur de Sudamérica: gran parte de la Argentina, del monte y el espinal a la pampa y la Patagonia.",
+		"descripcion": "Felino silvestre pequeño, principalmente nocturno y solitario.",
 		"peligro": "Hoy no está en peligro de extinción (Preocupación menor), pero la caza para pieles lo diezmó y sigue protegido por CITES.",
 		"caza": "Sí, injustamente: durante décadas se exportaron cientos de miles de pieles. Hoy lo matan por atacar gallineros y lo atropellan en las rutas.",
 		"come": "Roedores, liebres, aves, reptiles y peces.",
+		"relacion_hornero": "En el juego acecha al hornero. En la naturaleza podría capturar aves o saquear nidos al alcance, aunque no se halló un registro directo específico.",
 	},
 	{
-		"nombre": "Cotorra (Myiopsitta monachus)",
+		"nombre": "Cotorra", "cientifico": "Myiopsitta monachus", "mapa": "norte_este",
 		"hoja": preload("res://assets/cotorra/cotorra_walk.png"), "columnas": 6, "filas_y": [210], "alto": 320, "fps": 8.0,
 		"habitat": "Centro y norte de Argentina, Uruguay, Paraguay, Bolivia y sur de Brasil. Arma grandes nidos comunitarios de ramitas en árboles y postes.",
+		"descripcion": "Loro sociable que forma colonias y construye grandes nidos comunales de ramas.",
 		"peligro": "No está en peligro de extinción (Preocupación menor).",
 		"caza": "Sí: la declararon plaga agrícola y se la caza y se le destruyen los nidos. También la capturan para venderla como mascota.",
 		"come": "Semillas, granos, frutos, brotes, flores y algún insecto.",
+		"relacion_hornero": "El juego le asigna el daño al nido como mecánica; no lo presentamos como una interacción natural comprobada con el hornero.",
 	},
-	# --- Próximamente: todavía no están en el juego, pero ya tienen una ficha breve.
-	# Los nombres comunes que pueden abarcar varias especies se describen de forma general.
+	# --- Próximamente: fichas informativas; las relaciones se distinguen entre evidencia directa y riesgo posible.
 	# Las 16 láminas son de assets/Hornero_Fauna_14_Animales/, 1536x1024,
 	# 6 poses en 2 filas de 3 (cada celda de 512x512).
-	{"nombre": "Halcón", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/halcon.png"),
+	{"nombre": "Halconcito colorado", "cientifico": "Falco sparverius", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/halcon.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Ave rapaz diurna, veloz y de vista extraordinaria, que caza desde el aire.",
-			"habitat": "Según la especie, vive en campos abiertos, sierras, acantilados y también en ciudades de la Argentina.",
-			"peligro": "El nombre abarca varias especies: muchas no están amenazadas, aunque algunas poblaciones son escasas."},
-	{"nombre": "Gavilán", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/gavilan.png"),
+			"descripcion": "Rapaz pequeña y veloz que caza desde perchas o en vuelo; identificada aquí como el halconcito colorado, especie común en Argentina.",
+			"habitat": "Desde Canadá hasta Tierra del Fuego; en Sudamérica ocupa campos, pastizales, sabanas y bordes urbanos.",
+			"peligro": "No está globalmente amenazado (Preocupación menor); en Argentina es residente o migratorio según la región.",
+			"caza": "Puede sufrir persecución y pérdida de sitios de nidificación; no se lo debe confundir con una amenaza para aves domésticas.",
+			"come": "Insectos, roedores, lagartijas y aves pequeñas.",
+			"relacion_hornero": "Puede capturar aves pequeñas, pero los registros consultados no identifican al hornero como presa de esta especie."},
+	{"nombre": "Taguató común", "cientifico": "Rupornis magnirostris", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/gavilan_v2_taguato_comun.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Rapaz ágil que sorprende a aves, roedores y otros animales pequeños.",
-			"habitat": "Habita bosques, montes, bordes de caminos y zonas rurales o urbanas, según la especie.",
-			"peligro": "El nombre se usa para varias especies; su estado de conservación depende de cuál sea."},
-	{"nombre": "Lechuza", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/lechuza.png"),
+			"descripcion": "Rapaz diurna pequeña y adaptable, conocida también como gavilán común en algunas regiones.",
+			"habitat": "Desde México y Centroamérica hasta gran parte de Sudamérica; usa montes, bosques abiertos, campos y áreas urbanas.",
+			"peligro": "No está globalmente amenazado (Preocupación menor); la evaluación nacional consultada también lo clasifica como no amenazado.",
+			"caza": "Puede morir por persecución, pérdida de árboles para nidificar y colisiones; no se considera una amenaza para el ganado.",
+			"come": "Insectos, pequeños reptiles, roedores y aves; caza desde perchas y también caminando en el suelo.",
+			"relacion_hornero": "Hay un registro publicado en Córdoba de un taguató común que depredó un volantón de hornero; es evidencia directa, no significa que sea su presa habitual."},
+	{
+		"nombre": "Aves nocturnas",
+		"variantes": [
+			{"nombre": "Lechuza de campanario", "cientifico": "Tyto furcata", "mapa": "sudamerica",
+				"hoja": preload("res://assets/Hornero_Fauna_14_Animales/lechuza.png"),
+				"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+				"descripcion": "Lechuza nocturna de vuelo silencioso y oído muy desarrollado; suele anidar en cavidades y edificios.",
+				"habitat": "Gran parte de América; ocupa ambientes abiertos, campos y ciudades, y se refugia en huecos y construcciones.",
+				"peligro": "No está amenazada en Argentina (categoría nacional consultada); pierde refugios y puede intoxicarse con rodenticidas.",
+				"caza": "La persecución y el uso de venenos para roedores pueden afectarla indirectamente.",
+				"come": "Sobre todo roedores; también puede capturar otros animales pequeños.",
+				"relacion_hornero": "No se encontró evidencia directa de depredación de horneros por esta especie; su dieta se compone principalmente de pequeños mamíferos."},
+			{"nombre": "Lechuzón orejudo", "cientifico": "Asio clamator", "mapa": "sudamerica",
+				"hoja": preload("res://assets/Hornero_Fauna_14_Animales/buho_v2_lechuzon_orejudo.png"),
+				"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
+				"descripcion": "Búho nocturno con penachos de plumas que parecen orejas; caza al acecho y en vuelos bajos.",
+				"habitat": "Desde Centroamérica hasta Argentina y Uruguay; frecuenta montes abiertos, pastizales, humedales y bordes de ciudades.",
+				"peligro": "No está amenazado en Argentina ni globalmente (Preocupación menor).",
+				"caza": "Puede verse afectado por pérdida de hábitat, persecución y colisiones con vehículos.",
+				"come": "Roedores y otros mamíferos pequeños, aves, reptiles e insectos.",
+				"relacion_hornero": "Se registró un hornero entre las presas identificadas en egagrópilas de esta especie en Santa Fe: es un registro puntual, no una presa frecuente demostrada."},
+		],
+	},
+	{"nombre": "Tordo renegrido", "cientifico": "Molothrus bonariensis", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/tordo_renegrido.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Cazadora principalmente nocturna, de vuelo silencioso y oído muy sensible.",
-			"habitat": "Se refugia en huecos, construcciones y árboles de campos, pastizales y poblados.",
-			"peligro": "Las especies más comunes no están en peligro, pero sufren atropellamientos y pérdida de refugios."},
-	{"nombre": "Búho", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/buho.png"),
+			"descripcion": "Ave oscura y gregaria; es parásita de cría obligada: pone sus huevos en nidos de otras aves.",
+			"habitat": "Gran parte de Sudamérica, incluida Argentina; campos, pastizales, áreas rurales y ciudades.",
+			"peligro": "No está globalmente amenazado (Preocupación menor) y figura como no amenazado en Argentina.",
+			"caza": "No suele cazarse por consumo; puede ser perseguido localmente por considerarlo perjudicial para aves de cría o cultivos.",
+			"come": "Semillas e insectos; aprovecha granos y alimento disponible en el suelo.",
+			"relacion_hornero": "No es depredador: puede parasitar nidos de hornero. Los adultos reconocen y expulsan algunos huevos parásitos."},
+	{"nombre": "Golondrina ceja blanca", "cientifico": "Tachycineta leucorrhoa", "mapa": "cono_sur", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/golondrina.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Ave rapaz nocturna que controla poblaciones de roedores y otros animales pequeños.",
-			"habitat": "Según la especie, ocupa bosques, montes, pastizales, sierras y áreas rurales.",
-			"peligro": "El nombre abarca varias especies; muchas no están amenazadas, pero algunas son vulnerables localmente."},
-	{"nombre": "Tordo renegrido", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/tordo_renegrido.png"),
+			"descripcion": "Golondrina migratoria pequeña, de alas largas y rabadilla blanca; captura insectos durante el vuelo.",
+			"habitat": "Cono sur de Sudamérica; se encuentra en campos, humedales y zonas rurales, y anida en cavidades o estructuras.",
+			"peligro": "No se considera globalmente amenazada (Preocupación menor); sus poblaciones pueden verse afectadas localmente.",
+			"caza": "Puede afectarla la pérdida de sitios de nidificación, los pesticidas y la reducción de insectos.",
+			"come": "Insectos que captura en vuelo.",
+			"relacion_hornero": "No se conoce como depredadora del hornero; ambas pueden compartir áreas abiertas y alimentarse de recursos distintos."},
+	{"nombre": "Benteveo común", "cientifico": "Pitangus sulphuratus", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/benteveo.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Ave sociable de plumaje oscuro; pone sus huevos en nidos de otras aves.",
-			"habitat": "Es común en campos, pastizales, zonas agrícolas, parques y ciudades de gran parte de Sudamérica.",
-			"peligro": "No se encuentra en peligro de extinción (Preocupación menor)."},
-	{"nombre": "Golondrina", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/golondrina.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Ave pequeña y acrobática que captura insectos mientras vuela; muchas especies son migratorias.",
-			"habitat": "Vive cerca de campos abiertos, humedales, costas y poblados, donde encuentra insectos y sitios para anidar.",
-			"peligro": "El nombre reúne varias especies; las más comunes no están amenazadas, aunque su situación varía."},
-	{"nombre": "Benteveo", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/benteveo.png"),
-			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Ave inquieta y fácil de reconocer por su llamado; come insectos, frutos y pequeños animales.",
-			"habitat": "Frecuenta montes abiertos, orillas de ríos, campos, plazas y jardines de gran parte de la Argentina.",
-			"peligro": "No se encuentra en peligro de extinción (Preocupación menor)."},
-	{"nombre": "Cóndor andino", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/Vuelo del cóndor andino en sprites-1.png"),
+			"descripcion": "Tirano robusto y ruidoso, reconocible por su ceja blanca y vientre amarillo; es muy oportunista.",
+			"habitat": "Desde el sur de Estados Unidos hasta Argentina; vive en montes abiertos, orillas, parques, campos y jardines.",
+			"peligro": "No está globalmente amenazado (Preocupación menor).",
+			"caza": "No suele cazarse; puede sufrir pérdida de hábitat, atropellamientos y persecución local.",
+			"come": "Insectos, frutos, peces pequeños y otros vertebrados pequeños; también puede tomar huevos o pichones.",
+			"relacion_hornero": "Podría depredar huevos o pichones accesibles por su dieta oportunista, pero no se halló un registro directo específico sobre horneros."},
+	{"nombre": "Cóndor andino", "cientifico": "Vultur gryphus", "mapa": "andino", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/Vuelo del cóndor andino en sprites-1.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
 			"descripcion": "Enorme ave carroñera que planea largas distancias y ayuda a mantener limpios los ecosistemas.",
 			"habitat": "Vive en montañas, quebradas y estepas a lo largo de los Andes y en sierras del centro argentino.",
-			"peligro": "Está categorizado como Amenazado en la Argentina; los cebos tóxicos son una de sus mayores amenazas."},
-	{"nombre": "Comadreja", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/comadreja.png"),
+			"peligro": "Está amenazado en Argentina y globalmente figura como Vulnerable; el envenenamiento es una amenaza grave.",
+			"caza": "Históricamente perseguido; hoy lo afectan sobre todo cebos tóxicos, plomo, pérdida de alimento y perturbación de sitios de cría.",
+			"come": "Carroña, especialmente grandes mamíferos; no caza animales vivos como conducta habitual.",
+			"relacion_hornero": "No es un cazador de horneros: se alimenta de carroña y no representa una amenaza directa para el nido."},
+	{"nombre": "Comadreja overa", "cientifico": "Didelphis albiventris", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/comadreja.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Marsupial nocturno y trepador que come frutos, insectos, huevos y pequeños vertebrados.",
-			"habitat": "Habita montes, bosques, humedales, áreas rurales y jardines; suele refugiarse en huecos y techos.",
-			"peligro": "Las especies más comunes no están en peligro de extinción, aunque son víctimas frecuentes de atropellamientos."},
-	{"nombre": "Gato cimarrón", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/gato_cimarron.png"),
+			"descripcion": "Marsupial nocturno, omnívoro y trepador, con cola prensil; también se lo llama comadreja común.",
+			"habitat": "La comadreja overa ocupa gran parte de Argentina y países vecinos; usa montes, humedales, áreas rurales y ciudades.",
+			"peligro": "La comadreja overa no está amenazada (Preocupación menor); no debe generalizarse a todas las especies llamadas comadrejas.",
+			"caza": "Puede ser perseguida por entrar en gallineros; también la afectan atropellamientos y pérdida de refugios.",
+			"come": "Frutos, insectos, pequeños vertebrados, huevos y carroña.",
+			"relacion_hornero": "Podría saquear huevos o pichones en un nido accesible, pero no se halló evidencia directa específica para horneros."},
+	{"nombre": "Gato cimarrón", "cientifico": "Felis catus", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/gato_cimarron.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Es un gato doméstico que volvió a vivir en estado silvestre y puede cazar fauna nativa.",
-			"habitat": "Se adapta a campos, montes, islas y zonas cercanas a poblados donde consigue alimento y refugio.",
-			"peligro": "No está en peligro de extinción: es una especie doméstica asilvestrada y puede volverse invasora."},
-	{"nombre": "Zorro gris", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/zorro.png"),
+			"descripcion": "Gato doméstico (Felis catus) que vive sin depender de personas; es un depredador introducido.",
+			"habitat": "Se adapta a ambientes rurales, periurbanos, montes e islas de Argentina y Latinoamérica.",
+			"peligro": "No es una especie silvestre amenazada; sus poblaciones asilvestradas pueden amenazar fauna nativa.",
+			"caza": "Puede ser controlado o perseguido; el manejo responsable incluye evitar abandonos y proteger la fauna silvestre.",
+			"come": "Aves, roedores, reptiles e insectos, además de alimento provisto por personas.",
+			"relacion_hornero": "Puede cazar horneros adultos, volantones o pichones fuera del nido; el riesgo depende del acceso y del contexto local."},
+	{"nombre": "Zorro gris pampeano", "cientifico": "Lycalopex gymnocercus", "mapa": "cono_sur", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/zorro.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Cánido adaptable y mayormente nocturno que se alimenta de animales pequeños, frutos y carroña.",
-			"habitat": "Vive en pastizales, matorrales, montes y estepas de distintas regiones de la Argentina.",
-			"peligro": "No se considera en peligro de extinción, pero la caza y los atropellamientos afectan sus poblaciones."},
-	{"nombre": "Ratón de campo", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/roedor.png"),
+			"descripcion": "Cánido oportunista de tamaño mediano, también llamado zorro pampeano o zorro gris chico.",
+			"habitat": "Centro y sur de Sudamérica; ocupa pastizales, montes, matorrales y estepas, incluido el centro de Argentina.",
+			"peligro": "No está globalmente amenazado; la persecución y la caza generan presión en algunas zonas.",
+			"caza": "Persecución por conflictos con animales domésticos, caza por pieles y atropellamientos son presiones conocidas.",
+			"come": "Roedores, aves, reptiles, insectos, frutos y carroña; la proporción depende de la región.",
+			"relacion_hornero": "Podría capturar aves o revisar nidos accesibles, pero no se encontró un registro directo específico de depredación de horneros."},
+	{"nombre": "Laucha de campo", "cientifico": "Calomys laucha", "mapa": "pampas", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/roedor.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Pequeño roedor, por lo general nocturno, que dispersa semillas y sirve de alimento a muchos depredadores.",
-			"habitat": "Las distintas especies ocupan pastizales, cultivos, montes, bosques y estepas de todo el país.",
-			"peligro": "El nombre agrupa muchas especies: la mayoría no está amenazada, pero algunas tienen distribución reducida."},
-	{"nombre": "Puma", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/Puma en carrera, seis poses.png"),
+			"descripcion": "Roedor pequeño, mayormente nocturno, conocido también como laucha chica o laucha de campo.",
+			"habitat": "Norte de Paraguay y sudeste de Bolivia hasta el centro de Argentina; frecuente en campos y áreas agrícolas.",
+			"peligro": "No se considera amenazado; la intensidad de la agricultura y los rodenticidas pueden afectar poblaciones locales.",
+			"caza": "Se lo controla en cultivos y viviendas; los rodenticidas afectan también a sus depredadores.",
+			"come": "Semillas, brotes e insectos; es presa de numerosas rapaces y mamíferos.",
+			"relacion_hornero": "No es un depredador del hornero; forma parte de la red alimentaria de las rapaces que pueden compartir su ambiente."},
+	{"nombre": "Puma", "cientifico": "Puma concolor", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/Puma en carrera, seis poses.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Gran felino solitario y sigiloso, fundamental para regular las poblaciones de sus presas.",
-			"habitat": "Ocupa montañas, bosques, montes, pastizales y estepas desde el norte argentino hasta la Patagonia.",
-			"peligro": "No está amenazado a escala global, pero en varias regiones disminuyó por persecución y pérdida de hábitat."},
-	{"nombre": "Yarará", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/yarara.png"),
+			"descripcion": "Puma (Puma concolor), gran felino solitario que regula las poblaciones de sus presas.",
+			"habitat": "Desde Canadá hasta el extremo sur de Sudamérica; ocupa montañas, bosques, montes, pastizales y estepas.",
+			"peligro": "Preocupación menor a escala global; en Argentina y varias regiones sus poblaciones sufren persecución y fragmentación.",
+			"caza": "Perseguido por conflictos con la ganadería y por caza; también lo afectan la pérdida y fragmentación de hábitat.",
+			"come": "Mamíferos medianos y grandes; también aves y presas pequeñas cuando están disponibles.",
+			"relacion_hornero": "No es un depredador probable de un hornero adulto o de un nido alto; no se halló evidencia directa de interacción."},
+	{"nombre": "Yarará grande", "cientifico": "Bothrops alternatus", "mapa": "norte_este", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/yarara.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Víbora venenosa que evita el contacto con las personas y ayuda a controlar roedores.",
-			"habitat": "Según la especie, vive en pastizales, humedales, montes y bosques de buena parte de la Argentina.",
-			"peligro": "El nombre abarca varias especies; las más conocidas no están en peligro, pero no deben ser perseguidas."},
-	{"nombre": "Culebra arborícola", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/culebra.png"),
+			"descripcion": "Víbora venenosa de cuerpo robusto, también llamada víbora de la cruz; contribuye al control de roedores.",
+			"habitat": "Norte y centro de Argentina, Uruguay, Paraguay y sur de Brasil; prefiere pastizales húmedos, bañados y orillas.",
+			"peligro": "No amenazada en Argentina según la categorización consultada; no debe manipularse ni matarse por temor.",
+			"caza": "La persecución humana y la pérdida de hábitat son riesgos; también mueren en rutas.",
+			"come": "Principalmente roedores y otros pequeños vertebrados; la dieta depende de la especie y la edad.",
+			"relacion_hornero": "No es un depredador típico de nidos; podría afectar huevos o pichones en circunstancias excepcionales, sin registro directo localizado."},
+	{"nombre": "Culebra arborícola verde", "cientifico": "Philodryas olfersii", "mapa": "norte_este", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/culebra.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Serpiente ágil que se desplaza entre ramas y se alimenta de pequeños animales.",
-			"habitat": "Habita árboles y arbustos de bosques, selvas y montes cálidos, principalmente del norte argentino.",
-			"peligro": "El nombre puede referirse a distintas especies; su estado de conservación varía y no conviene generalizar."},
-	{"nombre": "Lagarto overo", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/lagarto_overo.png"),
+			"descripcion": "Culebra verde diurna y semiarborícola; aunque no es una víbora, su mordedura puede causar envenenamiento local.",
+			"habitat": "Norte y este de Sudamérica, incluido el noreste argentino; vive en bosques, selvas y áreas abiertas con vegetación.",
+			"peligro": "No se la considera globalmente amenazada; enfrenta pérdida de hábitat y persecución por confusión con víboras.",
+			"caza": "Sufren persecución por confusión con víboras y pérdida de vegetación nativa.",
+			"come": "Anfibios, lagartijas, aves y pequeños mamíferos.",
+			"relacion_hornero": "Por sus hábitos trepadores y dieta, podría acceder a huevos o pichones; no se encontró un registro directo de esta especie en nidos de hornero."},
+	{"nombre": "Lagarto overo", "cientifico": "Salvator merianae", "mapa": "norte_este", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/lagarto_overo.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Lagarto grande y terrestre, buen nadador, que consume frutos, huevos, insectos y pequeños animales.",
-			"habitat": "Vive en selvas, montes, pastizales y humedales del norte y centro de la Argentina.",
-			"peligro": "No se encuentra en peligro de extinción, aunque fue muy cazado por su cuero."},
+			"descripcion": "Lagarto overo (Salvator merianae), reptil grande, diurno en época cálida y buen nadador.",
+			"habitat": "Centro y norte de Argentina y países vecinos; vive en montes, pastizales, humedales y bordes de ambientes rurales.",
+			"peligro": "No está amenazado a escala global ni en Argentina según las evaluaciones consultadas; puede sufrir presión local.",
+			"caza": "Históricamente perseguido por su cuero y hoy afectado por atropellamientos y captura ilegal.",
+			"come": "Omnívoro: frutos, insectos, huevos, carroña y pequeños animales.",
+			"relacion_hornero": "Puede consumir huevos o animales pequeños si encuentra un nido accesible, pero no se halló un registro directo específico para horneros."},
+	{"nombre": "Aguará guazú", "cientifico": "Chrysocyon brachyurus", "mapa": "aguaraguazu", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/aguaraguazu.png"),
+			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0,
+			"descripcion": "El mayor cánido de Sudamérica: esbelto, de patas largas y pelaje rojizo con una crin oscura.",
+			"habitat": "Centro y sur de Brasil, este de Bolivia, Paraguay, noroeste de Uruguay y noreste de Argentina. Prefiere pastizales y pajonales abiertos, a menudo junto a bañados, palmares y parches de monte.",
+			"peligro": "Sí: está categorizado como Vulnerable (VU) en Argentina (SAREM, 2025) y como Casi Amenazado globalmente (UICN; evaluación más reciente disponible de 2015).",
+			"caza": "Lo afectan la pérdida y fragmentación de pastizales por la expansión agropecuaria, los atropellamientos y la persecución o captura ilegal.",
+			"come": "Omnívoro: frutos silvestres, insectos y pequeños vertebrados, como roedores, armadillos, reptiles y aves.",
+			"relacion_hornero": "Puede comer aves pequeñas de forma oportunista, pero no es un depredador habitual del hornero y no se encontró evidencia específica de ataques a sus nidos."},
 ]
 
 const TextoJuego := preload("res://scripts/ui/texto_juego.gd")
-const FaunaFrames := preload("res://scripts/ui/fauna_frames.gd")
 const PopupNombre := preload("res://scripts/ui/popup_nombre.gd")
 const PopupConfirmacion := preload("res://scripts/ui/popup_confirmacion.gd")
 const PopupAnimal := preload("res://scripts/ui/popup_animal.gd")
 const BotonSilenciar := preload("res://scripts/ui/boton_silenciar.gd")
 ## Cartel de madera vacío que aparece detrás de la opción seleccionada.
 const CartelFileteado := preload("res://scripts/ui/cartel_fileteado.gd")
+const LOGO_AVES: Texture2D = preload("res://Hornero_Menu_Inicio/logo_aves.png")
+const URL_AVES := "https://www.avesargentinas.org.ar/"
+## Alto del logo de Aves Argentinas, como fracción del de la UTN.
+const ESCALA_LOGO_AVES := 0.85
+## Espacio vertical entre un logo y el otro.
+const SEPARACION_LOGOS := 8.0
 # Colores de las letras del logo "HORNERO".
 const COLOR_LETRAS: Color = Color("f8dc9c")
 const COLOR_BORDE_LETRAS: Color = Color("5a2e12")
@@ -285,11 +369,9 @@ var _pestanas: HBoxContainer
 var _pestana_historia: Button
 var _pestana_fauna: Button
 var _fauna: ScrollContainer
-# Cada entrada: {"rect": TextureRect, "cuadros": Array[Texture2D], "fps": float}
-var _animales: Array[Dictionary] = []
-var _tiempo_fauna := 0.0
 ## Ventana de detalle de un animal, mientras está abierta (ver _abrir_detalle_animal).
 var _popup_animal: Control
+var _miniaturas_fauna: Array[Dictionary] = []
 ## Volumen real (lineal) de la música y del canto, para volver a ponerlo al
 ## desactivar el silencio; _ready los guarda antes de aplicar nada.
 var _volumen_musica := 1.0
@@ -344,6 +426,7 @@ func _ready() -> void:
 	_volumen_musica = musica_menu.volume_linear
 	_volumen_canto = _canto_hornero.volume_linear
 	_crear_boton_silenciar()
+	_crear_logo_aves()
 	_fondo.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_fondo.stretch_mode = TextureRect.STRETCH_SCALE
 	resized.connect(_ajustar_fondo)
@@ -351,7 +434,9 @@ func _ready() -> void:
 	ventana.hide()
 	start.grab_focus()
 	$HorneroMenu.play(&"viento")
-	musica_menu.play()
+	# Viniendo de la presentación, el tema sigue donde quedó allá en vez de
+	# volver a empezar; en cualquier otro caso arranca de cero.
+	musica_menu.play(Presentacion.tomar_posicion_musica())
 	_iniciar_canto_ambiental()
 	# Los datos de Talo llegan de a poco: cada uno rellena su pestaña.
 	TaloManager.player_stats_loaded.connect(_on_estadisticas_personales)
@@ -383,14 +468,41 @@ func _crear_boton_silenciar() -> void:
 	var boton := BotonSilenciar.new()
 	boton.anchor_left = 1.0
 	boton.anchor_right = 1.0
+	boton.anchor_top = 1.0
+	boton.anchor_bottom = 1.0
 	boton.offset_left = -60.0
 	boton.offset_right = -16.0
-	boton.offset_top = 16.0
-	boton.offset_bottom = 60.0
+	boton.offset_top = -60.0
+	boton.offset_bottom = -16.0
 	boton.silenciado = Ajustes.musica_silenciada
 	_aplicar_silencio(boton.silenciado)
 	boton.alternado.connect(_on_alternar_silencio)
 	add_child(boton)
+
+## Logo de Aves Argentinas, apoyado justo arriba del de la UTN. Ese otro es un
+## autoload que se dibuja en todas las pantallas: de ahí salen la medida, el
+## margen y la opacidad, así los dos quedan alineados y parejos aunque se los
+## cambie. Éste además es un botón y abre el sitio de Aves Argentinas.
+## Se lo mete antes de Ventana para que los cuadros del menú lo tapen, y fuera
+## del recorrido del Tab para no interferir con la navegación por teclado.
+func _crear_logo_aves() -> void:
+	var alto_logo := UtnLogo.alto * ESCALA_LOGO_AVES
+	var boton := TextureButton.new()
+	boton.texture_normal = LOGO_AVES
+	boton.ignore_texture_size = true
+	boton.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	boton.focus_mode = Control.FOCUS_NONE
+	boton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	boton.tooltip_text = "Aves Argentinas"
+	boton.modulate.a = UtnLogo.alfa_menu
+	boton.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	boton.offset_left = UtnLogo.margen.x
+	boton.offset_right = UtnLogo.margen.x + alto_logo * LOGO_AVES.get_width() / LOGO_AVES.get_height()
+	boton.offset_bottom = -UtnLogo.margen.y - UtnLogo.alto - SEPARACION_LOGOS
+	boton.offset_top = boton.offset_bottom - alto_logo
+	boton.pressed.connect(func() -> void: OS.shell_open(URL_AVES))
+	add_child(boton)
+	move_child(boton, ventana.get_index())
 
 func _on_alternar_silencio(silenciado: bool) -> void:
 	Ajustes.cambiar_musica_silenciada(silenciado)
@@ -522,68 +634,106 @@ func _crear_pestanas_historia() -> void:
 func _crear_ficha(animal: Dictionary) -> Control:
 	var ficha := PanelContainer.new()
 	ficha.add_theme_stylebox_override("panel", _caja(Color(0.08, 0.17, 0.15, 0.9), Color("6f6a4a"), 12))
-	_hacer_clickeable(ficha, _abrir_detalle_animal.bind(animal))
-	var fila := HBoxContainer.new()
-	fila.add_theme_constant_override("separation", 18)
-	ficha.add_child(fila)
-
-	var cuadros := FaunaFrames.cortar(animal["hoja"], animal["columnas"], animal["filas_y"],
-			animal["alto"], animal.get("margen_x", 10.0))
-	var dibujo := TextureRect.new()
-	dibujo.custom_minimum_size = Vector2(190, 150)
-	dibujo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	dibujo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	dibujo.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	dibujo.texture = cuadros[0]
-	fila.add_child(dibujo)
-	_animales.append({"rect": dibujo, "cuadros": cuadros, "fps": animal["fps"]})
-
-	var columna_texto := VBoxContainer.new()
-	columna_texto.add_theme_constant_override("separation", 6)
-	columna_texto.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	fila.add_child(columna_texto)
-
-	# Los animales que todavía no aparecen durante la partida conservan la insignia,
-	# pero ya muestran su ficha informativa breve.
-	if animal.get("proximamente", false):
-		columna_texto.add_child(_insignia_proximamente())
-
-	var texto := RichTextLabel.new()
-	texto.bbcode_enabled = true
-	texto.fit_content = true
-	texto.scroll_active = false
-	texto.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	texto.add_theme_color_override("default_color", Color(0.95, 0.92, 0.83))
-	texto.add_theme_font_size_override("normal_font_size", 17)
-	texto.add_theme_font_size_override("bold_font_size", 17)
-	if animal.has("descripcion"):
-		texto.text = "[b][color=#f8dc9c]%s[/color][/b]\n%s\n[b]Dónde vive:[/b] %s\n[color=%s][b]¿Peligro de extinción?[/b] %s[/color]" % [
-			animal["nombre"], animal["descripcion"], animal["habitat"], COLOR_PELIGRO, animal["peligro"]]
+	ficha.custom_minimum_size.y = 104
+	if animal.has("variantes"):
+		_mostrar_ficha_con_variantes(ficha, animal["variantes"])
 	else:
-		texto.text = "[b][color=#f8dc9c]%s[/color][/b]\n[b]Dónde vive:[/b] %s\n[color=%s][b]¿Peligro de extinción?[/b] %s[/color]\n[b]¿Lo cazan?[/b] %s\n[b]Qué come:[/b] %s" % [
-			animal["nombre"], animal["habitat"], COLOR_PELIGRO, animal["peligro"], animal["caza"], animal["come"]]
-	columna_texto.add_child(texto)
+		_hacer_clickeable(ficha, _abrir_detalle_animal.bind(animal))
+		var fila := HBoxContainer.new()
+		fila.add_theme_constant_override("separation", 12)
+		fila.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		ficha.add_child(fila)
+		fila.add_child(_miniatura_animal(animal))
+		var columna := _columna_nombre_animal(animal)
+		columna.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fila.add_child(columna)
 	_fichas_fauna.append(ficha)
 	return ficha
 
-## Cartelito "PRÓXIMAMENTE" para los animales que todavía no están en el juego.
-func _insignia_proximamente() -> Control:
-	var insignia := PanelContainer.new()
-	insignia.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	var estilo := StyleBoxFlat.new()
-	estilo.bg_color = Color("c97a2b")
-	estilo.border_color = Color("f8dc9c")
-	estilo.set_border_width_all(1)
-	estilo.set_corner_radius_all(5)
-	estilo.content_margin_left = 10.0
-	estilo.content_margin_right = 10.0
-	estilo.content_margin_top = 3.0
-	estilo.content_margin_bottom = 3.0
-	insignia.add_theme_stylebox_override("panel", estilo)
-	var etiqueta := _texto(13, Color("2a1606"))
-	etiqueta.text = "PRÓXIMAMENTE"
-	insignia.add_child(etiqueta)
-	return insignia
+
+func _mostrar_ficha_con_variantes(ficha: PanelContainer, variantes: Array) -> void:
+	var indice := [0]
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 8)
+	ficha.add_child(fila)
+	var anterior := _boton_carrusel("‹")
+	var siguiente := _boton_carrusel("›")
+	var miniatura := _miniatura_animal(variantes[0], false)
+	var columna := VBoxContainer.new()
+	columna.alignment = BoxContainer.ALIGNMENT_CENTER
+	columna.add_theme_constant_override("separation", 2)
+	columna.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var refrescar := func() -> void:
+		for hijo in columna.get_children():
+			columna.remove_child(hijo)
+			if hijo != null:
+				hijo.queue_free()
+		columna.add_child(_etiqueta_nombre_animal(variantes[indice[0]], true))
+		columna.add_child(_etiqueta_nombre_animal(variantes[indice[0]], false))
+		miniatura.texture = _cuadro_vista_previa(variantes[indice[0]])
+	fila.add_child(anterior)
+	fila.add_child(miniatura)
+	fila.add_child(columna)
+	fila.add_child(siguiente)
+	anterior.pressed.connect(func() -> void:
+		indice[0] = posmod(indice[0] - 1, variantes.size())
+		refrescar.call())
+	siguiente.pressed.connect(func() -> void:
+		indice[0] = (indice[0] + 1) % variantes.size()
+		refrescar.call())
+	_hacer_clickeable(ficha, func() -> void: _abrir_detalle_animal(variantes[indice[0]]))
+	refrescar.call()
+
+
+func _miniatura_animal(animal: Dictionary, registrar: bool = true) -> TextureRect:
+	var miniatura := TextureRect.new()
+	miniatura.custom_minimum_size = Vector2(116, 84)
+	miniatura.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	miniatura.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	miniatura.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	miniatura.texture = _cuadro_vista_previa(animal)
+	if registrar:
+		_miniaturas_fauna.append({"animal": animal, "miniatura": miniatura})
+	return miniatura
+
+
+func _cuadro_vista_previa(animal: Dictionary) -> Texture2D:
+	var modelo := animal
+	if animal.get("modelo_jugador", false) and Ajustes.hornero_modelo_alternativo:
+		var opciones: Array = animal.get("modelos_extra", [])
+		if not opciones.is_empty():
+			modelo = opciones[0]
+	var cuadros := FaunaFrames.cortar(modelo["hoja"], modelo["columnas"], modelo["filas_y"],
+			modelo["alto"], modelo.get("margen_x", 10.0))
+	return cuadros[0] if not cuadros.is_empty() else null
+
+
+func _boton_carrusel(texto: String) -> Button:
+	var boton := Button.new()
+	boton.text = texto
+	boton.custom_minimum_size = Vector2(38, 40)
+	boton.add_theme_font_size_override("font_size", 28)
+	boton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	return boton
+
+
+func _columna_nombre_animal(animal: Dictionary) -> VBoxContainer:
+	var columna := VBoxContainer.new()
+	columna.alignment = BoxContainer.ALIGNMENT_CENTER
+	columna.add_theme_constant_override("separation", 2)
+	columna.add_child(_etiqueta_nombre_animal(animal, true))
+	columna.add_child(_etiqueta_nombre_animal(animal, false))
+	return columna
+
+
+func _etiqueta_nombre_animal(animal: Dictionary, comun: bool) -> Label:
+	var etiqueta := Label.new()
+	etiqueta.text = animal.get("nombre", "") if comun else animal.get("cientifico", "")
+	etiqueta.add_theme_font_size_override("font_size", 24 if comun else 17)
+	etiqueta.add_theme_color_override("font_color", COLOR_LETRAS if comun else COLOR_TEXTO)
+	etiqueta.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	etiqueta.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return etiqueta
 
 ## Abre la ventana de detalle del animal. Si ya hay una abierta, no apila otra.
 func _abrir_detalle_animal(animal: Dictionary) -> void:
@@ -591,15 +741,29 @@ func _abrir_detalle_animal(animal: Dictionary) -> void:
 		return
 	# Para que Tab no llegue a una ficha tapada por la ventana de detalle.
 	for ficha in _fichas_fauna:
-		ficha.focus_mode = Control.FOCUS_NONE
+		_establecer_foco_ficha(ficha, false)
 	var popup := PopupAnimal.new()
 	popup.animal = animal
 	popup.tree_exited.connect(func() -> void:
 		_popup_animal = null
+		_refrescar_miniaturas_fauna()
 		for ficha in _fichas_fauna:
-			ficha.focus_mode = Control.FOCUS_ALL)
+			_establecer_foco_ficha(ficha, true))
 	_popup_animal = popup
 	add_child(popup)
+
+
+func _refrescar_miniaturas_fauna() -> void:
+	for datos in _miniaturas_fauna:
+		var miniatura := datos["miniatura"] as TextureRect
+		if is_instance_valid(miniatura):
+			miniatura.texture = _cuadro_vista_previa(datos["animal"])
+
+
+func _establecer_foco_ficha(ficha: Control, activo: bool) -> void:
+	ficha.focus_mode = Control.FOCUS_ALL if activo else Control.FOCUS_NONE
+	for hijo in ficha.find_children("*", "Control", true, false):
+		hijo.focus_mode = Control.FOCUS_ALL if activo and hijo is Button else Control.FOCUS_NONE
 
 ## Hace que una ficha (de Fauna) reaccione al clic o a Enter, con el borde
 ## resaltado al pasar el mouse o tener el foco, como los botones del menú.
@@ -626,12 +790,6 @@ func _hacer_clickeable(control: Control, accion: Callable) -> void:
 
 func _process(delta: float) -> void:
 	_scroll_con_teclas(delta)
-	if _fauna == null or not _fauna.is_visible_in_tree():
-		return
-	_tiempo_fauna += delta
-	for animal in _animales:
-		var cuadros: Array[Texture2D] = animal["cuadros"]
-		animal["rect"].texture = cuadros[int(_tiempo_fauna * animal["fps"]) % cuadros.size()]
 
 func _cerrar() -> void:
 	ventana.hide()

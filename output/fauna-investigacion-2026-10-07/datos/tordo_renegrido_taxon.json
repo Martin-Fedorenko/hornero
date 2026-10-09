@@ -1,0 +1,23 @@
+{
+  "usageKey": 2484396,
+  "scientificName": "Molothrus bonariensis (Gmelin, 1789)",
+  "canonicalName": "Molothrus bonariensis",
+  "rank": "SPECIES",
+  "status": "ACCEPTED",
+  "confidence": 99,
+  "matchType": "EXACT",
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "order": "Passeriformes",
+  "family": "Icteridae",
+  "genus": "Molothrus",
+  "species": "Molothrus bonariensis",
+  "kingdomKey": 1,
+  "phylumKey": 44,
+  "classKey": 212,
+  "orderKey": 729,
+  "familyKey": 6176,
+  "genusKey": 2484385,
+  "speciesKey": 2484396,
+  "class": "Aves"
+}
