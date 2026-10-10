@@ -66,9 +66,11 @@ const IDENTITY_PATH := "user://jugador.cfg"
 ## Resultados de partida que todavía no se pudieron subir.
 const PENDING_PATH := "user://pendientes.cfg"
 const NAME_MAX_LENGTH := 20
-const RANKING_SIZE := 10
+const RANKING_SIZE := 50
 ## Páginas de Talo (50 entradas cada una) que se recorren para llenar un ranking.
-const MAX_RANKING_PAGES := 5
+## Las entradas ocultas (de antes de borrar datos o sin nombre) no cuentan, así
+## que puede hacer falta más de una página para juntar los 50 puestos.
+const MAX_RANKING_PAGES := 10
 ## Páginas de la búsqueda de jugadores que se recorren al comprobar un nombre.
 const MAX_NAME_SEARCH_PAGES := 5
 
