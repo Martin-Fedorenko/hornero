@@ -63,7 +63,7 @@ func _armar() -> void:
 	centro.add_child(columna)
 
 	var texto := TextoJuego.crear(44)
-	texto.text = "Cargando..."
+	texto.text = "CARGANDO"
 	texto.custom_minimum_size = Vector2(420, 0)
 	texto.size = Vector2.ZERO
 	columna.add_child(texto)

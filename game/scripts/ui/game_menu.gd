@@ -78,8 +78,7 @@ func _ready() -> void:
 	_textos.add_child(_tiempo)
 	_textos.move_child(_tiempo, _titulo.get_index() + 1)
 	_aviso_subida = Label.new()
-	_aviso_subida.text = "No fue posible subir tus estadísticas.
-Revisá tu conexión a internet."
+	_aviso_subida.text = "JUEGO_SIN_CONEXION"
 	_aviso_subida.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_aviso_subida.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_aviso_subida.add_theme_font_size_override("font_size", 20)
@@ -109,7 +108,7 @@ func abrir_muerte() -> void:
 ## `tiempo_ms`: lo que tardó en ganar, para mostrarlo debajo del título.
 func abrir_victoria(tiempo_ms := -1) -> void:
 	await get_tree().create_timer(victory_delay, false).timeout
-	_tiempo.text = "Tu tiempo: " + TaloManager.format_time(tiempo_ms)
+	_tiempo.text = tr("JUEGO_TU_TIEMPO") % TaloManager.format_time(tiempo_ms)
 	_abrir(Tipo.VICTORIA)
 	_tiempo.visible = tiempo_ms >= 0 and tipo == Tipo.VICTORIA
 
@@ -121,15 +120,15 @@ func _abrir(nuevo_tipo: Tipo) -> void:
 	_tiempo.visible = false
 	match tipo:
 		Tipo.PAUSA:
-			_poner_titulo("PAUSA", COLOR_LETRAS)
-			_poner_opciones([["Continuar", _continuar], ["Cómo jugar", _mostrar_ayuda],
-					["Reiniciar", _volver_a_jugar]])
+			_poner_titulo("JUEGO_PAUSA", COLOR_LETRAS)
+			_poner_opciones([["JUEGO_CONTINUAR", _continuar], ["TITULO_COMO_JUGAR", _mostrar_ayuda],
+					["JUEGO_REINICIAR", _volver_a_jugar]])
 		Tipo.MUERTE:
-			_poner_titulo("HAS FALLADO", Color(0.85, 0.2, 0.18))
-			_poner_opciones([["Volver a jugar", _volver_a_jugar]])
+			_poner_titulo("JUEGO_FALLASTE", Color(0.85, 0.2, 0.18))
+			_poner_opciones([["JUEGO_VOLVER_A_JUGAR", _volver_a_jugar]])
 		Tipo.VICTORIA:
-			_poner_titulo("¡HAS GANADO!", Color("efb760"))
-			_poner_opciones([["Volver a jugar", _volver_a_jugar]])
+			_poner_titulo("JUEGO_GANASTE", Color("efb760"))
+			_poner_opciones([["JUEGO_VOLVER_A_JUGAR", _volver_a_jugar]])
 	match tipo:
 		Tipo.MUERTE: _preparar_imagen_final(IMAGEN_DERROTA)
 		Tipo.VICTORIA: _preparar_imagen_final(IMAGEN_VICTORIA)
@@ -183,9 +182,10 @@ func _poner_opciones(propias: Array) -> void:
 	for hijo in _opciones.get_children():
 		hijo.queue_free()
 		_opciones.remove_child(hijo)
-	var salidas := [["Salir al menú", _salir_al_menu]]
+	var salidas := [["JUEGO_SALIR_MENU", _salir_al_menu]]
 	if not OS.has_feature("web"):
-		salidas.append(["Salir al escritorio", _salir_al_escritorio])
+		salidas.append([Plataforma.texto_control("JUEGO_SALIR_ESCRITORIO", "JUEGO_SALIR_JUEGO"),
+				_salir_al_escritorio])
 	for opcion in propias + salidas:
 		_opciones.add_child(_boton(opcion[0], opcion[1]))
 
@@ -248,7 +248,7 @@ func _crear_ayuda() -> void:
 	panel.add_child(columna)
 
 	var titulo := Label.new()
-	titulo.text = "Cómo jugar"
+	titulo.text = "TITULO_COMO_JUGAR"
 	titulo.add_theme_color_override("font_color", Color(0.98, 0.92, 0.77))
 	titulo.add_theme_font_size_override("font_size", 34)
 	columna.add_child(titulo)
@@ -264,7 +264,7 @@ func _crear_ayuda() -> void:
 	_texto_ayuda = texto
 
 	_boton_cerrar_ayuda = Button.new()
-	_boton_cerrar_ayuda.text = "Cerrar"
+	_boton_cerrar_ayuda.text = "CERRAR"
 	_boton_cerrar_ayuda.custom_minimum_size = Vector2(0, 52)
 	_boton_cerrar_ayuda.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	_boton_cerrar_ayuda.add_theme_font_size_override("font_size", 23)

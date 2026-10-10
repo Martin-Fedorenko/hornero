@@ -71,7 +71,7 @@ func _ready() -> void:
 	# top_level: el cuerpo del hornero rota al volar y el texto no debe girar.
 	_aviso = TextoJuego.crear(aviso_font_size)
 	_aviso.name = "AvisoAgarrar"
-	_aviso.text = "E para agarrar"
+	_aviso.text = tr("AVISO_AGARRAR") % Plataforma.texto_control("E", tr("TACTIL_PICO"))
 	_aviso.top_level = true
 	_aviso.z_index = 100
 	_aviso.visible = false

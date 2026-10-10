@@ -113,7 +113,7 @@ func _ready() -> void:
 	mapa_columna.add_theme_constant_override("separation", 3)
 	visuales.add_child(mapa_columna)
 	var titulo_mapa := Label.new()
-	titulo_mapa.text = "Distribución en Sudamérica"
+	titulo_mapa.text = "FAUNA_DISTRIBUCION"
 	titulo_mapa.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	titulo_mapa.add_theme_font_size_override("font_size", 16)
 	titulo_mapa.add_theme_color_override("font_color", COLOR_LETRAS)
@@ -124,7 +124,7 @@ func _ready() -> void:
 	mapa.set_region(animal.get("mapa", "sudamerica"))
 	mapa_columna.add_child(mapa)
 	var nota_mapa := Label.new()
-	nota_mapa.text = "Rojo: distribución aproximada. Esquema, no avistamientos puntuales."
+	nota_mapa.text = "FAUNA_NOTA_MAPA"
 	nota_mapa.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	nota_mapa.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	nota_mapa.add_theme_font_size_override("font_size", 12)
@@ -143,7 +143,7 @@ func _ready() -> void:
 	contenido.add_child(texto)
 
 	var cerrar := Button.new()
-	cerrar.text = "Cerrar"
+	cerrar.text = "CERRAR"
 	cerrar.custom_minimum_size = Vector2(0, 52)
 	cerrar.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	_estilizar_boton(cerrar)
@@ -189,25 +189,25 @@ func _seleccionar_modelo(indice: int, guardar_eleccion: bool = false) -> void:
 ## texto más largo, a mano) tiene prioridad; si no, se arma a partir de los
 ## que estén presentes entre descripcion/habitat/peligro/caza/come (los
 ## "próximamente" hoy sólo traen descripcion+habitat+peligro). Si no hay
-## ninguno, el aviso de "Próximamente".
+## ninguno, el aviso de "Próximamente". Los campos son claves de textos.gd.
 func _texto_detalle() -> String:
 	if animal.has("detalle"):
-		return animal["detalle"]
+		return tr(animal["detalle"])
 	var partes: Array[String] = []
 	if animal.has("descripcion"):
-		partes.append(animal["descripcion"])
+		partes.append(tr(animal["descripcion"]))
 	if animal.has("habitat"):
-		partes.append("[b]Dónde vive:[/b] %s" % animal["habitat"])
+		partes.append("[b]%s[/b] %s" % [tr("FAUNA_DONDE_VIVE"), tr(animal["habitat"])])
 	if animal.has("peligro"):
-		partes.append("[color=%s][b]¿Peligro de extinción?[/b] %s[/color]" % [COLOR_PELIGRO, animal["peligro"]])
+		partes.append("[color=%s][b]%s[/b] %s[/color]" % [COLOR_PELIGRO, tr("FAUNA_PELIGRO"), tr(animal["peligro"])])
 	if animal.has("caza"):
-		partes.append("[b]Presiones humanas:[/b] %s" % animal["caza"])
+		partes.append("[b]%s[/b] %s" % [tr("FAUNA_PRESIONES"), tr(animal["caza"])])
 	if animal.has("come"):
-		partes.append("[b]Qué come:[/b] %s" % animal["come"])
+		partes.append("[b]%s[/b] %s" % [tr("FAUNA_COME"), tr(animal["come"])])
 	if animal.has("relacion_hornero"):
-		partes.append("[b]Relación con el hornero:[/b] %s" % animal["relacion_hornero"])
+		partes.append("[b]%s[/b] %s" % [tr("FAUNA_RELACION"), tr(animal["relacion_hornero"])])
 	if partes.is_empty():
-		return "[i]Todavía no aparece en el juego. Pronto vas a poder encontrarlo en la Pampa.[/i]"
+		return tr("FAUNA_PRONTO")
 	return "\n\n".join(partes)
 
 
@@ -239,7 +239,7 @@ func _insignia_proximamente() -> Control:
 	estilo.content_margin_bottom = 3.0
 	insignia.add_theme_stylebox_override("panel", estilo)
 	var etiqueta := Label.new()
-	etiqueta.text = "PRÓXIMAMENTE"
+	etiqueta.text = "FAUNA_PROXIMAMENTE"
 	etiqueta.add_theme_font_size_override("font_size", 13)
 	etiqueta.add_theme_color_override("font_color", Color("2a1606"))
 	insignia.add_child(etiqueta)

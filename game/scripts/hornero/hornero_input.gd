@@ -23,6 +23,9 @@ static func read() -> HorneroInput:
 	_frame_foto = frame
 	_foto.move = Input.get_axis(&"move_left", &"move_right")
 	_foto.pitch = Input.get_axis(&"pitch_down", &"pitch_up")
+	# Timón "Directo" (Configuración): arriba sube el pico.
+	if Ajustes.timon_directo:
+		_foto.pitch = -_foto.pitch
 	_foto.flap = Input.is_action_just_pressed(&"flap")
 	_foto.fall = Input.is_action_just_pressed(&"fall")
 	return _foto

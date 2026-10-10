@@ -20,7 +20,7 @@ func _ready() -> void:
 	custom_minimum_size = Vector2(44, 44)
 	focus_mode = Control.FOCUS_ALL
 	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	tooltip_text = "Silenciar / activar el sonido"
+	tooltip_text = "TOOLTIP_SILENCIAR"
 	focus_entered.connect(queue_redraw)
 	focus_exited.connect(queue_redraw)
 	mouse_entered.connect(queue_redraw)

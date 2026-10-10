@@ -26,8 +26,14 @@ var pantalla_completa := true
 var musica_silenciada := false
 ## Muestra los FPS debajo del cronómetro de la partida.
 var mostrar_fps := false
+## Timón del vuelo. En false ("Avión", el de siempre) arriba baja el pico y
+## abajo lo sube, como la palanca de un avión; en true ("Directo") arriba sube
+## el pico. Vale para el teclado y para la palanca táctil.
+var timon_directo := false
 ## La variante visual del protagonista, elegida desde la ficha de Fauna.
 var hornero_modelo_alternativo := false
+## Idioma de los textos: "es" o "en" (ver idioma.gd).
+var idioma := "es"
 
 
 func _ready() -> void:
@@ -38,7 +44,11 @@ func _ready() -> void:
 		pantalla_completa = bool(archivo.get_value("pantalla", "completa", pantalla_completa))
 		musica_silenciada = bool(archivo.get_value("sonido", "silenciada", musica_silenciada))
 		mostrar_fps = bool(archivo.get_value("pantalla", "fps", mostrar_fps))
+		timon_directo = bool(archivo.get_value("controles", "timon_directo", timon_directo))
 		hornero_modelo_alternativo = bool(archivo.get_value("juego", "hornero_modelo_alternativo", hornero_modelo_alternativo))
+		var guardado := str(archivo.get_value("general", "idioma", idioma))
+		if guardado in ["es", "en"]:
+			idioma = guardado
 	# En el navegador la pantalla completa sólo se puede pedir con un clic.
 	if not OS.has_feature("web"):
 		_aplicar_pantalla()
@@ -84,6 +94,11 @@ func cambiar_mostrar_fps(mostrar: bool) -> void:
 	_guardar()
 
 
+func cambiar_timon_directo(directo: bool) -> void:
+	timon_directo = directo
+	_guardar()
+
+
 func cambiar_musica_silenciada(silenciada: bool) -> void:
 	musica_silenciada = silenciada
 	_guardar()
@@ -91,6 +106,11 @@ func cambiar_musica_silenciada(silenciada: bool) -> void:
 
 func cambiar_modelo_hornero(alternativo: bool) -> void:
 	hornero_modelo_alternativo = alternativo
+	_guardar()
+
+
+func cambiar_idioma(nuevo: String) -> void:
+	idioma = nuevo
 	_guardar()
 
 
@@ -106,6 +126,8 @@ func _guardar() -> void:
 	archivo.set_value("juego", "dificultad", dificultad)
 	archivo.set_value("pantalla", "completa", pantalla_completa)
 	archivo.set_value("pantalla", "fps", mostrar_fps)
+	archivo.set_value("controles", "timon_directo", timon_directo)
 	archivo.set_value("sonido", "silenciada", musica_silenciada)
 	archivo.set_value("juego", "hornero_modelo_alternativo", hornero_modelo_alternativo)
+	archivo.set_value("general", "idioma", idioma)
 	archivo.save(RUTA)

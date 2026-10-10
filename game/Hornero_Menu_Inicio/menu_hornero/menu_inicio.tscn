@@ -185,7 +185,7 @@ theme_override_constants/separation = 18
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.92, 0.77, 1)
 theme_override_font_sizes/font_size = 34
-text = "Cómo jugar"
+text = "TITULO_COMO_JUGAR"
 
 [node name="Texto" type="RichTextLabel" parent="Ventana/Panel/Margen/Columna" unique_id=81010788]
 layout_mode = 2
@@ -198,7 +198,7 @@ theme_override_font_sizes/bold_font_size = 20
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 mouse_default_cursor_shape = 2
-text = "Volver"
+text = "MENU_VOLVER"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=355568695]
 texture = SubResource("ImageTexture_73d2e")

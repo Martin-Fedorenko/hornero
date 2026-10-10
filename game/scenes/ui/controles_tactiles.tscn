@@ -1,0 +1,61 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/controles_tactiles.gd" id="1_controles"]
+[ext_resource type="Script" path="res://scripts/ui/palanca_tactil.gd" id="2_palanca"]
+[ext_resource type="Script" path="res://scripts/ui/boton_tactil.gd" id="3_boton"]
+
+[node name="ControlesTactiles" type="CanvasLayer"]
+layer = 5
+script = ExtResource("1_controles")
+
+[node name="Raiz" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Palanca" type="Control" parent="Raiz"]
+layout_mode = 1
+anchors_preset = 0
+offset_right = 250.0
+offset_bottom = 250.0
+script = ExtResource("2_palanca")
+
+[node name="Aletear" type="Control" parent="Raiz"]
+layout_mode = 1
+anchors_preset = 0
+offset_right = 170.0
+offset_bottom = 170.0
+script = ExtResource("3_boton")
+accion = &"flap"
+texto = "TACTIL_ALETEAR"
+
+[node name="Pico" type="Control" parent="Raiz"]
+layout_mode = 1
+anchors_preset = 0
+offset_right = 112.0
+offset_bottom = 112.0
+script = ExtResource("3_boton")
+accion = &"hornero_interactuar"
+texto = "TACTIL_PICO"
+
+[node name="Nido" type="Control" parent="Raiz"]
+layout_mode = 1
+anchors_preset = 0
+offset_right = 112.0
+offset_bottom = 112.0
+script = ExtResource("3_boton")
+accion = &"hornero_nido"
+texto = "TACTIL_NIDO"
+
+[node name="Pausa" type="Control" parent="Raiz"]
+layout_mode = 1
+anchors_preset = 0
+offset_right = 72.0
+offset_bottom = 72.0
+script = ExtResource("3_boton")
+accion = &"ui_cancel"
+icono_pausa = true

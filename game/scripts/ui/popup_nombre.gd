@@ -1,8 +1,10 @@
 extends Control
 ## Ventana "Nombre de jugador" que aparece la primera vez, antes de poder jugar.
 ## Con el mismo estilo que las ventanas del menú principal.
-## "Aceptar" guarda el nombre en TaloManager (y genera el UUID); "Rechazar"
-## juega en modo incógnito: no se genera UUID ni se registra nada.
+## "Aceptar" comprueba en Talo que nadie más use el nombre y lo guarda en
+## TaloManager; sin conexión lo usa sólo en esta sesión. "Rechazar" juega en
+## modo incógnito: no se registra nada.
+## En celulares el teclado del dispositivo se abre al tocar el campo.
 
 signal aceptado(nombre: String)
 signal rechazado()
@@ -12,19 +14,26 @@ const COLOR_LETRAS := Color("f8dc9c")
 const COLOR_BORDE_LETRAS := Color("5a2e12")
 const COLOR_TEXTO := Color(0.95, 0.92, 0.83)
 const COLOR_ERROR := Color("ff8a7a")
+const TecladoWeb := preload("res://scripts/ui/teclado_web.gd")
 
 var _campo: LineEdit
 var _error: Label
+var _aceptar: Button
+var _rechazar: Button
+## Se está consultando en Talo si el nombre ya existe.
+var _comprobando := false
+## Sólo en el navegador de un celular (ver teclado_web.gd).
+var _teclado_web: TecladoWeb
 
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	var columna := armar_ventana(self, "Nombre de jugador", "Así vas a aparecer en los rankings.")
+	var columna := armar_ventana(self, "NOMBRE_TITULO", "NOMBRE_DETALLE")
 
 	_campo = LineEdit.new()
 	_campo.max_length = TaloManager.NAME_MAX_LENGTH
-	_campo.placeholder_text = "Tu nombre"
+	_campo.placeholder_text = "NOMBRE_PLACEHOLDER"
 	_campo.custom_minimum_size = Vector2(0, 52)
 	_campo.add_theme_font_size_override("font_size", 24)
 	_campo.add_theme_color_override("font_color", COLOR_TEXTO)
@@ -32,6 +41,10 @@ func _ready() -> void:
 	_campo.add_theme_color_override("caret_color", COLOR_LETRAS)
 	_campo.add_theme_stylebox_override("normal", _caja(Color(0.08, 0.17, 0.15, 0.9), Color("6f6a4a"), 10))
 	_campo.add_theme_stylebox_override("focus", _caja(Color(0.08, 0.17, 0.15, 0.9), Color("fff1c1"), 10))
+	# Mientras se comprueba el nombre el campo no es editable: con la misma caja
+	# (márgenes incluidos) el texto no se mueve.
+	_campo.add_theme_stylebox_override("read_only", _caja(Color(0.08, 0.17, 0.15, 0.9), Color("6f6a4a"), 10))
+	_campo.add_theme_color_override("font_uneditable_color", Color(COLOR_TEXTO, 0.7))
 	_campo.text_submitted.connect(_on_aceptar.unbind(1))
 	_campo.text_changed.connect(func(_texto: String) -> void: _error.text = "")
 	columna.add_child(_campo)
@@ -44,38 +57,95 @@ func _ready() -> void:
 	var botones := HBoxContainer.new()
 	botones.add_theme_constant_override("separation", 12)
 	columna.add_child(botones)
-	var rechazar := boton("Rechazar", false)
-	rechazar.pressed.connect(_on_rechazar)
-	botones.add_child(rechazar)
-	var aceptar := boton("Aceptar", true)
-	aceptar.pressed.connect(_on_aceptar)
-	botones.add_child(aceptar)
+	_rechazar = boton("NOMBRE_RECHAZAR", false)
+	_rechazar.pressed.connect(_on_rechazar)
+	botones.add_child(_rechazar)
+	_aceptar = boton("ACEPTAR", true)
+	_aceptar.pressed.connect(_on_aceptar)
+	botones.add_child(_aceptar)
 
 	var aviso := Label.new()
-	aviso.text = "Si rechazás, jugás en modo incógnito: no se guardan tus estadísticas, pero podés ver los rankings."
+	aviso.text = "NOMBRE_AVISO"
 	aviso.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	aviso.add_theme_font_size_override("font_size", 15)
 	aviso.add_theme_color_override("font_color", Color(COLOR_TEXTO, 0.6))
 	columna.add_child(aviso)
 
-	_campo.grab_focus.call_deferred()
+	if Plataforma.tipo == Plataforma.Tipo.WEB_MOVIL:
+		_teclado_web = TecladoWeb.new()
+		_teclado_web.enviado.connect(_on_aceptar)
+		_campo.add_child(_teclado_web)
+	elif Plataforma.tipo == Plataforma.Tipo.MOVIL:
+		_campo.gui_input.connect(_on_campo_tocado)
+	else:
+		# Con teclado físico se puede escribir de entrada. En celulares no: el
+		# teclado del dispositivo se abre recién al tocar el campo.
+		_campo.grab_focus.call_deferred()
 
 
 func _on_aceptar() -> void:
+	if _comprobando:
+		return
 	var nombre := TaloManager.clean_name(_campo.text)
 	if nombre.is_empty():
-		_error.text = "Escribí un nombre."
-		_campo.grab_focus()
+		_mostrar_error("NOMBRE_ERROR_VACIO")
 		return
-	if not TaloManager.set_player_name(nombre):
-		_error.text = "Máximo %d caracteres." % TaloManager.NAME_MAX_LENGTH
-		_campo.grab_focus()
+	if not TaloManager.is_valid_name(nombre):
+		_mostrar_error(tr("NOMBRE_ERROR_LARGO") % TaloManager.NAME_MAX_LENGTH)
 		return
+	# Los nombres no se repiten: se consulta en Talo antes de guardarlo. Sin
+	# conexión se usa sólo en esta sesión (no se envía nada) y la próxima vez
+	# se vuelve a pedir: Talo nunca es un requisito para jugar.
+	_set_comprobando(true)
+	var ocupado: Variant = await TaloManager.is_name_taken(nombre)
+	_set_comprobando(false)
+	if ocupado == true:
+		_mostrar_error("NOMBRE_ERROR_OCUPADO")
+		return
+	if ocupado == null:
+		TaloManager.set_temporary_player_name(nombre)
+	else:
+		TaloManager.set_player_name(nombre)
 	aceptado.emit(nombre)
 	queue_free()
 
 
+func _mostrar_error(texto: String) -> void:
+	_error.text = texto
+	# En celulares no se enfoca solo: abriría el teclado sin que lo pidan.
+	if not Plataforma.tactil:
+		_campo.grab_focus()
+
+
+## Android / iOS: si el campo ya tenía el foco y se cerró el teclado (botón
+## "atrás"), tocarlo de nuevo lo vuelve a abrir.
+func _on_campo_tocado(event: InputEvent) -> void:
+	var toque: bool = (event is InputEventScreenTouch and not event.pressed) \
+			or (event is InputEventMouseButton and not event.pressed and event.button_index == MOUSE_BUTTON_LEFT)
+	if not toque or not _campo.editable:
+		return
+	if not _campo.has_focus():
+		_campo.grab_focus()
+	if DisplayServer.has_feature(DisplayServer.FEATURE_VIRTUAL_KEYBOARD):
+		DisplayServer.virtual_keyboard_show(_campo.text, _campo.get_global_rect(),
+				DisplayServer.KEYBOARD_TYPE_DEFAULT, _campo.max_length, _campo.caret_column)
+
+
+func _set_comprobando(valor: bool) -> void:
+	_comprobando = valor
+	_campo.editable = not valor
+	_aceptar.disabled = valor
+	_rechazar.disabled = valor
+	_aceptar.text = "NOMBRE_COMPROBANDO" if valor else "ACEPTAR"
+	if valor and DisplayServer.has_feature(DisplayServer.FEATURE_VIRTUAL_KEYBOARD):
+		DisplayServer.virtual_keyboard_hide()
+	if _teclado_web:
+		_teclado_web.actualizar_zona()
+
+
 func _on_rechazar() -> void:
+	if _comprobando:
+		return
 	TaloManager.play_incognito()
 	rechazado.emit()
 	queue_free()

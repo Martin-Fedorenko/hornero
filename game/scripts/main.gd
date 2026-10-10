@@ -4,6 +4,8 @@ extends Node2D
 
 const NestArrow := preload("res://scripts/ui/nest_arrow.gd")
 const Cronometro := preload("res://scripts/ui/cronometro.gd")
+## Botones en pantalla: sólo en celulares y navegadores de celular.
+const ControlesTactiles := preload("res://scenes/ui/controles_tactiles.tscn")
 
 ## Área jugable. La cámara no muestra nada fuera de este rectángulo.
 @export var world_rect := Rect2(0, -400, 12000, 2065)
@@ -45,6 +47,8 @@ func _ready() -> void:
 	_camera.limit_bottom = int(world_rect.end.y)
 	_create_nest_arrow()
 	_create_cronometro()
+	if Plataforma.tactil:
+		add_child(ControlesTactiles.instantiate())
 	_vitals_hud.track(_hornero.vitals)
 	_hornero.died.connect(_on_hornero_died)
 	_hornero.state_changed.connect(_on_hornero_state_changed)
@@ -101,13 +105,18 @@ func _process(_delta: float) -> void:
 func _update_nest_hint() -> void:
 	var aviso := ""
 	if _hornero.state == Hornero.State.NESTED:
-		aviso = "" if _exited_nest_once else "G para salir"
+		aviso = "" if _exited_nest_once else tr("AVISO_SALIR_NIDO") % _tecla_nido()
 	elif not _entered_nest_once and _can_enter_nest():
-		aviso = "G para entrar"
+		aviso = tr("AVISO_ENTRAR_NIDO") % _tecla_nido()
 	# Sólo se toca el cartel cuando cambia el texto.
 	if aviso != _aviso_nido:
 		_aviso_nido = aviso
 		_nest.mostrar_aviso(aviso)
+
+
+## G en el teclado; el botón NIDO en pantalla.
+func _tecla_nido() -> String:
+	return Plataforma.texto_control("G", tr("TACTIL_NIDO"))
 
 
 func _can_enter_nest() -> bool:
@@ -127,8 +136,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		if not _menu.esta_abierto() and not _hornero.is_dead():
 			_menu.abrir_pausa()
 		return
-	if event is InputEventKey and event.pressed and not event.echo \
-		and event.physical_keycode == KEY_G:
+	# Acción "hornero_nido": la G del teclado o el botón NIDO en pantalla.
+	if event.is_action_pressed(&"hornero_nido"):
 		_toggle_nest_pose()
 		get_viewport().set_input_as_handled()
 	elif event is InputEventKey and event.pressed and not event.echo \

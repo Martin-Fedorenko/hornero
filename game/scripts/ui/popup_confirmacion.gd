@@ -8,7 +8,7 @@ const PopupNombre := preload("res://scripts/ui/popup_nombre.gd")
 
 var titulo := ""
 var mensaje := ""
-var texto_aceptar := "Aceptar"
+var texto_aceptar := "ACEPTAR"
 
 
 func _ready() -> void:
@@ -19,7 +19,7 @@ func _ready() -> void:
 	var botones := HBoxContainer.new()
 	botones.add_theme_constant_override("separation", 12)
 	columna.add_child(botones)
-	var cancelar := PopupNombre.boton("Cancelar", false)
+	var cancelar := PopupNombre.boton("CANCELAR", false)
 	cancelar.pressed.connect(_responder.bind(false))
 	botones.add_child(cancelar)
 	var aceptar := PopupNombre.boton(texto_aceptar, true)

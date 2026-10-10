@@ -4,67 +4,6 @@ const FaunaFrames := preload("res://scripts/ui/fauna_frames.gd")
 const Presentacion := preload("res://splash_screen.gd")
 
 @export_file("*.tscn") var escena_juego: String = "res://scenes/main.tscn"
-# Texto con BBCode, igual que "Cómo jugar". En cada categoría van los tres
-# autores, en distinto orden.
-@export_multiline var creditos: String = """
-[b][color=#f8dc9c]DIRECCIÓN DE IMAGEN, SONIDO, AMBIENTE Y DESARROLLO[/color][/b]
-Ingeniero Fedorenko Martin · Villadeza Eric · Brian Moulia
-
-[b][color=#f8dc9c]MOTOR[/color][/b]
-Godot Engine
-
-[b][color=#f8dc9c]AGRADECIMIENTOS[/color][/b]
-A nuestras novias: la Magíster Cyntia V, la Ingeniera Abril C y la Ingeniera Arabella B.
-
-Al maestro Gustavo Santaolalla, por crear una obra maestra como "De Ushuaia a La Quiaca". Y perdón por tomarnos el atrevimiento de sumarle el noble cantar del hornero a su pieza.
-
-A la Universidad Tecnológica Nacional, Facultad Regional Buenos Aires, por formarnos como profesionales.
-
-Y sin dudas, a nuestros padres y familia.
-
-No queremos dejar de agradecer al noble Hornero, nuestra fuente de inspiración."""
-
-# Texto con BBCode: los títulos usan el dorado del logo (COLOR_LETRAS).
-const AYUDA: String = """[b][color=#f8dc9c]OBJETIVO[/color][/b]
-Juntá paja, ramitas, piedras y barro y llevalos a tu nido: cada material le suma una etapa. Cuando esté terminado, entrá con [b]G[/b] para ganar. Si el nido queda fuera de pantalla, una flecha te marca dónde está.
-Arriba a la derecha corre el tiempo de la partida: al ganar te muestra cuánto tardaste.
-
-[b][color=#f8dc9c]DIFICULTAD[/color][/b] (se elige en Configuración)
-[b]Fácil[/b]: Perfecto para horneros principiantes.
-[b]Difícil[/b]: Solo para veteranos de la Pampa.
-
-[b][color=#f8dc9c]VUELO[/color][/b]
-[b]Espacio[/b]: aletear. Cada aletazo te empuja hacia donde apunta el pico (y un poco hacia arriba) y gasta stamina. Desde el piso, despega.
-[b]W / ↑[/b]: bajar el pico.   [b]S / ↓[/b]: subir el pico. Funciona como el timón de un avión.
-[b]A / D[/b] o [b]← / →[/b]: darte vuelta en el aire.
-Cuando no aleteás, planeás: la gravedad siempre tira para abajo y las alas convierten esa caída en avance.
-Picar con el pico hacia abajo te hace ganar velocidad; subir el pico cambia esa velocidad por altura.
-Si subís el pico demasiado y vas lento, perdés sustentación: el pico se cae y bajás en picada hasta recuperar velocidad.
-Podés dar loops: si quedás panza arriba, el hornero rueda solo para enderezarse.
-
-[b][color=#f8dc9c]EN EL PISO[/color][/b]
-[b]A / D[/b] o [b]← / →[/b]: caminar.   [b]Espacio[/b]: despegar.
-En el piso la stamina se recupera rápido; planeando, de a poco.
-
-[b][color=#f8dc9c]E — PICO[/color][/b]
-Cerca de un material, [b]E[/b] lo levanta con el pico. Con algo en el pico, [b]E[/b] lo suelta.
-Para entregarlo, soltalo sobre el nido o pasá volando por encima con él.
-Algunos árboles tienen ramitas apoyadas en las ramas: agarralas con [b]E[/b] al pasar volando.
-Cada tanto aparecen bichos en las hojas y los troncos de los árboles. Se comen pasando por encima: devuelven vida y stamina.
-
-[b][color=#f8dc9c]G — NIDO[/color][/b]
-Dentro del círculo del nido, [b]G[/b] te mete adentro; otra vez [b]G[/b] te saca.
-Adentro recuperás vida y stamina lentamente.
-Con el nido techado quedás a salvo: ningún depredador te puede atacar.
-
-[b][color=#f8dc9c]PELIGROS[/color][/b]
-[b]Chimango, aguilucho y carancho[/b] atacan desde el aire. Si te agarran, apretá [b]Espacio[/b] varias veces para soltarte; si te sueltan, caés aturdido y perdés vida y stamina.
-[b]Gato montés[/b]: acecha en el piso y salta si volás bajo cerca de él.
-[b]Cotorra[/b]: pica tu nido y, si la dejás 15 segundos, le rompe una etapa y se va. Acercate para espantarla: si se va antes, no rompe nada.
-
-[b]Esc[/b]: pausa.   [b]R[/b]: reiniciar la partida."""
-
-
 ## Dibujo de los controles (teclas y qué hace cada una) arriba de "Cómo jugar".
 ## Con preload queda como dependencia y entra en la exportación.
 const IMAGEN_AYUDA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/como_jugar.jpg")
@@ -73,26 +12,32 @@ const PantallaCarga := preload("res://scripts/ui/pantalla_carga.gd")
 const ANCHO_IMAGEN_AYUDA := 660
 
 
-## "Cómo jugar" completo: el dibujo de los controles arriba y, abajo, AYUDA.
+## "Cómo jugar" completo: el dibujo de los controles arriba y, abajo, AYUDA
+## (scripts/textos.gd) en el idioma elegido. En celulares, sin el dibujo del
+## teclado y con los botones en pantalla.
 static func texto_ayuda() -> String:
-	return "[center][img width=%d]%s[/img][/center]\n\n" % [ANCHO_IMAGEN_AYUDA, IMAGEN_AYUDA.resource_path] + AYUDA
+	var tactil := Plataforma.tactil
+	var boton := func(clave: String) -> String: return "[b]%s[/b]" % Idioma.t(clave)
+	# Timón "Directo" (Configuración): arriba sube el pico y abajo lo baja.
+	var directo := Ajustes.timon_directo
+	var texto := Idioma.t("AYUDA").format({
+		"ALETEAR": boton.call("TACTIL_ALETEAR") if tactil else Idioma.t("AYUDA_ALETEAR_TECLA"),
+		"ARRIBA": Idioma.t("AYUDA_ARRIBA_TACTIL") if tactil else "[b]W / ↑[/b]",
+		"ABAJO": Idioma.t("AYUDA_ABAJO_TACTIL") if tactil else "[b]S / ↓[/b]",
+		"ACCION_ARRIBA": Idioma.t("AYUDA_SUBIR_PICO" if directo else "AYUDA_BAJAR_PICO"),
+		"ACCION_ABAJO": Idioma.t("AYUDA_BAJAR_PICO" if directo else "AYUDA_SUBIR_PICO"),
+		"NOTA_TIMON": Idioma.t("AYUDA_NOTA_DIRECTO" if directo else "AYUDA_NOTA_AVION"),
+		"GIRAR": Idioma.t("AYUDA_GIRAR_TACTIL" if tactil else "AYUDA_GIRAR_TECLA"),
+		"PICO": boton.call("TACTIL_PICO") if tactil else "[b]E[/b]",
+		"TITULO_PICO": Idioma.t("TACTIL_PICO") if tactil else "E — " + Idioma.t("TACTIL_PICO"),
+		"NIDO": boton.call("TACTIL_NIDO") if tactil else "[b]G[/b]",
+		"TITULO_NIDO": Idioma.t("TACTIL_NIDO") if tactil else "G — " + Idioma.t("TACTIL_NIDO"),
+		"PAUSA": Idioma.t("AYUDA_PAUSA_TACTIL" if tactil else "AYUDA_PAUSA_TECLA"),
+	})
+	if tactil:
+		return Idioma.t("AYUDA_TACTIL_INTRO") + texto
+	return "[center][img width=%d]%s[/img][/center]\n\n" % [ANCHO_IMAGEN_AYUDA, IMAGEN_AYUDA.resource_path] + texto
 
-
-const HISTORIA: String = """[b][color=#f8dc9c]EL PRIMER INGENIERO ARGENTINO[/color][/b]
-
-Cuentan los libros que el primer ingeniero argentino fue Luis Huergo, el que se recibió allá por 1870 y soñó puertos, canales y vías de tren.
-
-Pero los libros no lo saben todo.
-
-Mucho antes de que existieran las universidades, los planos y las reglas de cálculo, en la pampa ya trabajaba otro ingeniero. No tenía título ni diploma, pero tenía un pico firme, alas incansables y un saber que pasaba de padres a hijos. Era un hornero, y en el monte todos lo conocían como [b]Huergo[/b].
-
-Huergo sabía cosas que ningún libro le había enseñado: que el barro tiene que estar húmedo pero no aguado, que la paja y las ramitas lo hacen fuerte como el adobe, que las piedras le dan base, y que la puerta del nido tiene que mirar para el lado contrario al viento. Así, pellada a pellada, levantaba casas de barro que aguantaban tormentas, soles y años enteros.
-
-Pero ser ingeniero en la pampa no es fácil. El chimango, el aguilucho y el carancho vigilan desde el cielo; el gato montés acecha entre los pastos; y la cotorra, envidiosa, viene a picotear la obra ajena.
-
-Ahora te toca a vos ayudar a Huergo: juntá los materiales, esquivá a los que quieren arruinarle el día y terminá el nido antes de que sea tarde.
-
-[i]Moraleja: antes de que el hombre aprendiera a construir, el hornero ya era ingeniero. Y lo sigue siendo, en cada poste y en cada árbol de nuestra tierra.[/i]"""
 
 ## Colores del puesto 1, 2 y 3 en los rankings.
 const COLORES_PODIO: Array[Color] = [Color("f2c94c"), Color("d9dde3"), Color("d79a5b")]
@@ -100,214 +45,214 @@ const COLORES_PODIO: Array[Color] = [Color("f2c94c"), Color("d9dde3"), Color("d7
 # Pestaña "Fauna": hoja de sprites, columnas, inicio en Y de cada fila, alto del recorte y velocidad.
 const FAUNA: Array[Dictionary] = [
 	{
-		"nombre": "Hornero", "cientifico": "Furnarius rufus", "mapa": "rio_plata",
+		"nombre": "FAUNA_HORNERO_NOMBRE", "cientifico": "Furnarius rufus", "mapa": "rio_plata",
 		"hoja": preload("res://assets/hornero/hornero_walk.png"), "columnas": 3, "filas_y": [160, 590], "alto": 300, "fps": 8.0,
 		"modelo_jugador": true,
 		"modelos_extra": [{"hoja": preload("res://assets/Hornero_Fauna_14_Animales/hornero_v2_modelo_jugador_reducido.png"), "columnas": 3, "filas_y": [0, 512], "alto": 512, "margen_x": 0.0, "fps": 6.0}],
-		"habitat": "Centro y norte de Argentina, Uruguay, Paraguay, Bolivia y sur de Brasil. Vive en campos, pastizales, plazas y ciudades. Es el Ave Nacional de la Argentina.",
-		"descripcion": "Ave caminadora que construye un nido cerrado de barro con una cámara para los huevos.",
-		"peligro": "No está en peligro de extinción (Preocupación menor).",
-		"caza": "Casi no se lo caza: es querido en todo el país. Como toda la fauna silvestre, capturarlo es ilegal.",
-		"come": "Insectos, larvas, arañas y lombrices que busca caminando por el suelo.",
-		"relacion_hornero": "Es el protagonista: construye y defiende su nido; puede sufrir depredación de huevos o pichones.",
+		"habitat": "FAUNA_HORNERO_HABITAT",
+		"descripcion": "FAUNA_HORNERO_DESCRIPCION",
+		"peligro": "FAUNA_HORNERO_PELIGRO",
+		"caza": "FAUNA_HORNERO_CAZA",
+		"come": "FAUNA_HORNERO_COME",
+		"relacion_hornero": "FAUNA_HORNERO_RELACION",
 	},
 	{
-		"nombre": "Chimango", "cientifico": "Milvago chimango", "mapa": "cono_sur",
+		"nombre": "FAUNA_CHIMANGO_NOMBRE", "cientifico": "Milvago chimango", "mapa": "cono_sur",
 		"hoja": preload("res://assets/chimango/chimangwo_walk.png"), "columnas": 6, "filas_y": [200], "alto": 320, "fps": 8.0,
 		"modelos_extra": [{"nombre": "Centinela nocturno", "hoja": preload("res://assets/chimango/chimango_variante_secreta.png"), "columnas": 3, "filas_y": [0, 512], "alto": 512, "margen_x": 0.0, "fps": 6.0}],
-		"habitat": "Sur de Sudamérica: casi toda la Argentina, Chile, Uruguay y sur de Brasil. Campos abiertos, costas y hasta ciudades.",
-		"descripcion": "Rapaz oportunista que suele buscar alimento en el suelo y aprovecha recursos naturales y humanos.",
-		"peligro": "No está en peligro de extinción (Preocupación menor).",
-		"caza": "Sí, injustamente: algunos lo tratan como plaga y lo matan, aunque ayuda a limpiar el campo de carroña e insectos.",
-		"come": "De todo: carroña, insectos, larvas, lombrices, pequeños animales y huevos. Suele seguir a los arados.",
-		"relacion_hornero": "En el juego es un depredador aéreo. Puede consumir huevos o pichones de aves, pero no se halló aquí un registro directo específico sobre horneros.",
+		"habitat": "FAUNA_CHIMANGO_HABITAT",
+		"descripcion": "FAUNA_CHIMANGO_DESCRIPCION",
+		"peligro": "FAUNA_CHIMANGO_PELIGRO",
+		"caza": "FAUNA_CHIMANGO_CAZA",
+		"come": "FAUNA_CHIMANGO_COME",
+		"relacion_hornero": "FAUNA_CHIMANGO_RELACION",
 	},
 	{
-		"nombre": "Aguilucho común", "cientifico": "Geranoaetus polyosoma", "mapa": "andino",
+		"nombre": "FAUNA_AGUILUCHO_NOMBRE", "cientifico": "Geranoaetus polyosoma", "mapa": "andino",
 		"hoja": preload("res://assets/Aguilucho/Aguilucho en reposo, seis cuadros.png"), "columnas": 3, "filas_y": [100, 560], "alto": 420, "fps": 4.0,
-		"habitat": "Andes y Patagonia, desde Colombia hasta Tierra del Fuego. Estepas, laderas y zonas abiertas.",
-		"descripcion": "Rapaz de espacios abiertos que planea buscando roedores, reptiles y otras presas pequeñas.",
-		"peligro": "No está en peligro de extinción (Preocupación menor).",
-		"caza": "Sí, injustamente: le disparan creyendo que ataca al ganado. También muere electrocutado en tendidos eléctricos.",
-		"come": "Roedores, liebres jóvenes, reptiles, aves e insectos grandes. Controla plagas de roedores.",
-		"relacion_hornero": "Puede representar un riesgo oportunista para aves pequeñas, pero no se halló un registro directo específico de depredación de horneros.",
+		"habitat": "FAUNA_AGUILUCHO_HABITAT",
+		"descripcion": "FAUNA_AGUILUCHO_DESCRIPCION",
+		"peligro": "FAUNA_AGUILUCHO_PELIGRO",
+		"caza": "FAUNA_AGUILUCHO_CAZA",
+		"come": "FAUNA_AGUILUCHO_COME",
+		"relacion_hornero": "FAUNA_AGUILUCHO_RELACION",
 	},
 	{
-		"nombre": "Carancho", "cientifico": "Caracara plancus", "mapa": "sudamerica",
+		"nombre": "FAUNA_CARANCHO_NOMBRE", "cientifico": "Caracara plancus", "mapa": "sudamerica",
 		"hoja": preload("res://assets/Carancho/Hoja de sprites del carancho argentino.png"), "columnas": 3, "filas_y": [10, 515], "alto": 490, "fps": 4.0,
-		"habitat": "Casi toda Sudamérica y toda la Argentina. Campos abiertos, bordes de rutas y montes.",
-		"descripcion": "Rapaz grande y adaptable; combina la búsqueda de carroña con la captura de presas pequeñas.",
-		"peligro": "No está en peligro de extinción (Preocupación menor).",
-		"caza": "Sí, injustamente: lo envenenan o le disparan acusándolo de atacar corderos, aunque sobre todo come animales ya muertos.",
-		"come": "Carroña, insectos, roedores, reptiles, huevos y pichones.",
-		"relacion_hornero": "Hay un registro publicado en Uruguay (2026) de un carancho que abrió un nido de hornero y depredó un pichón.",
+		"habitat": "FAUNA_CARANCHO_HABITAT",
+		"descripcion": "FAUNA_CARANCHO_DESCRIPCION",
+		"peligro": "FAUNA_CARANCHO_PELIGRO",
+		"caza": "FAUNA_CARANCHO_CAZA",
+		"come": "FAUNA_CARANCHO_COME",
+		"relacion_hornero": "FAUNA_CARANCHO_RELACION",
 	},
 	{
-		"nombre": "Gato montés", "cientifico": "Leopardus geoffroyi", "mapa": "cono_sur",
+		"nombre": "FAUNA_GATO_MONTES_NOMBRE", "cientifico": "Leopardus geoffroyi", "mapa": "cono_sur",
 		"hoja": preload("res://assets/gato_montez/gato_caminando.png"), "columnas": 8, "filas_y": [280], "alto": 180, "fps": 9.0,
-		"habitat": "Centro y sur de Sudamérica: gran parte de la Argentina, del monte y el espinal a la pampa y la Patagonia.",
-		"descripcion": "Felino silvestre pequeño, principalmente nocturno y solitario.",
-		"peligro": "Hoy no está en peligro de extinción (Preocupación menor), pero la caza para pieles lo diezmó y sigue protegido por CITES.",
-		"caza": "Sí, injustamente: durante décadas se exportaron cientos de miles de pieles. Hoy lo matan por atacar gallineros y lo atropellan en las rutas.",
-		"come": "Roedores, liebres, aves, reptiles y peces.",
-		"relacion_hornero": "En el juego acecha al hornero. En la naturaleza podría capturar aves o saquear nidos al alcance, aunque no se halló un registro directo específico.",
+		"habitat": "FAUNA_GATO_MONTES_HABITAT",
+		"descripcion": "FAUNA_GATO_MONTES_DESCRIPCION",
+		"peligro": "FAUNA_GATO_MONTES_PELIGRO",
+		"caza": "FAUNA_GATO_MONTES_CAZA",
+		"come": "FAUNA_GATO_MONTES_COME",
+		"relacion_hornero": "FAUNA_GATO_MONTES_RELACION",
 	},
 	{
-		"nombre": "Cotorra", "cientifico": "Myiopsitta monachus", "mapa": "norte_este",
+		"nombre": "FAUNA_COTORRA_NOMBRE", "cientifico": "Myiopsitta monachus", "mapa": "norte_este",
 		"hoja": preload("res://assets/cotorra/cotorra_walk.png"), "columnas": 6, "filas_y": [210], "alto": 320, "fps": 8.0,
-		"habitat": "Centro y norte de Argentina, Uruguay, Paraguay, Bolivia y sur de Brasil. Arma grandes nidos comunitarios de ramitas en árboles y postes.",
-		"descripcion": "Loro sociable que forma colonias y construye grandes nidos comunales de ramas.",
-		"peligro": "No está en peligro de extinción (Preocupación menor).",
-		"caza": "Sí: la declararon plaga agrícola y se la caza y se le destruyen los nidos. También la capturan para venderla como mascota.",
-		"come": "Semillas, granos, frutos, brotes, flores y algún insecto.",
-		"relacion_hornero": "El juego le asigna el daño al nido como mecánica; no lo presentamos como una interacción natural comprobada con el hornero.",
+		"habitat": "FAUNA_COTORRA_HABITAT",
+		"descripcion": "FAUNA_COTORRA_DESCRIPCION",
+		"peligro": "FAUNA_COTORRA_PELIGRO",
+		"caza": "FAUNA_COTORRA_CAZA",
+		"come": "FAUNA_COTORRA_COME",
+		"relacion_hornero": "FAUNA_COTORRA_RELACION",
 	},
 	# --- Próximamente: fichas informativas; las relaciones se distinguen entre evidencia directa y riesgo posible.
 	# Las 16 láminas son de assets/Hornero_Fauna_14_Animales/, 1536x1024,
 	# 6 poses en 2 filas de 3 (cada celda de 512x512).
-	{"nombre": "Halconcito colorado", "cientifico": "Falco sparverius", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/halcon.png"),
+	{"nombre": "FAUNA_HALCONCITO_NOMBRE", "cientifico": "Falco sparverius", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/halcon.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Rapaz pequeña y veloz que caza desde perchas o en vuelo; identificada aquí como el halconcito colorado, especie común en Argentina.",
-			"habitat": "Desde Canadá hasta Tierra del Fuego; en Sudamérica ocupa campos, pastizales, sabanas y bordes urbanos.",
-			"peligro": "No está globalmente amenazado (Preocupación menor); en Argentina es residente o migratorio según la región.",
-			"caza": "Puede sufrir persecución y pérdida de sitios de nidificación; no se lo debe confundir con una amenaza para aves domésticas.",
-			"come": "Insectos, roedores, lagartijas y aves pequeñas.",
-			"relacion_hornero": "Puede capturar aves pequeñas, pero los registros consultados no identifican al hornero como presa de esta especie."},
-	{"nombre": "Taguató común", "cientifico": "Rupornis magnirostris", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/gavilan_v2_taguato_comun.png"),
+			"descripcion": "FAUNA_HALCONCITO_DESCRIPCION",
+			"habitat": "FAUNA_HALCONCITO_HABITAT",
+			"peligro": "FAUNA_HALCONCITO_PELIGRO",
+			"caza": "FAUNA_HALCONCITO_CAZA",
+			"come": "FAUNA_HALCONCITO_COME",
+			"relacion_hornero": "FAUNA_HALCONCITO_RELACION"},
+	{"nombre": "FAUNA_TAGUATO_NOMBRE", "cientifico": "Rupornis magnirostris", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/gavilan_v2_taguato_comun.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Rapaz diurna pequeña y adaptable, conocida también como gavilán común en algunas regiones.",
-			"habitat": "Desde México y Centroamérica hasta gran parte de Sudamérica; usa montes, bosques abiertos, campos y áreas urbanas.",
-			"peligro": "No está globalmente amenazado (Preocupación menor); la evaluación nacional consultada también lo clasifica como no amenazado.",
-			"caza": "Puede morir por persecución, pérdida de árboles para nidificar y colisiones; no se considera una amenaza para el ganado.",
-			"come": "Insectos, pequeños reptiles, roedores y aves; caza desde perchas y también caminando en el suelo.",
-			"relacion_hornero": "Hay un registro publicado en Córdoba de un taguató común que depredó un volantón de hornero; es evidencia directa, no significa que sea su presa habitual."},
+			"descripcion": "FAUNA_TAGUATO_DESCRIPCION",
+			"habitat": "FAUNA_TAGUATO_HABITAT",
+			"peligro": "FAUNA_TAGUATO_PELIGRO",
+			"caza": "FAUNA_TAGUATO_CAZA",
+			"come": "FAUNA_TAGUATO_COME",
+			"relacion_hornero": "FAUNA_TAGUATO_RELACION"},
 	{
-		"nombre": "Aves nocturnas",
+		"nombre": "FAUNA_AVES_NOCTURNAS_NOMBRE",
 		"variantes": [
-			{"nombre": "Lechuza de campanario", "cientifico": "Tyto furcata", "mapa": "sudamerica",
+			{"nombre": "FAUNA_LECHUZA_NOMBRE", "cientifico": "Tyto furcata", "mapa": "sudamerica",
 				"hoja": preload("res://assets/Hornero_Fauna_14_Animales/lechuza.png"),
 				"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-				"descripcion": "Lechuza nocturna de vuelo silencioso y oído muy desarrollado; suele anidar en cavidades y edificios.",
-				"habitat": "Gran parte de América; ocupa ambientes abiertos, campos y ciudades, y se refugia en huecos y construcciones.",
-				"peligro": "No está amenazada en Argentina (categoría nacional consultada); pierde refugios y puede intoxicarse con rodenticidas.",
-				"caza": "La persecución y el uso de venenos para roedores pueden afectarla indirectamente.",
-				"come": "Sobre todo roedores; también puede capturar otros animales pequeños.",
-				"relacion_hornero": "No se encontró evidencia directa de depredación de horneros por esta especie; su dieta se compone principalmente de pequeños mamíferos."},
-			{"nombre": "Lechuzón orejudo", "cientifico": "Asio clamator", "mapa": "sudamerica",
+				"descripcion": "FAUNA_LECHUZA_DESCRIPCION",
+				"habitat": "FAUNA_LECHUZA_HABITAT",
+				"peligro": "FAUNA_LECHUZA_PELIGRO",
+				"caza": "FAUNA_LECHUZA_CAZA",
+				"come": "FAUNA_LECHUZA_COME",
+				"relacion_hornero": "FAUNA_LECHUZA_RELACION"},
+			{"nombre": "FAUNA_LECHUZON_NOMBRE", "cientifico": "Asio clamator", "mapa": "sudamerica",
 				"hoja": preload("res://assets/Hornero_Fauna_14_Animales/buho_v2_lechuzon_orejudo.png"),
 				"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-				"descripcion": "Búho nocturno con penachos de plumas que parecen orejas; caza al acecho y en vuelos bajos.",
-				"habitat": "Desde Centroamérica hasta Argentina y Uruguay; frecuenta montes abiertos, pastizales, humedales y bordes de ciudades.",
-				"peligro": "No está amenazado en Argentina ni globalmente (Preocupación menor).",
-				"caza": "Puede verse afectado por pérdida de hábitat, persecución y colisiones con vehículos.",
-				"come": "Roedores y otros mamíferos pequeños, aves, reptiles e insectos.",
-				"relacion_hornero": "Se registró un hornero entre las presas identificadas en egagrópilas de esta especie en Santa Fe: es un registro puntual, no una presa frecuente demostrada."},
+				"descripcion": "FAUNA_LECHUZON_DESCRIPCION",
+				"habitat": "FAUNA_LECHUZON_HABITAT",
+				"peligro": "FAUNA_LECHUZON_PELIGRO",
+				"caza": "FAUNA_LECHUZON_CAZA",
+				"come": "FAUNA_LECHUZON_COME",
+				"relacion_hornero": "FAUNA_LECHUZON_RELACION"},
 		],
 	},
-	{"nombre": "Tordo renegrido", "cientifico": "Molothrus bonariensis", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/tordo_renegrido.png"),
+	{"nombre": "FAUNA_TORDO_NOMBRE", "cientifico": "Molothrus bonariensis", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/tordo_renegrido.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Ave oscura y gregaria; es parásita de cría obligada: pone sus huevos en nidos de otras aves.",
-			"habitat": "Gran parte de Sudamérica, incluida Argentina; campos, pastizales, áreas rurales y ciudades.",
-			"peligro": "No está globalmente amenazado (Preocupación menor) y figura como no amenazado en Argentina.",
-			"caza": "No suele cazarse por consumo; puede ser perseguido localmente por considerarlo perjudicial para aves de cría o cultivos.",
-			"come": "Semillas e insectos; aprovecha granos y alimento disponible en el suelo.",
-			"relacion_hornero": "No es depredador: puede parasitar nidos de hornero. Los adultos reconocen y expulsan algunos huevos parásitos."},
-	{"nombre": "Golondrina ceja blanca", "cientifico": "Tachycineta leucorrhoa", "mapa": "cono_sur", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/golondrina.png"),
+			"descripcion": "FAUNA_TORDO_DESCRIPCION",
+			"habitat": "FAUNA_TORDO_HABITAT",
+			"peligro": "FAUNA_TORDO_PELIGRO",
+			"caza": "FAUNA_TORDO_CAZA",
+			"come": "FAUNA_TORDO_COME",
+			"relacion_hornero": "FAUNA_TORDO_RELACION"},
+	{"nombre": "FAUNA_GOLONDRINA_NOMBRE", "cientifico": "Tachycineta leucorrhoa", "mapa": "cono_sur", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/golondrina.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Golondrina migratoria pequeña, de alas largas y rabadilla blanca; captura insectos durante el vuelo.",
-			"habitat": "Cono sur de Sudamérica; se encuentra en campos, humedales y zonas rurales, y anida en cavidades o estructuras.",
-			"peligro": "No se considera globalmente amenazada (Preocupación menor); sus poblaciones pueden verse afectadas localmente.",
-			"caza": "Puede afectarla la pérdida de sitios de nidificación, los pesticidas y la reducción de insectos.",
-			"come": "Insectos que captura en vuelo.",
-			"relacion_hornero": "No se conoce como depredadora del hornero; ambas pueden compartir áreas abiertas y alimentarse de recursos distintos."},
-	{"nombre": "Benteveo común", "cientifico": "Pitangus sulphuratus", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/benteveo.png"),
+			"descripcion": "FAUNA_GOLONDRINA_DESCRIPCION",
+			"habitat": "FAUNA_GOLONDRINA_HABITAT",
+			"peligro": "FAUNA_GOLONDRINA_PELIGRO",
+			"caza": "FAUNA_GOLONDRINA_CAZA",
+			"come": "FAUNA_GOLONDRINA_COME",
+			"relacion_hornero": "FAUNA_GOLONDRINA_RELACION"},
+	{"nombre": "FAUNA_BENTEVEO_NOMBRE", "cientifico": "Pitangus sulphuratus", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/benteveo.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Tirano robusto y ruidoso, reconocible por su ceja blanca y vientre amarillo; es muy oportunista.",
-			"habitat": "Desde el sur de Estados Unidos hasta Argentina; vive en montes abiertos, orillas, parques, campos y jardines.",
-			"peligro": "No está globalmente amenazado (Preocupación menor).",
-			"caza": "No suele cazarse; puede sufrir pérdida de hábitat, atropellamientos y persecución local.",
-			"come": "Insectos, frutos, peces pequeños y otros vertebrados pequeños; también puede tomar huevos o pichones.",
-			"relacion_hornero": "Podría depredar huevos o pichones accesibles por su dieta oportunista, pero no se halló un registro directo específico sobre horneros."},
-	{"nombre": "Cóndor andino", "cientifico": "Vultur gryphus", "mapa": "andino", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/Vuelo del cóndor andino en sprites-1.png"),
+			"descripcion": "FAUNA_BENTEVEO_DESCRIPCION",
+			"habitat": "FAUNA_BENTEVEO_HABITAT",
+			"peligro": "FAUNA_BENTEVEO_PELIGRO",
+			"caza": "FAUNA_BENTEVEO_CAZA",
+			"come": "FAUNA_BENTEVEO_COME",
+			"relacion_hornero": "FAUNA_BENTEVEO_RELACION"},
+	{"nombre": "FAUNA_CONDOR_NOMBRE", "cientifico": "Vultur gryphus", "mapa": "andino", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/Vuelo del cóndor andino en sprites-1.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Enorme ave carroñera que planea largas distancias y ayuda a mantener limpios los ecosistemas.",
-			"habitat": "Vive en montañas, quebradas y estepas a lo largo de los Andes y en sierras del centro argentino.",
-			"peligro": "Está amenazado en Argentina y globalmente figura como Vulnerable; el envenenamiento es una amenaza grave.",
-			"caza": "Históricamente perseguido; hoy lo afectan sobre todo cebos tóxicos, plomo, pérdida de alimento y perturbación de sitios de cría.",
-			"come": "Carroña, especialmente grandes mamíferos; no caza animales vivos como conducta habitual.",
-			"relacion_hornero": "No es un cazador de horneros: se alimenta de carroña y no representa una amenaza directa para el nido."},
-	{"nombre": "Comadreja overa", "cientifico": "Didelphis albiventris", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/comadreja.png"),
+			"descripcion": "FAUNA_CONDOR_DESCRIPCION",
+			"habitat": "FAUNA_CONDOR_HABITAT",
+			"peligro": "FAUNA_CONDOR_PELIGRO",
+			"caza": "FAUNA_CONDOR_CAZA",
+			"come": "FAUNA_CONDOR_COME",
+			"relacion_hornero": "FAUNA_CONDOR_RELACION"},
+	{"nombre": "FAUNA_COMADREJA_NOMBRE", "cientifico": "Didelphis albiventris", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/comadreja.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Marsupial nocturno, omnívoro y trepador, con cola prensil; también se lo llama comadreja común.",
-			"habitat": "La comadreja overa ocupa gran parte de Argentina y países vecinos; usa montes, humedales, áreas rurales y ciudades.",
-			"peligro": "La comadreja overa no está amenazada (Preocupación menor); no debe generalizarse a todas las especies llamadas comadrejas.",
-			"caza": "Puede ser perseguida por entrar en gallineros; también la afectan atropellamientos y pérdida de refugios.",
-			"come": "Frutos, insectos, pequeños vertebrados, huevos y carroña.",
-			"relacion_hornero": "Podría saquear huevos o pichones en un nido accesible, pero no se halló evidencia directa específica para horneros."},
-	{"nombre": "Gato cimarrón", "cientifico": "Felis catus", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/gato_cimarron.png"),
+			"descripcion": "FAUNA_COMADREJA_DESCRIPCION",
+			"habitat": "FAUNA_COMADREJA_HABITAT",
+			"peligro": "FAUNA_COMADREJA_PELIGRO",
+			"caza": "FAUNA_COMADREJA_CAZA",
+			"come": "FAUNA_COMADREJA_COME",
+			"relacion_hornero": "FAUNA_COMADREJA_RELACION"},
+	{"nombre": "FAUNA_GATO_CIMARRON_NOMBRE", "cientifico": "Felis catus", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/gato_cimarron.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Gato doméstico (Felis catus) que vive sin depender de personas; es un depredador introducido.",
-			"habitat": "Se adapta a ambientes rurales, periurbanos, montes e islas de Argentina y Latinoamérica.",
-			"peligro": "No es una especie silvestre amenazada; sus poblaciones asilvestradas pueden amenazar fauna nativa.",
-			"caza": "Puede ser controlado o perseguido; el manejo responsable incluye evitar abandonos y proteger la fauna silvestre.",
-			"come": "Aves, roedores, reptiles e insectos, además de alimento provisto por personas.",
-			"relacion_hornero": "Puede cazar horneros adultos, volantones o pichones fuera del nido; el riesgo depende del acceso y del contexto local."},
-	{"nombre": "Zorro gris pampeano", "cientifico": "Lycalopex gymnocercus", "mapa": "cono_sur", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/zorro.png"),
+			"descripcion": "FAUNA_GATO_CIMARRON_DESCRIPCION",
+			"habitat": "FAUNA_GATO_CIMARRON_HABITAT",
+			"peligro": "FAUNA_GATO_CIMARRON_PELIGRO",
+			"caza": "FAUNA_GATO_CIMARRON_CAZA",
+			"come": "FAUNA_GATO_CIMARRON_COME",
+			"relacion_hornero": "FAUNA_GATO_CIMARRON_RELACION"},
+	{"nombre": "FAUNA_ZORRO_NOMBRE", "cientifico": "Lycalopex gymnocercus", "mapa": "cono_sur", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/zorro.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Cánido oportunista de tamaño mediano, también llamado zorro pampeano o zorro gris chico.",
-			"habitat": "Centro y sur de Sudamérica; ocupa pastizales, montes, matorrales y estepas, incluido el centro de Argentina.",
-			"peligro": "No está globalmente amenazado; la persecución y la caza generan presión en algunas zonas.",
-			"caza": "Persecución por conflictos con animales domésticos, caza por pieles y atropellamientos son presiones conocidas.",
-			"come": "Roedores, aves, reptiles, insectos, frutos y carroña; la proporción depende de la región.",
-			"relacion_hornero": "Podría capturar aves o revisar nidos accesibles, pero no se encontró un registro directo específico de depredación de horneros."},
-	{"nombre": "Laucha de campo", "cientifico": "Calomys laucha", "mapa": "pampas", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/roedor.png"),
+			"descripcion": "FAUNA_ZORRO_DESCRIPCION",
+			"habitat": "FAUNA_ZORRO_HABITAT",
+			"peligro": "FAUNA_ZORRO_PELIGRO",
+			"caza": "FAUNA_ZORRO_CAZA",
+			"come": "FAUNA_ZORRO_COME",
+			"relacion_hornero": "FAUNA_ZORRO_RELACION"},
+	{"nombre": "FAUNA_LAUCHA_NOMBRE", "cientifico": "Calomys laucha", "mapa": "pampas", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/roedor.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Roedor pequeño, mayormente nocturno, conocido también como laucha chica o laucha de campo.",
-			"habitat": "Norte de Paraguay y sudeste de Bolivia hasta el centro de Argentina; frecuente en campos y áreas agrícolas.",
-			"peligro": "No se considera amenazado; la intensidad de la agricultura y los rodenticidas pueden afectar poblaciones locales.",
-			"caza": "Se lo controla en cultivos y viviendas; los rodenticidas afectan también a sus depredadores.",
-			"come": "Semillas, brotes e insectos; es presa de numerosas rapaces y mamíferos.",
-			"relacion_hornero": "No es un depredador del hornero; forma parte de la red alimentaria de las rapaces que pueden compartir su ambiente."},
-	{"nombre": "Puma", "cientifico": "Puma concolor", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/Puma en carrera, seis poses.png"),
+			"descripcion": "FAUNA_LAUCHA_DESCRIPCION",
+			"habitat": "FAUNA_LAUCHA_HABITAT",
+			"peligro": "FAUNA_LAUCHA_PELIGRO",
+			"caza": "FAUNA_LAUCHA_CAZA",
+			"come": "FAUNA_LAUCHA_COME",
+			"relacion_hornero": "FAUNA_LAUCHA_RELACION"},
+	{"nombre": "FAUNA_PUMA_NOMBRE", "cientifico": "Puma concolor", "mapa": "sudamerica", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/Puma en carrera, seis poses.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Puma (Puma concolor), gran felino solitario que regula las poblaciones de sus presas.",
-			"habitat": "Desde Canadá hasta el extremo sur de Sudamérica; ocupa montañas, bosques, montes, pastizales y estepas.",
-			"peligro": "Preocupación menor a escala global; en Argentina y varias regiones sus poblaciones sufren persecución y fragmentación.",
-			"caza": "Perseguido por conflictos con la ganadería y por caza; también lo afectan la pérdida y fragmentación de hábitat.",
-			"come": "Mamíferos medianos y grandes; también aves y presas pequeñas cuando están disponibles.",
-			"relacion_hornero": "No es un depredador probable de un hornero adulto o de un nido alto; no se halló evidencia directa de interacción."},
-	{"nombre": "Yarará grande", "cientifico": "Bothrops alternatus", "mapa": "norte_este", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/yarara.png"),
+			"descripcion": "FAUNA_PUMA_DESCRIPCION",
+			"habitat": "FAUNA_PUMA_HABITAT",
+			"peligro": "FAUNA_PUMA_PELIGRO",
+			"caza": "FAUNA_PUMA_CAZA",
+			"come": "FAUNA_PUMA_COME",
+			"relacion_hornero": "FAUNA_PUMA_RELACION"},
+	{"nombre": "FAUNA_YARARA_NOMBRE", "cientifico": "Bothrops alternatus", "mapa": "norte_este", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/yarara.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Víbora venenosa de cuerpo robusto, también llamada víbora de la cruz; contribuye al control de roedores.",
-			"habitat": "Norte y centro de Argentina, Uruguay, Paraguay y sur de Brasil; prefiere pastizales húmedos, bañados y orillas.",
-			"peligro": "No amenazada en Argentina según la categorización consultada; no debe manipularse ni matarse por temor.",
-			"caza": "La persecución humana y la pérdida de hábitat son riesgos; también mueren en rutas.",
-			"come": "Principalmente roedores y otros pequeños vertebrados; la dieta depende de la especie y la edad.",
-			"relacion_hornero": "No es un depredador típico de nidos; podría afectar huevos o pichones en circunstancias excepcionales, sin registro directo localizado."},
-	{"nombre": "Culebra arborícola verde", "cientifico": "Philodryas olfersii", "mapa": "norte_este", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/culebra.png"),
+			"descripcion": "FAUNA_YARARA_DESCRIPCION",
+			"habitat": "FAUNA_YARARA_HABITAT",
+			"peligro": "FAUNA_YARARA_PELIGRO",
+			"caza": "FAUNA_YARARA_CAZA",
+			"come": "FAUNA_YARARA_COME",
+			"relacion_hornero": "FAUNA_YARARA_RELACION"},
+	{"nombre": "FAUNA_CULEBRA_NOMBRE", "cientifico": "Philodryas olfersii", "mapa": "norte_este", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/culebra.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Culebra verde diurna y semiarborícola; aunque no es una víbora, su mordedura puede causar envenenamiento local.",
-			"habitat": "Norte y este de Sudamérica, incluido el noreste argentino; vive en bosques, selvas y áreas abiertas con vegetación.",
-			"peligro": "No se la considera globalmente amenazada; enfrenta pérdida de hábitat y persecución por confusión con víboras.",
-			"caza": "Sufren persecución por confusión con víboras y pérdida de vegetación nativa.",
-			"come": "Anfibios, lagartijas, aves y pequeños mamíferos.",
-			"relacion_hornero": "Por sus hábitos trepadores y dieta, podría acceder a huevos o pichones; no se encontró un registro directo de esta especie en nidos de hornero."},
-	{"nombre": "Lagarto overo", "cientifico": "Salvator merianae", "mapa": "norte_este", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/lagarto_overo.png"),
+			"descripcion": "FAUNA_CULEBRA_DESCRIPCION",
+			"habitat": "FAUNA_CULEBRA_HABITAT",
+			"peligro": "FAUNA_CULEBRA_PELIGRO",
+			"caza": "FAUNA_CULEBRA_CAZA",
+			"come": "FAUNA_CULEBRA_COME",
+			"relacion_hornero": "FAUNA_CULEBRA_RELACION"},
+	{"nombre": "FAUNA_LAGARTO_NOMBRE", "cientifico": "Salvator merianae", "mapa": "norte_este", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/lagarto_overo.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0, "proximamente": true,
-			"descripcion": "Lagarto overo (Salvator merianae), reptil grande, diurno en época cálida y buen nadador.",
-			"habitat": "Centro y norte de Argentina y países vecinos; vive en montes, pastizales, humedales y bordes de ambientes rurales.",
-			"peligro": "No está amenazado a escala global ni en Argentina según las evaluaciones consultadas; puede sufrir presión local.",
-			"caza": "Históricamente perseguido por su cuero y hoy afectado por atropellamientos y captura ilegal.",
-			"come": "Omnívoro: frutos, insectos, huevos, carroña y pequeños animales.",
-			"relacion_hornero": "Puede consumir huevos o animales pequeños si encuentra un nido accesible, pero no se halló un registro directo específico para horneros."},
-	{"nombre": "Aguará guazú", "cientifico": "Chrysocyon brachyurus", "mapa": "aguaraguazu", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/aguaraguazu.png"),
+			"descripcion": "FAUNA_LAGARTO_DESCRIPCION",
+			"habitat": "FAUNA_LAGARTO_HABITAT",
+			"peligro": "FAUNA_LAGARTO_PELIGRO",
+			"caza": "FAUNA_LAGARTO_CAZA",
+			"come": "FAUNA_LAGARTO_COME",
+			"relacion_hornero": "FAUNA_LAGARTO_RELACION"},
+	{"nombre": "FAUNA_AGUARA_NOMBRE", "cientifico": "Chrysocyon brachyurus", "mapa": "aguaraguazu", "hoja": preload("res://assets/Hornero_Fauna_14_Animales/aguaraguazu.png"),
 			"columnas": 3, "filas_y": [0, 512], "alto": 512, "fps": 6.0,
-			"descripcion": "El mayor cánido de Sudamérica: esbelto, de patas largas y pelaje rojizo con una crin oscura.",
-			"habitat": "Centro y sur de Brasil, este de Bolivia, Paraguay, noroeste de Uruguay y noreste de Argentina. Prefiere pastizales y pajonales abiertos, a menudo junto a bañados, palmares y parches de monte.",
-			"peligro": "Sí: está categorizado como Vulnerable (VU) en Argentina (SAREM, 2025) y como Casi Amenazado globalmente (UICN; evaluación más reciente disponible de 2015).",
-			"caza": "Lo afectan la pérdida y fragmentación de pastizales por la expansión agropecuaria, los atropellamientos y la persecución o captura ilegal.",
-			"come": "Omnívoro: frutos silvestres, insectos y pequeños vertebrados, como roedores, armadillos, reptiles y aves.",
-			"relacion_hornero": "Puede comer aves pequeñas de forma oportunista, pero no es un depredador habitual del hornero y no se encontró evidencia específica de ataques a sus nidos."},
+			"descripcion": "FAUNA_AGUARA_DESCRIPCION",
+			"habitat": "FAUNA_AGUARA_HABITAT",
+			"peligro": "FAUNA_AGUARA_PELIGRO",
+			"caza": "FAUNA_AGUARA_CAZA",
+			"come": "FAUNA_AGUARA_COME",
+			"relacion_hornero": "FAUNA_AGUARA_RELACION"},
 ]
 
 const TextoJuego := preload("res://scripts/ui/texto_juego.gd")
@@ -315,6 +260,7 @@ const PopupNombre := preload("res://scripts/ui/popup_nombre.gd")
 const PopupConfirmacion := preload("res://scripts/ui/popup_confirmacion.gd")
 const PopupAnimal := preload("res://scripts/ui/popup_animal.gd")
 const BotonSilenciar := preload("res://scripts/ui/boton_silenciar.gd")
+const BotonIdioma := preload("res://scripts/ui/boton_idioma.gd")
 ## Cartel de madera vacío que aparece detrás de la opción seleccionada.
 const CartelFileteado := preload("res://scripts/ui/cartel_fileteado.gd")
 const LOGO_AVES: Texture2D = preload("res://Hornero_Menu_Inicio/logo_aves.png")
@@ -392,7 +338,8 @@ var _boton_borrar: Button
 ## Se borraron los datos: al cerrar Estadísticas se vuelve a pedir el nombre.
 var _pedir_nombre_al_cerrar := false
 # Ventana "Configuración".
-var _configuracion: VBoxContainer
+## Con desplazamiento: las fichas no entran todas en pantallas bajas.
+var _configuracion: ScrollContainer
 var _boton_completa: Button
 var _boton_ventana: Button
 var _boton_fps_si: Button
@@ -400,27 +347,32 @@ var _boton_fps_no: Button
 var _boton_facil: Button
 var _boton_dificil: Button
 var _detalle_dificultad: RichTextLabel
+var _boton_timon_avion: Button
+var _boton_timon_directo: Button
+var _detalle_timon: RichTextLabel
+## Reacomodan el cartel de cada opción del menú al largo de su texto (cambia con el idioma).
+var _acomodar_carteles: Array[Callable] = []
 
 func _ready() -> void:
 	# Mientras el jugador mira el menú, la partida se va cargando de fondo.
 	if ResourceLoader.exists(escena_juego):
 		PantallaCarga.precargar(escena_juego)
 	start.pressed.connect(_iniciar)
-	ayuda.pressed.connect(func(): _mostrar("Cómo jugar", texto_ayuda()))
+	ayuda.pressed.connect(func(): _mostrar("TITULO_COMO_JUGAR", texto_ayuda()))
 	historia.pressed.connect(_mostrar_historia)
 	boton_estadisticas.pressed.connect(_mostrar_estadisticas)
 	boton_configuracion.pressed.connect(_mostrar_configuracion)
-	boton_creditos.pressed.connect(func(): _mostrar("Créditos", creditos))
+	boton_creditos.pressed.connect(func(): _mostrar("TITULO_CREDITOS", "CREDITOS"))
 	salir.pressed.connect(_salir)
 	cerrar.pressed.connect(_cerrar)
 	musica_menu.finished.connect(_reiniciar_musica)
-	_estilizar_opcion(start, "JUGAR")
-	_estilizar_opcion(ayuda, "CÓMO JUGAR")
-	_estilizar_opcion(historia, "HISTORIA")
-	_estilizar_opcion(boton_estadisticas, "ESTADÍSTICAS")
-	_estilizar_opcion(boton_configuracion, "CONFIGURACIÓN")
-	_estilizar_opcion(boton_creditos, "CRÉDITOS")
-	_estilizar_opcion(salir, "SALIR")
+	_estilizar_opcion(start, "MENU_JUGAR")
+	_estilizar_opcion(ayuda, "MENU_COMO_JUGAR")
+	_estilizar_opcion(historia, "MENU_HISTORIA")
+	_estilizar_opcion(boton_estadisticas, "MENU_ESTADISTICAS")
+	_estilizar_opcion(boton_configuracion, "MENU_CONFIGURACION")
+	_estilizar_opcion(boton_creditos, "MENU_CREDITOS")
+	_estilizar_opcion(salir, "MENU_SALIR")
 	# En el navegador el juego no puede cerrar la pestaña.
 	salir.visible = not OS.has_feature("web")
 	_estilizar_boton(cerrar, false)
@@ -432,6 +384,8 @@ func _ready() -> void:
 	_volumen_musica = musica_menu.volume_linear
 	_volumen_canto = _canto_hornero.volume_linear
 	_crear_boton_silenciar()
+	_crear_boton_idioma()
+	Idioma.cambiado.connect(_on_idioma_cambiado)
 	if Ajustes.MOSTRAR_AVES_ARGENTINAS:
 		_crear_logo_aves()
 	_fondo.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -485,6 +439,31 @@ func _crear_boton_silenciar() -> void:
 	_aplicar_silencio(boton.silenciado)
 	boton.alternado.connect(_on_alternar_silencio)
 	add_child(boton)
+
+## Al lado del de silenciar (a su izquierda). Los textos con clave de
+## textos.gd se traducen solos al cambiar de idioma.
+func _crear_boton_idioma() -> void:
+	var boton := BotonIdioma.new()
+	boton.anchor_left = 1.0
+	boton.anchor_right = 1.0
+	boton.anchor_top = 1.0
+	boton.anchor_bottom = 1.0
+	boton.offset_left = -172.0
+	boton.offset_right = -84.0
+	boton.offset_top = -60.0
+	boton.offset_bottom = -16.0
+	add_child(boton)
+
+## Lo que no se traduce solo: el ancho de los carteles del menú y los textos
+## armados en código. Una ventana abierta se cierra (al reabrirla ya sale en
+## el idioma nuevo).
+func _on_idioma_cambiado() -> void:
+	for acomodar in _acomodar_carteles:
+		acomodar.call()
+	if is_instance_valid(_popup_animal):
+		_popup_animal.queue_free()
+	if ventana.visible:
+		_cerrar()
 
 ## Logo de Aves Argentinas, apoyado justo arriba del de la UTN. Ese otro es un
 ## autoload que se dibuja en todas las pantallas: de ahí salen la medida, el
@@ -557,7 +536,7 @@ func _iniciar() -> void:
 func _no_se_pudo_iniciar(error: String) -> void:
 	start.disabled = false
 	push_error(error)
-	_mostrar("No se pudo iniciar", "La escena de juego todavía no está disponible.")
+	_mostrar("ERROR_INICIAR_TITULO", "ERROR_INICIAR_TEXTO")
 
 ## Popup "Nombre de jugador": tapa el menú hasta que se acepta un nombre válido.
 func _pedir_nombre() -> void:
@@ -604,14 +583,14 @@ func _mostrar_panel(titulo: String, panel: Control) -> void:
 	panel.show()
 
 func _mostrar_historia() -> void:
-	_mostrar("Historia", HISTORIA)
+	_mostrar("TITULO_HISTORIA", "HISTORIA")
 	_pestanas.show()
 	_elegir_pestana(false)
 
 func _elegir_pestana(fauna: bool) -> void:
 	texto_ventana.visible = not fauna
 	_fauna.visible = fauna
-	titulo_ventana.text = "Fauna" if fauna else "Historia"
+	titulo_ventana.text = "TITULO_FAUNA" if fauna else "TITULO_HISTORIA"
 	_estilizar_boton(_pestana_historia, not fauna)
 	_estilizar_boton(_pestana_fauna, fauna)
 	if fauna:
@@ -622,9 +601,9 @@ func _crear_pestanas_historia() -> void:
 	_pestanas = HBoxContainer.new()
 	_pestanas.add_theme_constant_override("separation", 10)
 	_pestana_historia = Button.new()
-	_pestana_historia.text = "Historia"
+	_pestana_historia.text = "TITULO_HISTORIA"
 	_pestana_fauna = Button.new()
-	_pestana_fauna.text = "Fauna"
+	_pestana_fauna.text = "TITULO_FAUNA"
 	for pestana in [_pestana_historia, _pestana_fauna]:
 		pestana.custom_minimum_size = Vector2(160, 44)
 		pestana.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -833,6 +812,8 @@ func _barra_scroll() -> VScrollBar:
 		return _fauna.get_v_scroll_bar()
 	if _estadisticas.visible:
 		return _scroll_estadisticas.get_v_scroll_bar()
+	if _configuracion.visible:
+		return _configuracion.get_v_scroll_bar()
 	return texto_ventana.get_v_scroll_bar()
 
 func _desplazar(pixeles: float) -> void:
@@ -842,7 +823,7 @@ func _desplazar(pixeles: float) -> void:
 # Mientras se mantiene apretada la tecla, el texto se desliza de corrido.
 # Con la ventana de detalle de un animal abierta, no: ese scroll es aparte.
 func _scroll_con_teclas(delta: float) -> void:
-	if not ventana.visible or is_instance_valid(_popup_animal):
+	if not ventana.visible or is_instance_valid(_popup_animal) or _configuracion.visible:
 		return
 	var direccion := 0.0
 	if Input.is_physical_key_pressed(KEY_DOWN) or Input.is_physical_key_pressed(KEY_S):
@@ -864,7 +845,7 @@ func _input(event: InputEvent) -> void:
 		var sentido := -1.0 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0
 		_desplazar(sentido * paso_scroll_rueda * maxf(event.factor, 1.0))
 		get_viewport().set_input_as_handled()
-	# En Configuración no hay nada que desplazar: las flechas eligen la opción.
+	# En Configuración las flechas eligen la opción (y la lista sigue al foco).
 	elif event is InputEventKey and event.physical_keycode in [KEY_UP, KEY_DOWN, KEY_W, KEY_S] \
 			and not _configuracion.visible:
 		get_viewport().set_input_as_handled()
@@ -919,11 +900,12 @@ func _estilizar_opcion(boton: Button, texto: String) -> void:
 	var cartel := CartelFileteado.new()
 	boton.add_child(cartel)
 	var acomodar := func() -> void:
-		var ancho_texto := fuente.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, tamano_opciones).x
+		var ancho_texto := fuente.get_string_size(tr(texto), HORIZONTAL_ALIGNMENT_LEFT, -1, tamano_opciones).x
 		var tamano := Vector2(CartelFileteado.ancho_para(ancho_texto + 30.0, alto_cartel), alto_cartel)
 		cartel.size = tamano
 		cartel.position = (boton.size - tamano) * 0.5
 	boton.resized.connect(acomodar)
+	_acomodar_carteles.append(acomodar)
 	acomodar.call()
 	var actualizar := func() -> void:
 		var seleccionado := boton.has_focus()
@@ -942,7 +924,7 @@ func _estilizar_opcion(boton: Button, texto: String) -> void:
 # --- Estadísticas -----------------------------------------------------------
 
 func _mostrar_estadisticas() -> void:
-	_mostrar_panel("Estadísticas", _estadisticas)
+	_mostrar_panel("TITULO_ESTADISTICAS", _estadisticas)
 	# En incógnito no hay estadísticas propias que borrar.
 	_actualizar_boton_identidad()
 	_elegir_pestana_estadisticas(0)
@@ -952,33 +934,39 @@ func _mostrar_estadisticas() -> void:
 ## tanto muestra "Cargando…".
 func _cargar_estadisticas() -> void:
 	if TaloManager.has_local_identity():
-		_aviso_estadisticas.text = "Jugando como %s" % TaloManager.get_player_name()
+		_aviso_estadisticas.text = tr("ESTAD_JUGANDO_COMO") % TaloManager.get_player_name()
+	elif TaloManager.has_temporary_name():
+		_aviso_estadisticas.text = tr("ESTAD_JUGANDO_SIN_CONEXION") % TaloManager.get_player_name()
 	else:
-		_aviso_estadisticas.text = "Modo incógnito · tus partidas no se guardan"
+		_aviso_estadisticas.text = "ESTAD_MODO_INCOGNITO"
 	for i in _paginas_estadisticas.size():
-		_poner_pagina(i, _pagina_mensaje(_titulo_estadisticas(i), "Cargando…"))
+		_poner_pagina(i, _pagina_mensaje(_titulo_estadisticas(i), "ESTAD_CARGANDO"))
 	TaloManager.get_player_stats()
 	TaloManager.get_global_stats()
 	TaloManager.get_easy_leaderboard()
 	TaloManager.get_hard_leaderboard()
 
 func _titulo_estadisticas(indice: int) -> String:
-	return ["Tus partidas", "Todos los horneros", "Ranking Global · Fácil",
-			"Ranking Global · Difícil"][indice]
+	return ["ESTAD_TITULO_PERSONAL", "ESTAD_TITULO_GLOBAL", "ESTAD_TITULO_RANKING_FACIL",
+			"ESTAD_TITULO_RANKING_DIFICIL"][indice]
 
 func _on_estadisticas_personales(stats: Dictionary) -> void:
+	if stats.temporary_name:
+		_poner_pagina(0, _pagina_mensaje(_titulo_estadisticas(0),
+				"ESTAD_NOMBRE_TEMPORAL"))
+		return
 	if stats.incognito:
 		_poner_pagina(0, _pagina_mensaje(_titulo_estadisticas(0),
-				"Estás jugando en modo incógnito: tus estadísticas no se guardan."))
+				"ESTAD_INCOGNITO"))
 		return
 	if not stats.ok:
 		_poner_pagina(0, _pagina_sin_conexion(0))
 		return
 	_poner_pagina(0, _pagina_datos(_titulo_estadisticas(0), [
-		["Nidos construidos", str(stats.nests_built)],
-		["Muertes", str(stats.deaths)],
-		["Mejor tiempo fácil", TaloManager.format_time(stats.best_time_easy_ms)],
-		["Mejor tiempo difícil", TaloManager.format_time(stats.best_time_hard_ms)],
+		["ESTAD_NIDOS", str(stats.nests_built)],
+		["ESTAD_MUERTES", str(stats.deaths)],
+		["ESTAD_MEJOR_FACIL", TaloManager.format_time(stats.best_time_easy_ms)],
+		["ESTAD_MEJOR_DIFICIL", TaloManager.format_time(stats.best_time_hard_ms)],
 	]))
 
 func _on_estadisticas_globales(stats: Dictionary) -> void:
@@ -986,8 +974,8 @@ func _on_estadisticas_globales(stats: Dictionary) -> void:
 		_poner_pagina(1, _pagina_sin_conexion(1))
 		return
 	_poner_pagina(1, _pagina_datos(_titulo_estadisticas(1), [
-		["Nidos construidos", str(stats.nests_built)],
-		["Muertes", str(stats.deaths)],
+		["ESTAD_NIDOS", str(stats.nests_built)],
+		["ESTAD_MUERTES", str(stats.deaths)],
 	]))
 
 func _on_ranking(tabla: String, ranking: Dictionary) -> void:
@@ -996,7 +984,7 @@ func _on_ranking(tabla: String, ranking: Dictionary) -> void:
 		_poner_pagina(indice, _pagina_sin_conexion(indice))
 	elif ranking.entries.is_empty():
 		_poner_pagina(indice, _pagina_mensaje(_titulo_estadisticas(indice),
-				"Todavía nadie terminó un nido en esta dificultad."))
+				"ESTAD_RANKING_VACIO"))
 	else:
 		_poner_pagina(indice, _pagina_ranking(_titulo_estadisticas(indice), ranking.entries))
 
@@ -1014,7 +1002,7 @@ func _poner_pagina(indice: int, pagina: Control) -> void:
 
 func _pagina_sin_conexion(indice: int) -> Control:
 	return _pagina_mensaje(_titulo_estadisticas(indice),
-			"No se pudo conectar con el servidor. Probá de nuevo más tarde.")
+			"ESTAD_SIN_CONEXION")
 
 func _pagina_mensaje(titulo: String, mensaje: String) -> Control:
 	var ficha := _ficha()
@@ -1039,7 +1027,7 @@ func _crear_estadisticas() -> void:
 	var pestanas := HBoxContainer.new()
 	pestanas.add_theme_constant_override("separation", 8)
 	_estadisticas.add_child(pestanas)
-	for nombre in ["Personal", "Global", "Ranking Fácil", "Ranking Difícil"]:
+	for nombre in ["PESTANA_PERSONAL", "PESTANA_GLOBAL", "PESTANA_RANKING_FACIL", "PESTANA_RANKING_DIFICIL"]:
 		var pestana := Button.new()
 		pestana.text = nombre
 		pestana.custom_minimum_size = Vector2(0, 44)
@@ -1057,7 +1045,7 @@ func _crear_estadisticas() -> void:
 	_contenedor_paginas.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_scroll_estadisticas.add_child(_contenedor_paginas)
 	for i in 4:
-		_poner_pagina(i, _pagina_mensaje(_titulo_estadisticas(i), "Cargando…"))
+		_poner_pagina(i, _pagina_mensaje(_titulo_estadisticas(i), "ESTAD_CARGANDO"))
 
 	_aviso_estadisticas = _texto(15, Color(COLOR_TEXTO, 0.6))
 	_aviso_estadisticas.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -1083,7 +1071,7 @@ func _crear_estadisticas() -> void:
 ## Con nombre: "Borrar estadísticas" (en rojo). En incógnito: "Crear nombre" (dorado).
 func _actualizar_boton_identidad() -> void:
 	var con_nombre := TaloManager.has_local_identity()
-	_boton_borrar.text = "Borrar estadísticas" if con_nombre else "Crear nombre"
+	_boton_borrar.text = "ESTAD_BORRAR" if con_nombre else "ESTAD_CREAR_NOMBRE"
 	for color in ["font_color", "font_focus_color"]:
 		_boton_borrar.add_theme_color_override(color, Color("ffb4a6") if con_nombre else COLOR_LETRAS)
 	_boton_borrar.disabled = false
@@ -1099,8 +1087,8 @@ func _on_boton_identidad() -> void:
 
 func _confirmar_borrado() -> void:
 	var popup := PopupConfirmacion.new()
-	popup.titulo = "Borrar estadísticas"
-	popup.mensaje = "Se borran tu nombre, tus nidos construidos, tus muertes y tus tiempos de los rankings. Las estadísticas globales no cambian. No se puede deshacer."
+	popup.titulo = "ESTAD_BORRAR"
+	popup.mensaje = "ESTAD_BORRAR_CONFIRMACION"
 	popup.respondido.connect(_on_confirmacion_borrado)
 	add_child(popup)
 
@@ -1109,7 +1097,7 @@ func _on_confirmacion_borrado(aceptado: bool) -> void:
 	if not aceptado:
 		return
 	_boton_borrar.disabled = true
-	_aviso_estadisticas.text = "Borrando tus estadísticas…"
+	_aviso_estadisticas.text = "ESTAD_BORRANDO"
 	TaloManager.reset_player_stats()
 
 func _on_estadisticas_borradas(ok: bool) -> void:
@@ -1123,9 +1111,9 @@ func _on_estadisticas_borradas(ok: bool) -> void:
 		_pedir_nombre_al_cerrar = true
 		_actualizar_boton_identidad()
 		_cargar_estadisticas()
-		_aviso_estadisticas.text = "Tus datos se borraron. Ahora estás en modo incógnito."
+		_aviso_estadisticas.text = "ESTAD_BORRADAS"
 	else:
-		_aviso_estadisticas.text = "No fue posible borrar tus estadísticas. Revisá tu conexión a internet."
+		_aviso_estadisticas.text = "ESTAD_BORRAR_ERROR"
 
 func _elegir_pestana_estadisticas(indice: int) -> void:
 	_pestana_estadisticas_actual = indice
@@ -1174,7 +1162,7 @@ func _pagina_ranking(titulo: String, filas: Array) -> Control:
 	columna.add_theme_constant_override("separation", 4)
 	ficha.add_child(columna)
 	columna.add_child(_titulo_pagina(titulo))
-	columna.add_child(_fila_ranking("#", "Nombre", "Tiempo", COLOR_LETRAS, Color(0, 0, 0, 0)))
+	columna.add_child(_fila_ranking("#", "RANKING_NOMBRE", "RANKING_TIEMPO", COLOR_LETRAS, Color(0, 0, 0, 0)))
 	for i in filas.size():
 		var color := COLORES_PODIO[i] if i < COLORES_PODIO.size() else COLOR_TEXTO
 		var fondo := Color(1, 1, 1, 0.06) if i % 2 == 0 else Color(0, 0, 0, 0)
@@ -1182,7 +1170,7 @@ func _pagina_ranking(titulo: String, filas: Array) -> Control:
 		var nombre: String = fila.name
 		if fila.is_player:
 			fondo = Color(COLOR_LETRAS, 0.18)
-			nombre += " (vos)"
+			nombre += tr("RANKING_VOS")
 		columna.add_child(_fila_ranking(str(fila.position), nombre,
 				TaloManager.format_time(fila.time_ms), color, fondo))
 	return ficha
@@ -1239,36 +1227,46 @@ func _texto(tamano: int, color: Color) -> Label:
 # --- Configuración ----------------------------------------------------------
 
 func _mostrar_configuracion() -> void:
-	_mostrar_panel("Configuración", _configuracion)
+	_mostrar_panel("TITULO_CONFIGURACION", _configuracion)
 	# Refleja la ventana real: en el navegador se puede salir con Esc.
 	var modo := DisplayServer.window_get_mode()
 	var completa := modo == DisplayServer.WINDOW_MODE_FULLSCREEN 			or modo == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
 	_actualizar_pantalla(completa)
 	_actualizar_fps()
 	_actualizar_dificultad()
+	_actualizar_timon()
 	(_boton_completa if completa else _boton_ventana).grab_focus()
+	# Al tomar el foco la lista se corre hasta el botón; que abra desde arriba.
+	_configuracion.set_deferred(&"scroll_vertical", 0)
 
-## Pantalla (Completa / Ventana), FPS en la partida (Mostrar / Ocultar) y
-## dificultad (Fácil / Difícil). Se guardan en Ajustes.
+## Pantalla (Completa / Ventana), FPS en la partida (Mostrar / Ocultar),
+## dificultad (Fácil / Difícil) y timón de vuelo (Avión / Directo). Se guardan
+## en Ajustes.
 func _crear_configuracion() -> void:
 	var columna := titulo_ventana.get_parent()
-	_configuracion = VBoxContainer.new()
+	_configuracion = ScrollContainer.new()
 	_configuracion.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_configuracion.add_theme_constant_override("separation", 14)
+	_configuracion.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	# Con flechas / Tab, la ficha elegida siempre queda a la vista.
+	_configuracion.follow_focus = true
+	var fichas := VBoxContainer.new()
+	fichas.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fichas.add_theme_constant_override("separation", 14)
+	_configuracion.add_child(fichas)
 
 	var ficha_pantalla := _ficha()
-	_configuracion.add_child(ficha_pantalla)
+	fichas.add_child(ficha_pantalla)
 	var pantalla := VBoxContainer.new()
 	pantalla.add_theme_constant_override("separation", 12)
 	ficha_pantalla.add_child(pantalla)
-	pantalla.add_child(_titulo_pagina("Pantalla"))
+	pantalla.add_child(_titulo_pagina("CONFIG_PANTALLA"))
 	var opciones_pantalla := HBoxContainer.new()
 	opciones_pantalla.add_theme_constant_override("separation", 10)
 	pantalla.add_child(opciones_pantalla)
 	_boton_completa = Button.new()
-	_boton_completa.text = "Completa"
+	_boton_completa.text = "CONFIG_COMPLETA"
 	_boton_ventana = Button.new()
-	_boton_ventana.text = "Ventana"
+	_boton_ventana.text = "CONFIG_VENTANA"
 	for boton in [_boton_completa, _boton_ventana]:
 		boton.custom_minimum_size = Vector2(0, 48)
 		boton.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1278,18 +1276,18 @@ func _crear_configuracion() -> void:
 	_boton_ventana.pressed.connect(_elegir_pantalla.bind(false))
 
 	var ficha_fps := _ficha()
-	_configuracion.add_child(ficha_fps)
+	fichas.add_child(ficha_fps)
 	var fps := VBoxContainer.new()
 	fps.add_theme_constant_override("separation", 12)
 	ficha_fps.add_child(fps)
-	fps.add_child(_titulo_pagina("FPS en la partida"))
+	fps.add_child(_titulo_pagina("CONFIG_FPS"))
 	var opciones_fps := HBoxContainer.new()
 	opciones_fps.add_theme_constant_override("separation", 10)
 	fps.add_child(opciones_fps)
 	_boton_fps_si = Button.new()
-	_boton_fps_si.text = "Mostrar"
+	_boton_fps_si.text = "CONFIG_MOSTRAR"
 	_boton_fps_no = Button.new()
-	_boton_fps_no.text = "Ocultar"
+	_boton_fps_no.text = "CONFIG_OCULTAR"
 	for boton in [_boton_fps_si, _boton_fps_no]:
 		boton.custom_minimum_size = Vector2(0, 48)
 		boton.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1299,18 +1297,18 @@ func _crear_configuracion() -> void:
 	_boton_fps_no.pressed.connect(_elegir_fps.bind(false))
 
 	var ficha_dificultad := _ficha()
-	_configuracion.add_child(ficha_dificultad)
+	fichas.add_child(ficha_dificultad)
 	var dificultad := VBoxContainer.new()
 	dificultad.add_theme_constant_override("separation", 12)
 	ficha_dificultad.add_child(dificultad)
-	dificultad.add_child(_titulo_pagina("Dificultad"))
+	dificultad.add_child(_titulo_pagina("CONFIG_DIFICULTAD"))
 	var opciones := HBoxContainer.new()
 	opciones.add_theme_constant_override("separation", 10)
 	dificultad.add_child(opciones)
 	_boton_facil = Button.new()
-	_boton_facil.text = "Fácil"
+	_boton_facil.text = "CONFIG_FACIL"
 	_boton_dificil = Button.new()
-	_boton_dificil.text = "Difícil"
+	_boton_dificil.text = "CONFIG_DIFICIL"
 	for boton in [_boton_facil, _boton_dificil]:
 		boton.custom_minimum_size = Vector2(0, 48)
 		boton.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1326,6 +1324,35 @@ func _crear_configuracion() -> void:
 	_detalle_dificultad.add_theme_font_size_override("normal_font_size", 18)
 	_detalle_dificultad.add_theme_font_size_override("bold_font_size", 18)
 	dificultad.add_child(_detalle_dificultad)
+
+	var ficha_timon := _ficha()
+	fichas.add_child(ficha_timon)
+	var timon := VBoxContainer.new()
+	timon.add_theme_constant_override("separation", 12)
+	ficha_timon.add_child(timon)
+	timon.add_child(_titulo_pagina("CONFIG_TIMON"))
+	var opciones_timon := HBoxContainer.new()
+	opciones_timon.add_theme_constant_override("separation", 10)
+	timon.add_child(opciones_timon)
+	_boton_timon_avion = Button.new()
+	_boton_timon_avion.text = "CONFIG_AVION"
+	_boton_timon_directo = Button.new()
+	_boton_timon_directo.text = "CONFIG_DIRECTO"
+	for boton in [_boton_timon_avion, _boton_timon_directo]:
+		boton.custom_minimum_size = Vector2(0, 48)
+		boton.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		boton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		opciones_timon.add_child(boton)
+	_boton_timon_avion.pressed.connect(_elegir_timon.bind(false))
+	_boton_timon_directo.pressed.connect(_elegir_timon.bind(true))
+	_detalle_timon = RichTextLabel.new()
+	_detalle_timon.bbcode_enabled = true
+	_detalle_timon.fit_content = true
+	_detalle_timon.scroll_active = false
+	_detalle_timon.add_theme_color_override("default_color", COLOR_TEXTO)
+	_detalle_timon.add_theme_font_size_override("normal_font_size", 18)
+	_detalle_timon.add_theme_font_size_override("bold_font_size", 18)
+	timon.add_child(_detalle_timon)
 
 	columna.add_child(_configuracion)
 	columna.move_child(_configuracion, texto_ventana.get_index() + 1)
@@ -1355,7 +1382,14 @@ func _actualizar_dificultad() -> void:
 	var dificil := Ajustes.es_dificil()
 	_estilizar_boton(_boton_facil, not dificil)
 	_estilizar_boton(_boton_dificil, dificil)
-	if dificil:
-		_detalle_dificultad.text = "[b][color=#f8dc9c]Difícil:[/color][/b] Solo para veteranos de la Pampa."
-	else:
-		_detalle_dificultad.text = "[b][color=#f8dc9c]Fácil:[/color][/b] Perfecto para horneros principiantes."
+	_detalle_dificultad.text = "CONFIG_DIFICIL_DETALLE" if dificil else "CONFIG_FACIL_DETALLE"
+
+func _elegir_timon(directo: bool) -> void:
+	Ajustes.cambiar_timon_directo(directo)
+	_actualizar_timon()
+
+func _actualizar_timon() -> void:
+	var directo := Ajustes.timon_directo
+	_estilizar_boton(_boton_timon_avion, not directo)
+	_estilizar_boton(_boton_timon_directo, directo)
+	_detalle_timon.text = "CONFIG_DIRECTO_DETALLE" if directo else "CONFIG_AVION_DETALLE"
