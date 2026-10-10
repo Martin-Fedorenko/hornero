@@ -22,15 +22,15 @@ region = Rect2(1384, 0, 692, 724)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_muem4"]
 atlas = ExtResource("6_choun")
-region = Rect2(2076, 0, 692, 724)
+region = Rect2(0, 724, 692, 724)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dp3eg"]
 atlas = ExtResource("6_choun")
-region = Rect2(2768, 0, 692, 724)
+region = Rect2(692, 724, 692, 724)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0ld40"]
 atlas = ExtResource("6_choun")
-region = Rect2(3460, 0, 692, 724)
+region = Rect2(1384, 724, 692, 724)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tefeu"]
 atlas = ExtResource("5_tbgi4")
