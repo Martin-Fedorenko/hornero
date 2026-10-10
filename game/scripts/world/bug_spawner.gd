@@ -7,6 +7,7 @@ extends Node2D
 ## (tronco) de la textura del sprite, metidos en la zona y no en un borde.
 
 const BUG_SCENE := preload("res://scenes/bicho.tscn")
+const Pool := preload("res://scripts/world/pool.gd")
 ## Distancia (px de la imagen) que se revisa alrededor de un punto para
 ## asegurarse de que está metido en el follaje y no en un borde.
 const LEAF_MARGIN := 12
@@ -28,6 +29,8 @@ static var _images := {}
 @export var bug_spacing := 70.0
 
 var _bugs: Array[Bicho] = []
+## Bichos comidos de este árbol, guardados para reaparecer sin crear nodos.
+var _pool := Pool.new(BUG_SCENE.instantiate)
 
 
 func _ready() -> void:
@@ -64,11 +67,15 @@ func _spawn_bug(pop: bool) -> void:
 		spot = _random_spot(not on_trunk)
 	if spot == null:
 		return
-	var bug: Bicho = BUG_SCENE.instantiate()
+	var bug: Bicho = _pool.tomar()
 	bug.tipo = (randi() % Bicho.Tipo.size()) as Bicho.Tipo
 	bug.position = spot
-	bug.eaten.connect(_on_bug_eaten.bind(bug))
-	add_child(bug)
+	if Pool.es_nuevo(bug):
+		bug.eaten.connect(_on_bug_eaten.bind(bug))
+		bug.consumido.connect(_pool.devolver.bind(bug))
+		add_child(bug)
+	else:
+		bug.reiniciar()
 	_bugs.append(bug)
 	if pop:
 		bug.scale = Vector2.ZERO

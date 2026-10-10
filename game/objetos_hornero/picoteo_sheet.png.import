@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/picoteo_sheet.png-1a20bbc0735f4497db33e61b602
 
 [params]
 
-compress/mode=4
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

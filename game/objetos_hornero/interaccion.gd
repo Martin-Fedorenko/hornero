@@ -1,7 +1,7 @@
 extends Node
 ## Hijo directo de Hornero. Sustituye COMPLETAMENTE la versión con Tween.
 @export var alcance: float = 80.0
-@export var debug_logs: bool = true
+@export var debug_logs: bool = false
 @export var mostrar_puntos: bool = false
 @export var usar_pico_automatico: bool = true
 @export var intervalo_logs: float = 0.75
@@ -95,12 +95,14 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	# NO mover sprite.position: el gesto ahora está dibujado en los cuadros.
-	var error_antes := _error_actual()
+	var error_antes := _error_actual() if debug_logs else 0.0
 	_seguir_pico()
 	_actualizar_aviso()
 	if is_instance_valid(_debug) and _debug.is_inside_tree():
-		_debug.global_transform = Transform2D.IDENTITY
 		_debug.visible = mostrar_puntos
+	# Los puntos de diagnóstico sólo se calculan y redibujan si se muestran.
+	if mostrar_puntos and is_instance_valid(_debug) and _debug.is_inside_tree():
+		_debug.global_transform = Transform2D.IDENTITY
 		_debug.set("pico", _posicion_pico())
 		_debug.set("hay_objeto", is_instance_valid(objeto))
 		if is_instance_valid(objeto):
@@ -215,15 +217,19 @@ func _error_actual() -> float:
 func _objeto_cercano() -> RigidBody2D:
 	var mejor: RigidBody2D = null
 	var menor := alcance
+	var desde := hornero.global_position
 	for candidato in get_tree().get_nodes_in_group(&"levantables"):
 		if not candidato is RigidBody2D:
+			continue
+		# Primero la distancia, que es lo más barato: casi todos quedan lejos.
+		var distancia := desde.distance_to(candidato.global_position)
+		if distancia >= menor:
 			continue
 		if not candidato.has_method("recoger") or not candidato.has_method("soltar"):
 			continue
 		if candidato.get("recogida") == true:
 			continue
-		var distancia := hornero.global_position.distance_to(candidato.global_position)
-		if distancia < menor and _visible(candidato):
+		if _visible(candidato):
 			mejor = candidato
 			menor = distancia
 	return mejor
@@ -432,7 +438,7 @@ func _log(texto: String) -> void:
 		print("[PICO] " + texto)
 		
 func _diagnosticar_cambio_animacion() -> void:
-	if not ocupado:
+	if not ocupado or not debug_logs:
 		return
 
 	print(

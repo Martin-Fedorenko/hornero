@@ -213,7 +213,10 @@ func _texto_detalle() -> String:
 
 func _process(delta: float) -> void:
 	_tiempo += delta
-	_dibujo.texture = _cuadros[int(_tiempo * _fps) % _cuadros.size()]
+	# Sólo se cambia la textura cuando cambia el cuadro (6 por segundo).
+	var cuadro := _cuadros[int(_tiempo * _fps) % _cuadros.size()]
+	if _dibujo.texture != cuadro:
+		_dibujo.texture = cuadro
 
 
 func _unhandled_input(event: InputEvent) -> void:

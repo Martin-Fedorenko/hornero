@@ -23,6 +23,10 @@ void fragment() {
 @export var tinte := Color("f8dc9c")
 
 var _logo: TextureRect
+## La escena actual y si es la del juego: la ruta sólo se compara cuando
+## cambia la escena, no en cada frame.
+var _escena_vista := 0
+var _es_juego := false
 
 
 func _ready() -> void:
@@ -50,12 +54,21 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	_logo.modulate.a = move_toward(_logo.modulate.a, _alfa_objetivo(), delta * 2.0)
+	var objetivo := _alfa_objetivo()
+	# Ya llegó: no se toca el modulate (cada escritura redibuja el logo).
+	if is_equal_approx(_logo.modulate.a, objetivo):
+		return
+	_logo.modulate.a = move_toward(_logo.modulate.a, objetivo, delta * 2.0)
 
 
 ## Se está jugando cuando la escena es la del juego y no hay ningún menú abierto
 ## (los menús de pausa, derrota y victoria pausan el árbol).
 func _alfa_objetivo() -> float:
-	var escena := get_tree().current_scene
-	var jugando := escena != null and escena.scene_file_path == ESCENA_JUEGO and not get_tree().paused
+	var arbol := get_tree()
+	var escena := arbol.current_scene
+	var id := escena.get_instance_id() if escena != null else 0
+	if id != _escena_vista:
+		_escena_vista = id
+		_es_juego = escena != null and escena.scene_file_path == ESCENA_JUEGO
+	var jugando := _es_juego and not arbol.paused
 	return alfa_jugando if jugando else alfa_menu

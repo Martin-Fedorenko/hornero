@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/culebra.png-942824d0f1d2bdfe4d7fa3c8b1eb2569.
 
 [params]
 
-compress/mode=4
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -4,6 +4,8 @@ extends CharacterBody2D
 signal agarro_jugador
 signal solto_jugador
 
+const Cercania := preload("res://scripts/world/cercania.gd")
+
 enum Modo { PASEO, PERSECUCION, ZARPAZO, SALTO, AGARRE, RECUPERACION, RETIRADA }
 
 @export var target: Node2D # Hornero (si queda vacío, lo busca solo)
@@ -81,6 +83,18 @@ enum Modo { PASEO, PERSECUCION, ZARPAZO, SALTO, AGARRE, RECUPERACION, RETIRADA }
 @export var distancia_borde := 20.0
 @export var largo_rayo_borde := 64.0
 
+@export_group("Optimización")
+## Lejos de la cámara el gato se congela (IA, física y animación) y sigue
+## donde estaba al volver. El margen va más allá del radio de detección
+## para que nunca se congele uno que todavía podría ver al Hornero.
+@export var margen_activacion := 500.0
+## Zona del gato (local) que cuenta para saber si está en pantalla.
+@export var rect_visible := Rect2(-120, -160, 240, 170)
+
+## Todos los gatos en la escena. Reemplaza a get_nodes_in_group("gatos"),
+## que arma un arreglo nuevo en cada llamada (varias por gato y por frame).
+static var _todos: Array[GatoMontes] = []
+
 var modo := Modo.PASEO
 var facing := 1
 var _modo_timer := 0.0 # tiempo desde que entró al modo actual
@@ -116,8 +130,8 @@ func _ready() -> void:
 	else:
 		push_warning("GatoMontes: no tiene target asignado")
 
-	for g in get_tree().get_nodes_in_group("gatos"):
-		if g != self and g is PhysicsBody2D:
+	for g in _todos:
+		if g != self:
 			add_collision_exception_with(g)
 
 	# Forma de colisión propia, para detectar contacto real con el Hornero
@@ -144,8 +158,15 @@ func _ready() -> void:
 	_maullido_timer = randf_range(0.0, intervalo_maullido)
 	_mult_vel = randf_range(1.0 - variacion_velocidad, 1.0 + variacion_velocidad)
 
+	Cercania.activar_cerca_de_camara(self, self, rect_visible, margen_activacion)
+
+
+func _enter_tree() -> void:
+	_todos.append(self)
+
 
 func _exit_tree() -> void:
+	_todos.erase(self)
 	# Si el gato desaparece con el Hornero en la boca, lo libera
 	if modo == Modo.AGARRE and is_instance_valid(target):
 		target.set_physics_process(true)
@@ -458,13 +479,15 @@ func _iniciar_retirada() -> void:
 # ---------- Grupo ----------
 
 func _esta_atacando() -> bool:
-	return modo in [Modo.PERSECUCION, Modo.ZARPAZO, Modo.SALTO, Modo.AGARRE]
+	return modo == Modo.PERSECUCION or modo == Modo.ZARPAZO \
+			or modo == Modo.SALTO or modo == Modo.AGARRE
 
 
 func _cupo_para_perseguir() -> bool:
 	var n := 0
-	for g in get_tree().get_nodes_in_group("gatos"):
-		if g != self and g is GatoMontes and (g as GatoMontes)._esta_atacando():
+	for g in _todos:
+		# Uno congelado lejos de la cámara no le quita el turno a los demás.
+		if g != self and g.can_process() and g._esta_atacando():
 			n += 1
 	return n < max_perseguidores
 
@@ -473,10 +496,9 @@ func _cupo_para_perseguir() -> bool:
 func _dir_separacion() -> float:
 	var mas_cerca: Node2D = null
 	var mejor := distancia_separacion
-	for g in get_tree().get_nodes_in_group("gatos"):
-		if g == self or not g is Node2D:
+	for otro in _todos:
+		if otro == self:
 			continue
-		var otro := g as Node2D
 		if absf(otro.global_position.y - global_position.y) > 80.0:
 			continue # está en otra plataforma
 		var d := absf(otro.global_position.x - global_position.x)
@@ -501,9 +523,8 @@ func _acomodar_al_piso() -> void:
 	var q := PhysicsRayQueryParameters2D.create(desde, hasta, collision_mask)
 
 	var excluir: Array[RID] = [get_rid()]
-	for g in get_tree().get_nodes_in_group("gatos"):
-		if g is CollisionObject2D:
-			excluir.append((g as CollisionObject2D).get_rid())
+	for g in _todos:
+		excluir.append(g.get_rid())
 	if target is CollisionObject2D:
 		excluir.append((target as CollisionObject2D).get_rid())
 	q.exclude = excluir

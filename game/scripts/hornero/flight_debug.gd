@@ -12,6 +12,16 @@ extends Node2D
 @onready var _body: Hornero = get_parent()
 
 
+func _ready() -> void:
+	# Viene apagado: sólo redibuja mientras se lo ve.
+	visibility_changed.connect(_al_cambiar_visibilidad)
+	_al_cambiar_visibilidad()
+
+
+func _al_cambiar_visibilidad() -> void:
+	set_process(is_visible_in_tree())
+
+
 func _process(_delta: float) -> void:
 	queue_redraw()
 

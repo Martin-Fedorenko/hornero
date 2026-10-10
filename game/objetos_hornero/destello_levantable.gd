@@ -1,5 +1,9 @@
 extends Node2D
 
+const Cercania := preload("res://scripts/world/cercania.gd")
+## Píxeles de pantalla más allá del borde en los que el destello ya se anima.
+const MARGEN_ACTIVACION := 64.0
+
 @export_range(12.0, 120.0, 1.0) var radio: float = 22.0
 ## Resplandor que late detrás del objeto para que se vea en el pasto.
 @export var resplandor := true
@@ -12,6 +16,8 @@ static var _mezcla: CanvasItemMaterial
 
 var _tiempo := 0.0
 var _fondo: Node2D
+## El objeto (o el nido) al que pertenece; se lee en cada frame.
+@onready var _padre: Node = get_parent()
 
 
 func _ready() -> void:
@@ -31,16 +37,28 @@ func _ready() -> void:
 		_fondo.draw.connect(_dibujar_resplandor)
 		# Diferido: el padre todavía está armando sus hijos.
 		get_parent().add_child.call_deferred(_fondo)
+	_activar_por_cercania.call_deferred()
+
+
+## Fuera de pantalla no late ni se redibuja: con muchos bichos en los árboles
+## esto es lo que más pesa. El enabler cuelga del padre y no de este nodo
+## porque este se oculta al recogerse el objeto, y oculto no volvería a
+## encenderse.
+func _activar_por_cercania() -> void:
+	var padre := get_parent() as Node2D
+	if padre == null:
+		return
+	var alcance := Vector2.ONE * (radio + 10.0) * escala_destellos * scale.abs()
+	Cercania.activar_cerca_de_camara(
+		self, padre, Rect2(position - alcance, alcance * 2.0), MARGEN_ACTIVACION)
 
 
 func _process(delta: float) -> void:
 	_tiempo = fmod(_tiempo + delta, 2.4)
-	visible = get_parent().get("recogida") != true
+	visible = _padre.get("recogida") != true
 	if _fondo:
 		_fondo.visible = visible
-	# Fuera de pantalla no se redibuja: con muchos bichos en los árboles
-	# esto es lo que más pesa.
-	if not visible or not _en_pantalla():
+	if not visible:
 		return
 	queue_redraw()
 	if _fondo:
@@ -52,12 +70,6 @@ func _exit_tree() -> void:
 		_fondo.queue_free()
 
 
-func _en_pantalla() -> bool:
-	var en_canvas := get_global_transform_with_canvas()
-	var margen := (radio + 10.0) * escala_destellos * en_canvas.get_scale().x
-	return get_viewport_rect().grow(margen).has_point(en_canvas.origin)
-
-
 func _pulso() -> float:
 	return 0.5 + 0.5 * sin(_tiempo * TAU / 2.4)
 
@@ -66,10 +78,12 @@ func _dibujar_resplandor() -> void:
 	# Círculos superpuestos: el centro acumula más luz que el borde.
 	# 8 capas con el doble de alfa: el mismo brillo con la mitad de círculos.
 	var capas := 8
+	var pulso := _pulso()
+	var crecer := 0.92 + pulso * 0.12
+	var color := Color(1.0, 0.8, 0.35, 0.044 + pulso * 0.036)
 	for i in capas:
 		var t := float(i) / capas
-		var r := radio * (1.15 - t * 0.85) * (0.92 + _pulso() * 0.12)
-		_fondo.draw_circle(Vector2.ZERO, r, Color(1.0, 0.8, 0.35, 0.044 + _pulso() * 0.036))
+		_fondo.draw_circle(Vector2.ZERO, radio * (1.15 - t * 0.85) * crecer, color)
 
 
 func _draw() -> void:

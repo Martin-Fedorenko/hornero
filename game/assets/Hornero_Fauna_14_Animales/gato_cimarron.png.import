@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/gato_cimarron.png-9eed0ce7d77d9692d0f4484c853
 
 [params]
 
-compress/mode=4
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -68,6 +68,9 @@ var _damage_tween: Tween
 
 @onready var _body: Hornero = get_parent()
 var _clip_material := ShaderMaterial.new()
+## Hay un recorte aplicado: fuera del nido se limpia una sola vez, no en
+## cada frame (cada escritura actualiza el material).
+var _clip_activo := false
 
 
 func _ready() -> void:
@@ -114,7 +117,7 @@ func _crear_frames_fauna_14() -> SpriteFrames:
 
 
 func _process(_delta: float) -> void:
-	if _body.state != Hornero.State.NESTED:
+	if _clip_activo and _body.state != Hornero.State.NESTED:
 		clear_clip()
 	if is_instance_valid(interaccion_picoteo):
 		if interaccion_picoteo.get("ocupado") == true:
@@ -186,18 +189,21 @@ func idle_point_offset(texture_point: Vector2) -> Vector2:
 
 ## Oculta lo que queda por debajo de world_y (borde de un nido abierto).
 func clip_below(world_y: float) -> void:
+	_clip_activo = true
 	_clip_material.set_shader_parameter(&"clip_mode", 1)
 	_clip_material.set_shader_parameter(&"clip_line", world_y)
 
 
 ## Sólo deja ver lo que cae dentro del círculo (entrada del nido cerrado).
 func clip_to_circle(world_center: Vector2, world_radius: float) -> void:
+	_clip_activo = true
 	_clip_material.set_shader_parameter(&"clip_mode", 2)
 	_clip_material.set_shader_parameter(&"clip_center", world_center)
 	_clip_material.set_shader_parameter(&"clip_radius", world_radius)
 
 
 func clear_clip() -> void:
+	_clip_activo = false
 	_clip_material.set_shader_parameter(&"clip_mode", 0)
 
 

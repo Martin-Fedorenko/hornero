@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/aguilucho_ataque.png-a74e9ab2e38537a386ea2f9c
 
 [params]
 
-compress/mode=4
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

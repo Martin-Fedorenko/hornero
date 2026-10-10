@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/png-transparent-utn-hd-logo.png-8f4b508858f0d
 
 [params]
 
-compress/mode=4
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

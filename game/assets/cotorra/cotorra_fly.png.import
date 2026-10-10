@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/cotorra_fly.png-09fc363d192dd8dc2bf1ac65203a4
 
 [params]
 
-compress/mode=4
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

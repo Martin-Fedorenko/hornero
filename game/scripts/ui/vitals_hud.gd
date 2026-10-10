@@ -26,6 +26,9 @@ var _health_ratio := 1.0
 var _stamina_ratio := 1.0
 var _shown_health := 1.0
 var _shown_stamina := 1.0
+## Un StyleBox por color, armado una sola vez: antes se creaban cuatro en
+## cada redibujo, y las barras se redibujan casi todo el tiempo al volar.
+var _boxes := {}
 
 
 func _ready() -> void:
@@ -33,6 +36,8 @@ func _ready() -> void:
 	var bar_size := _bar_size()
 	custom_minimum_size = Vector2(bar_size.x, bar_size.y * 2.0 + bar_separation)
 	size = custom_minimum_size
+	# Sólo procesa mientras el relleno se acerca al valor real.
+	set_process(false)
 
 
 func track(vitals: HorneroVitals) -> void:
@@ -42,14 +47,17 @@ func track(vitals: HorneroVitals) -> void:
 	_on_stamina_changed(vitals.stamina, vitals.max_stamina)
 	_shown_health = _health_ratio
 	_shown_stamina = _stamina_ratio
+	queue_redraw()
 
 
 func _on_health_changed(current: float, maximum: float) -> void:
 	_health_ratio = clampf(current / maximum, 0.0, 1.0) if maximum > 0.0 else 0.0
+	set_process(true)
 
 
 func _on_stamina_changed(current: float, maximum: float) -> void:
 	_stamina_ratio = clampf(current / maximum, 0.0, 1.0) if maximum > 0.0 else 0.0
+	set_process(true)
 
 
 func _process(delta: float) -> void:
@@ -60,6 +68,9 @@ func _process(delta: float) -> void:
 		_shown_health = health
 		_shown_stamina = stamina
 		queue_redraw()
+	else:
+		# Ya llegó: no hay nada que animar hasta el próximo cambio.
+		set_process(false)
 
 
 func _draw() -> void:
@@ -86,10 +97,15 @@ func _draw_bar(origin: Vector2, region: Rect2, fill_color: Color, ratio: float) 
 
 
 func _draw_capsule(rect: Rect2, color: Color) -> void:
-	var box := StyleBoxFlat.new()
-	box.bg_color = color
-	box.set_corner_radius_all(int(rect.size.y * 0.5))
-	box.anti_aliasing = true
+	var radius := int(rect.size.y * 0.5)
+	var box: StyleBoxFlat = _boxes.get(color)
+	if box == null:
+		box = StyleBoxFlat.new()
+		box.bg_color = color
+		box.anti_aliasing = true
+		_boxes[color] = box
+	if box.corner_radius_top_left != radius:
+		box.set_corner_radius_all(radius)
 	draw_style_box(box, rect)
 
 

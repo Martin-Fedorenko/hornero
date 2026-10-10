@@ -22,6 +22,8 @@ var _entered_nest_once := false
 var _cronometro: Cronometro
 ## Ya se ganó o se perdió: única fuente de verdad del resultado de la partida.
 var _partida_terminada := false
+## Texto que muestra ahora el aviso del nido.
+var _aviso_nido := ""
 
 
 ## Antes de que arranquen el nido y los spawners (sus _ready van después):
@@ -97,12 +99,15 @@ func _process(_delta: float) -> void:
 ## Arriba del nido: cómo salir si está adentro, o cómo entrar si puede hacerlo.
 ## Cada aviso deja de mostrarse una vez que el jugador usó esa acción.
 func _update_nest_hint() -> void:
+	var aviso := ""
 	if _hornero.state == Hornero.State.NESTED:
-		_nest.mostrar_aviso("" if _exited_nest_once else "G para salir")
-	elif _can_enter_nest() and not _entered_nest_once:
-		_nest.mostrar_aviso("G para entrar")
-	else:
-		_nest.mostrar_aviso("")
+		aviso = "" if _exited_nest_once else "G para salir"
+	elif not _entered_nest_once and _can_enter_nest():
+		aviso = "G para entrar"
+	# Sólo se toca el cartel cuando cambia el texto.
+	if aviso != _aviso_nido:
+		_aviso_nido = aviso
+		_nest.mostrar_aviso(aviso)
 
 
 func _can_enter_nest() -> bool:
@@ -126,6 +131,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		and event.physical_keycode == KEY_G:
 		_toggle_nest_pose()
 		get_viewport().set_input_as_handled()
+	elif event is InputEventKey and event.pressed and not event.echo \
+		and event.physical_keycode == KEY_R:
+		# Reinicia la partida, igual que "Volver a jugar" del menú.
+		get_viewport().set_input_as_handled()
+		get_tree().reload_current_scene()
 
 
 func _toggle_nest_pose() -> void:
@@ -162,8 +172,12 @@ func _perch_in_nest() -> void:
 	_hornero_animator.clip_below(_nest.bottom_global_y())
 
 
-func _on_hornero_state_changed(_previous: Hornero.State, current: Hornero.State) -> void:
+func _on_hornero_state_changed(previous: Hornero.State, current: Hornero.State) -> void:
 	_nest.set_occupied(current == Hornero.State.NESTED)
+	# El tiempo de la partida empieza a correr la primera vez que el hornero
+	# deja el nido: con G o porque una rapaz lo sacó de la taza abierta.
+	if previous == Hornero.State.NESTED and current != Hornero.State.NESTED:
+		_cronometro.iniciar()
 
 
 func _on_nest_changed() -> void:

@@ -6,6 +6,12 @@ signal dejo_de_picar(nido: Node2D)
 
 enum Modo { AUSENTE, YENDO, PICANDO, HUYENDO }
 
+const Cercania := preload("res://scripts/world/cercania.gd")
+## Zona (local) que cuenta para saber si se la ve, y margen en píxeles de
+## pantalla más allá del borde en el que ya se anima.
+const RECT_VISIBLE := Rect2(-80, -80, 160, 160)
+const MARGEN_ACTIVACION := 128.0
+
 @export var nido: Node2D
 @export var hornero: Node2D
 
@@ -47,6 +53,11 @@ var _frame_al_llegar := 0
 
 func _ready() -> void:
 	add_to_group("cotorras")
+	# Su IA sigue fuera de cámara (rompe el nido aunque el Hornero esté
+	# lejos); sólo la animación se pausa cuando no se la ve.
+	var sprite := get_node_or_null(^"AnimatedSprite2D")
+	if sprite:
+		Cercania.activar_cerca_de_camara(sprite, self, RECT_VISIBLE, MARGEN_ACTIVACION)
 	if nido == null:
 		push_error("Cotorra: falta asignar 'nido' en el inspector")
 	if hornero == null:

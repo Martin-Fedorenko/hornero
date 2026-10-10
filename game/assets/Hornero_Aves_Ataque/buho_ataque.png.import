@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/buho_ataque.png-68bbc622e516d33502ed3bbd14fa3
 
 [params]
 
-compress/mode=4
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

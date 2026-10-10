@@ -105,8 +105,11 @@ func _process(delta: float) -> void:
 ## A alta velocidad suena el viento: entra y sale con fundido, así no se
 ## corta de golpe si la velocidad ronda el umbral.
 func _update_wind(delta: float) -> void:
-	var fast := velocity.length() > wind_speed and state != State.DEAD
+	var fast := velocity.length_squared() > wind_speed * wind_speed and state != State.DEAD
 	var target := _wind_volume if fast else 0.0
+	# Apagado y sin sonar: no hay nada que actualizar.
+	if not fast and not _wind_audio.playing and _wind_audio.volume_linear <= 0.0:
+		return
 	var fade := wind_fade_in if fast else wind_fade_out
 	var step := _wind_volume * delta / maxf(fade, 0.01)
 	_wind_audio.volume_linear = move_toward(_wind_audio.volume_linear, target, step)

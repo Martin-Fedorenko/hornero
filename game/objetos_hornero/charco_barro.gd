@@ -1,5 +1,7 @@
 extends Node2D
 
+const Pool := preload("res://scripts/world/pool.gd")
+
 @export_range(1, 3, 1) var bolas_maximas: int = 3
 @export var escena_bola: PackedScene
 @export var textura_seca: Texture2D
@@ -50,12 +52,22 @@ func _secar_charco() -> void:
 func _crear_bola() -> void:
 	if bolas_restantes <= 0 or is_instance_valid(bola_disponible) or escena_bola == null:
 		return
-	var nueva_bola := escena_bola.instantiate() as RigidBody2D
+	# Las bolas que cayeron al piso o se entregaron vuelven a un pool común a
+	# todos los charcos y se reusan acá.
+	var pool = Pool.de_escena(escena_bola)
+	var nodo: Node = pool.tomar()
+	var nueva_bola := nodo as RigidBody2D
 	if nueva_bola == null:
 		push_error("La escena de bola de barro debe tener un RigidBody2D como raíz.")
+		nodo.queue_free()
 		return
 	nueva_bola.set("fuente", self)
+	nueva_bola.set("pool", pool)
 	bola_disponible = nueva_bola
+	if not Pool.es_nuevo(nueva_bola):
+		nueva_bola.call("reiniciar")
+		nueva_bola.global_position = global_position + posicion_bola
+		return
 	# Diferido: el charco nace mientras se arma el piso y la escena todavía no
 	# acepta hijos nuevos.
 	_colocar_bola.call_deferred(nueva_bola)

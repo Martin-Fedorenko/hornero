@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/insectos_asset.png-2886182a2723e3b9e1b68a3976
 
 [params]
 
-compress/mode=4
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

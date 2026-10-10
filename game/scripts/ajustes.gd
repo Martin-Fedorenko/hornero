@@ -1,6 +1,11 @@
 extends Node
-## Configuración del jugador (autoload "Ajustes"): dificultad y pantalla
-## completa. Se guarda en user:// y se aplica al arrancar el juego.
+## Configuración del jugador (autoload "Ajustes"): dificultad, pantalla
+## completa y FPS en pantalla. Se guarda en user:// y se aplica al arrancar el juego.
+
+## Muestra lo de Aves Argentinas: la presentación con su logo al abrir el
+## juego y el logo del menú. En false el juego abre directo en el menú y el
+## logo no aparece.
+const MOSTRAR_AVES_ARGENTINAS := false
 
 enum Dificultad { FACIL, DIFICIL }
 
@@ -19,6 +24,8 @@ const MATERIALES_POR_ETAPA := { Dificultad.FACIL: 1, Dificultad.DIFICIL: 2 }
 var dificultad := Dificultad.FACIL
 var pantalla_completa := true
 var musica_silenciada := false
+## Muestra los FPS debajo del cronómetro de la partida.
+var mostrar_fps := false
 ## La variante visual del protagonista, elegida desde la ficha de Fauna.
 var hornero_modelo_alternativo := false
 
@@ -30,6 +37,7 @@ func _ready() -> void:
 				Dificultad.FACIL, Dificultad.DIFICIL) as Dificultad
 		pantalla_completa = bool(archivo.get_value("pantalla", "completa", pantalla_completa))
 		musica_silenciada = bool(archivo.get_value("sonido", "silenciada", musica_silenciada))
+		mostrar_fps = bool(archivo.get_value("pantalla", "fps", mostrar_fps))
 		hornero_modelo_alternativo = bool(archivo.get_value("juego", "hornero_modelo_alternativo", hornero_modelo_alternativo))
 	# En el navegador la pantalla completa sólo se puede pedir con un clic.
 	if not OS.has_feature("web"):
@@ -71,6 +79,11 @@ func cambiar_pantalla_completa(completa: bool) -> void:
 	_guardar()
 
 
+func cambiar_mostrar_fps(mostrar: bool) -> void:
+	mostrar_fps = mostrar
+	_guardar()
+
+
 func cambiar_musica_silenciada(silenciada: bool) -> void:
 	musica_silenciada = silenciada
 	_guardar()
@@ -92,6 +105,7 @@ func _guardar() -> void:
 	var archivo := ConfigFile.new()
 	archivo.set_value("juego", "dificultad", dificultad)
 	archivo.set_value("pantalla", "completa", pantalla_completa)
+	archivo.set_value("pantalla", "fps", mostrar_fps)
 	archivo.set_value("sonido", "silenciada", musica_silenciada)
 	archivo.set_value("juego", "hornero_modelo_alternativo", hornero_modelo_alternativo)
 	archivo.save(RUTA)

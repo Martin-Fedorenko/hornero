@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/roedor.png-449a74f7650b7d6feaf70f05709b840d.c
 
 [params]
 
-compress/mode=4
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

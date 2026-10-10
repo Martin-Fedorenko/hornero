@@ -62,12 +62,13 @@ Con el nido techado quedás a salvo: ningún depredador te puede atacar.
 [b]Gato montés[/b]: acecha en el piso y salta si volás bajo cerca de él.
 [b]Cotorra[/b]: pica tu nido y, si la dejás 15 segundos, le rompe una etapa y se va. Acercate para espantarla: si se va antes, no rompe nada.
 
-[b]Esc[/b]: pausa."""
+[b]Esc[/b]: pausa.   [b]R[/b]: reiniciar la partida."""
 
 
 ## Dibujo de los controles (teclas y qué hace cada una) arriba de "Cómo jugar".
 ## Con preload queda como dependencia y entra en la exportación.
 const IMAGEN_AYUDA: Texture2D = preload("res://Hornero_Menu_Inicio/menu_hornero/como_jugar.jpg")
+const PantallaCarga := preload("res://scripts/ui/pantalla_carga.gd")
 ## Ancho del dibujo dentro de la ventana, en píxeles.
 const ANCHO_IMAGEN_AYUDA := 660
 
@@ -394,11 +395,16 @@ var _pedir_nombre_al_cerrar := false
 var _configuracion: VBoxContainer
 var _boton_completa: Button
 var _boton_ventana: Button
+var _boton_fps_si: Button
+var _boton_fps_no: Button
 var _boton_facil: Button
 var _boton_dificil: Button
 var _detalle_dificultad: RichTextLabel
 
 func _ready() -> void:
+	# Mientras el jugador mira el menú, la partida se va cargando de fondo.
+	if ResourceLoader.exists(escena_juego):
+		PantallaCarga.precargar(escena_juego)
 	start.pressed.connect(_iniciar)
 	ayuda.pressed.connect(func(): _mostrar("Cómo jugar", texto_ayuda()))
 	historia.pressed.connect(_mostrar_historia)
@@ -426,7 +432,8 @@ func _ready() -> void:
 	_volumen_musica = musica_menu.volume_linear
 	_volumen_canto = _canto_hornero.volume_linear
 	_crear_boton_silenciar()
-	_crear_logo_aves()
+	if Ajustes.MOSTRAR_AVES_ARGENTINAS:
+		_crear_logo_aves()
 	_fondo.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_fondo.stretch_mode = TextureRect.STRETCH_SCALE
 	resized.connect(_ajustar_fondo)
@@ -535,12 +542,22 @@ func _iniciar() -> void:
 	if TaloManager.needs_identity_choice():
 		_pedir_nombre()
 		return
+	if not ResourceLoader.exists(escena_juego):
+		_no_se_pudo_iniciar("Revisá Escena Juego en MenuInicio: " + escena_juego)
+		return
 	start.disabled = true
-	var error := get_tree().change_scene_to_file(escena_juego)
-	if error != OK:
-		start.disabled = false
-		push_error("Revisá Escena Juego en MenuInicio: " + escena_juego)
-		_mostrar("No se pudo iniciar", "La escena de juego todavía no está disponible.")
+	# La partida tarda unos segundos en cargar: se carga en otro hilo detrás de
+	# una pantalla de carga, en vez de congelar el menú. Si la precarga del
+	# _ready ya terminó, pasa casi al instante.
+	var carga := PantallaCarga.new()
+	carga.ruta = escena_juego
+	carga.al_fallar = _no_se_pudo_iniciar
+	add_child(carga)
+
+func _no_se_pudo_iniciar(error: String) -> void:
+	start.disabled = false
+	push_error(error)
+	_mostrar("No se pudo iniciar", "La escena de juego todavía no está disponible.")
 
 ## Popup "Nombre de jugador": tapa el menú hasta que se acepta un nombre válido.
 func _pedir_nombre() -> void:
@@ -1227,10 +1244,12 @@ func _mostrar_configuracion() -> void:
 	var modo := DisplayServer.window_get_mode()
 	var completa := modo == DisplayServer.WINDOW_MODE_FULLSCREEN 			or modo == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
 	_actualizar_pantalla(completa)
+	_actualizar_fps()
 	_actualizar_dificultad()
 	(_boton_completa if completa else _boton_ventana).grab_focus()
 
-## Pantalla (Completa / Ventana) y dificultad (Fácil / Difícil). Se guardan en Ajustes.
+## Pantalla (Completa / Ventana), FPS en la partida (Mostrar / Ocultar) y
+## dificultad (Fácil / Difícil). Se guardan en Ajustes.
 func _crear_configuracion() -> void:
 	var columna := titulo_ventana.get_parent()
 	_configuracion = VBoxContainer.new()
@@ -1257,6 +1276,27 @@ func _crear_configuracion() -> void:
 		opciones_pantalla.add_child(boton)
 	_boton_completa.pressed.connect(_elegir_pantalla.bind(true))
 	_boton_ventana.pressed.connect(_elegir_pantalla.bind(false))
+
+	var ficha_fps := _ficha()
+	_configuracion.add_child(ficha_fps)
+	var fps := VBoxContainer.new()
+	fps.add_theme_constant_override("separation", 12)
+	ficha_fps.add_child(fps)
+	fps.add_child(_titulo_pagina("FPS en la partida"))
+	var opciones_fps := HBoxContainer.new()
+	opciones_fps.add_theme_constant_override("separation", 10)
+	fps.add_child(opciones_fps)
+	_boton_fps_si = Button.new()
+	_boton_fps_si.text = "Mostrar"
+	_boton_fps_no = Button.new()
+	_boton_fps_no.text = "Ocultar"
+	for boton in [_boton_fps_si, _boton_fps_no]:
+		boton.custom_minimum_size = Vector2(0, 48)
+		boton.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		boton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		opciones_fps.add_child(boton)
+	_boton_fps_si.pressed.connect(_elegir_fps.bind(true))
+	_boton_fps_no.pressed.connect(_elegir_fps.bind(false))
 
 	var ficha_dificultad := _ficha()
 	_configuracion.add_child(ficha_dificultad)
@@ -1298,6 +1338,14 @@ func _elegir_pantalla(completa: bool) -> void:
 func _actualizar_pantalla(completa: bool) -> void:
 	_estilizar_boton(_boton_completa, completa)
 	_estilizar_boton(_boton_ventana, not completa)
+
+func _elegir_fps(mostrar: bool) -> void:
+	Ajustes.cambiar_mostrar_fps(mostrar)
+	_actualizar_fps()
+
+func _actualizar_fps() -> void:
+	_estilizar_boton(_boton_fps_si, Ajustes.mostrar_fps)
+	_estilizar_boton(_boton_fps_no, not Ajustes.mostrar_fps)
 
 func _elegir_dificultad(nueva: int) -> void:
 	Ajustes.cambiar_dificultad(nueva)

@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/cotorra_walk.png-ac429b6964a696f5055a7389e670
 
 [params]
 
-compress/mode=4
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

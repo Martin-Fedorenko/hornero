@@ -79,6 +79,8 @@ var _tiempo_sin_danio := PAUSA_SIN_DANIO  # Arranca como "nadie pica"
 var _color_normal := Color.WHITE
 var _fase_titileo := 0.0
 var _estaba_atacado := false
+## Radio global del aura (se calcula la primera vez que se pide).
+var _radio_aura_global := -1.0
 
 
 func _ready() -> void:
@@ -98,6 +100,8 @@ func _ready() -> void:
 	_actualizar_contador()
 	_crear_aviso()
 	_color_normal = self_modulate
+	# _process sólo lo copia mientras titila: arranca igual al nido.
+	_front.self_modulate = self_modulate
 	_delivery_area.body_entered.connect(_on_delivery_body_entered)
 	# La zona de entrega es exactamente el círculo del aura.
 	var circulo := CircleShape2D.new()
@@ -124,8 +128,10 @@ func construcciones() -> int:
 
 ## ¿El punto (global) está dentro del aura del nido?
 func esta_en_aura(punto: Vector2) -> bool:
-	var radio_global := float(_aura.get("radio")) * _aura.global_scale.x
-	return _aura.global_position.distance_to(punto) <= radio_global
+	# Lo consulta main.gd en cada frame: el radio se calcula una sola vez.
+	if _radio_aura_global < 0.0:
+		_radio_aura_global = float(_aura.get("radio")) * _aura.global_scale.x
+	return _aura.global_position.distance_to(punto) <= _radio_aura_global
 
 
 ## ¿Lo están picando ahora?
@@ -144,6 +150,9 @@ func recibir_danio(segundos: float) -> void:
 
 
 func _process(delta: float) -> void:
+	# Sin ataque y con el color ya normal no hay nada que titilar.
+	if not _estaba_atacado and not esta_siendo_atacado():
+		return
 	_actualizar_titileo(delta)
 	# La pared delantera (cuando el hornero está adentro) titila con el resto
 	_front.self_modulate = self_modulate
@@ -269,7 +278,11 @@ func _entregar(body: Node2D) -> void:
 	_mostrar_etapa()
 	resistencia = 1.0  # La construcción nueva arranca intacta
 	material_delivered.emit(material)
-	body.queue_free()
+	# Los que se reusan (las bolas de barro) vuelven a su pool.
+	if body.has_method("liberar"):
+		body.call("liberar")
+	else:
+		body.queue_free()
 
 
 func _perder_construccion() -> void:

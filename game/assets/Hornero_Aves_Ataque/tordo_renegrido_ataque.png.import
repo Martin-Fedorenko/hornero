@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/tordo_renegrido_ataque.png-2bacdf1d7515b56560
 
 [params]
 
-compress/mode=4
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

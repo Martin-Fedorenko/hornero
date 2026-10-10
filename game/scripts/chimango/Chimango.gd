@@ -14,6 +14,13 @@ signal volvio
 enum State { FLYING, GLIDING, GROUND }
 enum Modo { PERSECUCION, AVISO, PICADA, AGARRE, HUIDA, AUSENTE }
 
+const Cercania := preload("res://scripts/world/cercania.gd")
+## Zona (local) que cuenta para saber si se la ve, y margen en píxeles de
+## pantalla más allá del borde en el que ya se anima (entra a margen_pantalla
+## del borde, así que llega animada).
+const RECT_VISIBLE := Rect2(-80, -80, 160, 160)
+const MARGEN_ACTIVACION := 200.0
+
 @export var flap_state_duration := 0.45
 @export var debug_draw_flight_direction := true
 @export var debug_print := false
@@ -94,6 +101,11 @@ var _fundido: Tween
 
 func _ready() -> void:
 	_apply_orientation()
+	# La IA sigue fuera de cámara: entra desde afuera de la pantalla y se
+	# esconde lejos. Sólo la animación se pausa cuando no se la ve.
+	var animador := get_node_or_null(^"Animador")
+	if animador:
+		Cercania.activar_cerca_de_camara(animador, self, RECT_VISIBLE, MARGEN_ACTIVACION)
 	# Chimango, aguilucho y carancho comparten este script: no chocan entre sí
 	add_to_group(&"rapaces")
 	for otra in get_tree().get_nodes_in_group(&"rapaces"):
@@ -111,6 +123,40 @@ func _ready() -> void:
 		_ocultar()
 	else:
 		_ya_aparecio = true
+		_gritar()
+
+## Para reusarla desde el pool de RapacesSpawner: la deja como recién creada
+## (configurar antes `empezar_ausente`, `lado_entrada`, etc., igual que
+## antes de agregarla al árbol).
+func reiniciar() -> void:
+	state = State.GLIDING
+	modo = Modo.PERSECUCION
+	facing = 1
+	pitch = 0.0
+	velocity = Vector2.ZERO
+	_flap_time_left = 0.0
+	_flap_timer = 0.0
+	_modo_timer = 0.0
+	_alineado_timer = 0.0
+	_target_vel = Vector2.ZERO
+	_lado = 1
+	_dir_picada = Vector2.RIGHT
+	_dir_huida = Vector2.UP
+	_presiones = 0
+	_ya_aparecio = false
+	_apply_orientation()
+	if _fundido:
+		_fundido.kill()
+	if _grito:
+		_grito.stop()
+		_grito.volume_linear = _volumen_grito
+	if is_instance_valid(target):
+		_target_prev_pos = target.global_position
+	if empezar_ausente:
+		_ocultar()
+	else:
+		_ya_aparecio = true
+		visible = true
 		_gritar()
 
 func _exit_tree() -> void:
@@ -380,13 +426,23 @@ func _evasion() -> Vector2:
 		return Vector2.UP * velocidad_max
 	return Vector2.ZERO
 
+## Se reusa en cada frame en vez de armar una consulta nueva.
+var _rayo := PhysicsRayQueryParameters2D.new()
+var _rayo_objetivo: Node2D
+var _rayo_listo := false
+
 func _raycast(hasta: Vector2) -> bool:
-	var excluir: Array[RID] = [get_rid()]
-	if target is CollisionObject2D:
-		excluir.append(target.get_rid())
-	var query := PhysicsRayQueryParameters2D.create(
-		global_position, global_position + hasta, collision_mask, excluir)
-	return not get_world_2d().direct_space_state.intersect_ray(query).is_empty()
+	if not _rayo_listo or _rayo_objetivo != target:
+		_rayo_listo = true
+		_rayo_objetivo = target
+		var excluir: Array[RID] = [get_rid()]
+		if target is CollisionObject2D:
+			excluir.append(target.get_rid())
+		_rayo.exclude = excluir
+	_rayo.collision_mask = collision_mask
+	_rayo.from = global_position
+	_rayo.to = global_position + hasta
+	return not get_world_2d().direct_space_state.intersect_ray(_rayo).is_empty()
 
 # --- Visual ---
 func _actualizar_orientacion() -> void:

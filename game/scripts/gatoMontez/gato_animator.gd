@@ -35,6 +35,9 @@ extends AnimatedSprite2D
 var _body: GatoMontes
 var _modo_anterior := -1
 var _avisadas := {}
+## Animación y cuadro para los que ya se aplicaron escala y offset.
+var _anim_ajustada := &""
+var _frame_ajustado := -1
 
 
 func _ready() -> void:
@@ -73,12 +76,17 @@ func _process(_delta: float) -> void:
 		_:
 			_movimiento()
 
-	_aplicar_ajustes()
+	# Escala y offset sólo dependen de la animación y el cuadro: no se recalculan
+	# si no cambiaron.
+	if animation != _anim_ajustada or frame != _frame_ajustado:
+		_aplicar_ajustes()
 
 
 # ---------- Ajustes por animación ----------
 
 func _aplicar_ajustes() -> void:
+	_anim_ajustada = animation
+	_frame_ajustado = frame
 	var esc := 1.0
 	var off := Vector2.ZERO
 	if animation == animacion_caminar:

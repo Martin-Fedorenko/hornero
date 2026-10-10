@@ -8,6 +8,8 @@ extends Area2D
 
 ## El bicho fue comido. El árbol lo usa para reponerlo más tarde.
 signal eaten
+## Terminó de desaparecer: el árbol lo guarda para reusarlo.
+signal consumido
 
 enum Tipo { ORUGA, CHICHARRITA, ESCARABAJO, POLILLA }
 
@@ -20,6 +22,9 @@ const FRAME_SIZE := Vector2(250, 236)
 const FIRST_COLUMN_X := 32.0
 const ROW_Y := [36.0, 280.0, 520.0, 755.0]
 const FRAME_COUNT := 6
+const Cercania := preload("res://scripts/world/cercania.gd")
+## Píxeles de pantalla más allá del borde en los que ya se anima.
+const MARGEN_ACTIVACION := 64.0
 
 static var _frames: SpriteFrames
 
@@ -44,6 +49,23 @@ func _ready() -> void:
 	monitoring = false
 	_sprite.sprite_frames = _shared_frames()
 	_sprite.scale = Vector2.ONE * sprite_scale
+	_configurar()
+	# Lejos de la cámara la animación queda en pausa. Sólo el sprite: el
+	# cuerpo sigue activo para que el tween con el que aparece no se trabe.
+	var medio := FRAME_SIZE * sprite_scale * 0.5
+	Cercania.activar_cerca_de_camara(_sprite, self, Rect2(-medio, medio * 2.0), MARGEN_ACTIVACION)
+
+
+## Lo deja como recién creado, para reusarlo desde el pool del árbol con
+## otro `tipo` y otra posición.
+func reiniciar() -> void:
+	_eaten = false
+	scale = Vector2.ONE
+	monitorable = true
+	_configurar()
+
+
+func _configurar() -> void:
 	_sprite.play(_animation_name(tipo))
 	_sprite.speed_scale = idle_fps / 8.0 * randf_range(0.8, 1.2)
 	# Cada bicho arranca en otro cuadro y mira para otro lado.
@@ -56,7 +78,8 @@ func can_be_eaten() -> bool:
 	return not _eaten
 
 
-## Lo come el hornero: vuela hacia el pico, se achica y desaparece.
+## Lo come el hornero: vuela hacia el pico, se achica y desaparece. Al
+## terminar avisa con `consumido`; si nadie lo reusa, se libera.
 func eat(beak_position: Vector2) -> void:
 	if _eaten:
 		return
@@ -66,7 +89,14 @@ func eat(beak_position: Vector2) -> void:
 	var tween := create_tween().set_parallel()
 	tween.tween_property(self, ^"global_position", beak_position, 0.12)
 	tween.tween_property(self, ^"scale", Vector2.ZERO, 0.15)
-	tween.chain().tween_callback(queue_free)
+	tween.chain().tween_callback(_terminar)
+
+
+func _terminar() -> void:
+	if consumido.get_connections().is_empty():
+		queue_free()
+	else:
+		consumido.emit()
 
 
 static func _animation_name(t: Tipo) -> StringName:

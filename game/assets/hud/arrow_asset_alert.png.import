@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/arrow_asset_alert.png-07e6e673bb0f53062fae6fe
 
 [params]
 
-compress/mode=4
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
